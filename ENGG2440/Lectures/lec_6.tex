@@ -1,0 +1,117 @@
+\chapter{Binomial Coefficients}
+
+\section{Introduction}
+In this section, we introduce Binomial Coefficients.
+
+\subsection{Combinations}
+As it is introduced before,
+\begin{definition} An r-combination of the n-element ground set $S_0$ is an \textbf{unordered selection} of $r$ elements from $S_0$. 
+\[
+	\binom{n}{r} = \dfrac{n!}{r!(n-r)!}
+\]
+\end{definition}
+
+\subsection{Permutation}
+Again, as it is introduced before, 
+\begin{definition} An r-permutation of the n-element ground set $S_0$ is an \textbf{ordered selection} of $r$ elements from $S_0$. 
+	\[
+	P(n,r) = \dfrac{n!}{(n-r)!}
+	\]
+\end{definition}
+
+\subsection{Binomial Identities}
+\begin{proposition} For any integers \(m, r \geq 0\) with \(0 \leq r \leq n\),
+	\[
+		\binom{n}{r} = \binom{n}{n - r}
+	\]
+\end{proposition}
+
+We have two ways to prove this proposition, namely Algebraic Proof and Combinatorial Proof.
+
+\begin{proof}[Algebraic Proof]
+	\[
+		\binom{n}{n-r} = \dfrac{n!}{(n-r)!(n-n+r)!} = \dfrac{n!}{r!(n-r)!} = \binom{n}{r}
+	\]
+\end{proof}
+
+\begin{proof}[Combinatorial Proof]
+	Both side of the identity are supposed to be two different ways of solving a counting problem. We can define the counting problem as counting the number of different unordered selections of \(r\) elements from an \(n\)-element ground set. Then, we can define the RHS as the selecting number to be excluded. Then this identity holds.  
+\end{proof}
+
+\subsection{Pascal's Identity}
+\begin{theorem}
+	For any integers \(n,\ r \geq 0\) with \(1 \leq r \leq n-1\),
+	\[
+		\binom{n}{r} = \binom{n-1}{r} + \binom{n-1}{r-1} \mathbf{\text{ OR }} \binom{n+1}{r} = \binom{n}{r} + \binom{n}{r-1}
+	\]  
+\end{theorem}
+
+Again, we can prove this theorem by two ways.
+
+\begin{proof}[Algebraic Proof]
+	\[
+		\begin{aligned}
+			RHS &= \dfrac{(n-1)!}{r!(n-r-1)!} + \dfrac{(n-1)!}{(r-1)!(n-1-r+1)!} \\
+			&= \dfrac{(n-1)!}{r!(n-r-1)!} + \dfrac{(n-1)!}{(r-1)!(n-r)!} \\
+			&= \dfrac{(n-1)!}{(r-1)!(n-r-1)!} \left(\dfrac{1}{r} + \dfrac{1}{n-r}\right) \\
+			&= \dfrac{(n-1)!}{(r-1)!(n-r-1)!} \left(\dfrac{n}{r(n-r)}\right) \\
+			&= \dfrac{n!}{r!(n-r)!} \\
+			&= \binom{n}{r}
+		\end{aligned}
+	\]
+\end{proof}
+
+\begin{proof}[Combinatorial Proof] 
+	Recall that \(\binom{n}{k}\) equals the number of subsets with \(k\) elements from a set with \(n\) elements. Suppose one particular element is uniquely labeled \(X\) in a set with \(n\) elements.
+	
+	To construct a subset of \(k\) elements containing \(X\), include \(X\) and choose \(k-1\) elements from the remaining \(n-1\) elements in the set. There are \(\binom{n-1}{k-1}\) such subsets.
+
+	To construct a subset of \(k\) elements \textbf{not} containing \(X\), choose \(k\) elements from the remaining \(n-1\) elements in the set. There are \(\binom{n-1}{k}\) such subsets.
+
+	Every subset of \(k\) elements either contains \(X\) or not. The total number of subsets with \(k\) elements in a set of \(n\) elements is the sum of the number of subsets containing \(X\) and the number of subsets that do not contain \(X\), \(\binom{n-1}{k-1} + \binom{n-1}{k}\).
+
+	This equals \(\binom{n}{k}\).
+\end{proof}
+
+\begin{eg}
+	Footnote!\footnote{This is a footnote!}
+	\begin{remark}
+		Oops! footnote somehow shows up earlier than expect!\footnote{This is another footnote!}
+	\end{remark}
+
+	Bugs caught!\footnote{The final footnote which is ok!}
+\end{eg}
+\begin{theorem}
+	
+\end{theorem}
+
+As we saw, the footnote in the \texttt{Example} environment should show at the bottom of its own box, but it's caught by \texttt{Remark} which causes the unwanted behavior. Unfortunately, I haven't found a nice way to solve this. A potential way to solve this is by using \texttt{footnotemark} with \texttt{footnotetext} placing at the bottom of the environment, but this is tedious and needs lots of manual tweaking.
+
+Furthermore, not sure whether you notice it or not, but the color box of \texttt{Remark} is not quite right! It extends to the right, another trick bug...
+
+\subsection{Mdframe Environment}
+Though \texttt{mdframe} package is nice and is the key theme throughout this template, but it has some kind of weird behavior. Let's see the demo.
+
+\begin{proof}[Proof of \autoref{thm}]
+	We need to prove the followings.
+	\begin{claim}
+		\(E = mc^{2} \).
+	\end{claim}
+	\begin{explanation}
+
+		Nonsense.
+
+		Nonsense,
+
+		Nonsense,
+
+		Nonsense,
+
+		Nonsense,
+
+		Nonsense.
+	\end{explanation}
+
+\end{proof}
+
+I expect it should break much earlier, and this seems to be an \href{https://github.com/marcodaniel/mdframed/issues/9}{algorithmic issue} of \href{https://ctan.org/pkg/mdframed?lang=en}{\texttt{mdframe}}. One potential solution is to use \href{https://ctan.org/pkg/tcolorbox?lang=en}{\texttt{tcolorbox}} instead, but I haven't completely figure it out, hence I can't really say anything right now.
