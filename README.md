@@ -17,37 +17,19 @@ This repository is not intended for teaching purposes.
 
 ## INDEX
 
-### 22-23 Fall (HKUST)
-|  Code  |  Course  |  Repository  |  Notes  |
-|  :---:  |  :---:  |  :---:  |  :---:  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-
-### 22-23 Spring (HKUST)
-|  Code  |  Course  |  Repository  |  Notes  |
-|  :---:  |  :---:  |  :---:  |  :---:  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-
 ### 23-24 Fall
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
+|  ENGG1110  |  X  |  X  |  X  |
+|  IERG1000  |  X  |  X  |  X  |
 
 ### 23-24 Spring
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
-|  X  |  X  |  X  |  X  |
+|  IERG1810  |  X  |  X  |  X  |
+|  IERG2060  |  X  |  X  |  X  |
+|  IERG2080  |  X  |  X  |  X  |
+|  ENGG1120  |  X  |  X  |  X  |
 
 ### 23-24 Fall
 |  Code  |  Course  |  Repository  |  Notes  |
