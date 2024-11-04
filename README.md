@@ -1,5 +1,10 @@
 # College Notes
 
-This repo contains the lecture notes I took in uni. You can also find the LaTex source code.
+This repository contains the lecture notes I took during university. You can also find the LaTeX source code here.
 
-> If you find any problems, feel free to contact me.
+> If you find any issues, feel free to contact me.
+
+> [!NOTE]
+> You can access the PDF file directly or download the folder to compile the LaTeX file offline.
+
+[ENGG2440 - Discrete Mathematics for Engineers](ENGG2440/ENGG2440.pdf)
