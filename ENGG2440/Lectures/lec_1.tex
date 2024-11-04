@@ -80,7 +80,7 @@ Process:
 \end{exercise}
 
 \section{Strong Mathematical Induction}
-As the name suggested, the MI used in this section is "stronger". It is because only assuming that \(P(n)\) is true may be too restrictive. Thus, in inductive step, you may show that \(P(1), P(2), \cdots, P(n)\) are true. Then prove that \(P(n+1)\) is true.
+As the name suggests, the method of induction used in this section is "stronger". This is because assuming only that \(P(n)\) is true may be too restrictive, i.e., insufficient to prove the predicate. Thus, in the inductive step, you may show that \(P(1), P(2), \cdots, P(n)\) are true, and then prove that \(P(n+1)\) is true.
 
 \begin{eg}
   The Fibonacci sequence is a sequence of number defined via the following recursion: 
@@ -116,7 +116,19 @@ As the name suggested, the MI used in this section is "stronger". It is because 
   \]
 
   By the strong inductive hypothesis, we have 
-  
+  \[
+    F_n \leq \phi^{n-1},\quad F_{n-1} \leq \phi^{n-2}
+  \]
+
+  From the definition of \(\phi\) we have \(\phi^2 = 1 + \phi\) 
+
+  Hence, we obtain
+  \[
+    F_{n+1} \leq \phi^{n-1} + \phi^{n-2} = \phi^{n-2}(1 + \phi) = \phi^n
+  \]
+
+   
+
 \end{eg}
 
 % END OF DOCUMENT
