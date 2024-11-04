@@ -7,4 +7,4 @@ This repository contains the lecture notes I took during university. You can als
 > [!NOTE]
 > You can access the PDF file directly or download the folder to compile the LaTeX file offline.
 
-[ENGG2440 - Discrete Mathematics for Engineers](ENGG2440/ENGG2440.pdf)
+[ENGG2440 - Discrete Mathematics for Engineers](https://github.com/dizzyryan/Notes/blob/b5ada08437728b756276dced2cec9b30b24cc8ed/ENGG2440/ENGG2440.pdf)
