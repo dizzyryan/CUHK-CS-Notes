@@ -20,16 +20,16 @@ This repository is not intended for teaching purposes.
 ### 23-24 Fall
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
-|  ENGG1110  |  X  |  X  |  X  |
-|  IERG1000  |  X  |  X  |  X  |
+|  ENGG1110  |  Problem Solving By Programming  |  [Repo](ENGG1110)  |  X  |
+|  IERG1000  |  Introduction to Information Engineering  |  X  |  X  |
 
 ### 23-24 Spring
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
-|  IERG1810  |  X  |  X  |  X  |
-|  IERG2060  |  X  |  X  |  X  |
-|  IERG2080  |  X  |  X  |  X  |
-|  ENGG1120  |  X  |  X  |  X  |
+|  IERG1810  |  Electronic Circuit Design Laboratory  |  X  |  X  |
+|  IERG2060  |  Basic Analog and Digital Circuits  |  X  |  X  |
+|  IERG2080  |  Introduction to System Programming   |  X  |  X  |
+|  ENGG1120  |  Linear Algebra for Engineers  |  X  |  X  |
 
 ### 23-24 Fall
 |  Code  |  Course  |  Repository  |  Notes  |
