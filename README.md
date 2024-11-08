@@ -35,7 +35,7 @@ This repository is not intended for teaching purposes.
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
 |  CSCI1130  |  Introduction to Computing Using Java  |  X  |  X  |
-|  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](https://github.com/dizzyryan/Notes/blob/b5ada08437728b756276dced2cec9b30b24cc8ed/ENGG2440/ENGG2440.pdf)  |
+|  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](ENGG2440/ENGG2440.pdf)  |
 |  ENGG2760  |  Probability for Engineers  |  X  |  X  |
 
 > MATERIALS WILL BE UPLOADED AFTER 20/10/2024.
