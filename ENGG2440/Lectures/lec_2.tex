@@ -1,46 +1,36 @@
 \chapter{Summation Techniques}
 
-\section{Introduction}
-Nothing is bugs-free. There are some known bugs which I don't have incentive to solve, or it is hard to solve whatsoever. Let me list some of them.
+\section{Summation}
+When summing numbers with certain patterns, we can use summation notation. For example,
+\[
+	a_1 + a_2 + \cdots + a_n = \sum_{k=1}^n a_k 
+\]
 
-\subsection{Footnote Environment}
-It's easy to let you fall into a situation that you want to keep using \texttt{footnote} to add a bunch of unrelated stuffs. However, with our environment there is a known strange behavior, which is following.
+\subsection{Distributive Law}
+Let \(c\) be a constant. Then, we can take \(c\) out of the summation:
+\[
+	\sum_{k\in\mathcal{K} } ca_k = c\sum_{k\in\mathcal{K} }a_k 
+\]
+
 \begin{eg}
-	Footnote!\footnote{This is a footnote!}
-	\begin{remark}
-		Oops! footnote somehow shows up earlier than expect!\footnote{This is another footnote!}
-	\end{remark}
-
-	Bugs caught!\footnote{The final footnote which is ok!}
+	\[
+		\sum_{k=1}^n 2k = 2(1) + 2(2) + 2(3) + \cdots + 2(n) = 2(1 + 2 + 3 + \cdots + n) = 2\sum_{k=1}^n k  
+	\]
 \end{eg}
 
-As we saw, the footnote in the \texttt{Example} environment should show at the bottom of its own box, but it's caught by \texttt{Remark} which causes the unwanted behavior. Unfortunately, I haven't found a nice way to solve this. A potential way to solve this is by using \texttt{footnotemark} with \texttt{footnotetext} placing at the bottom of the environment, but this is tedious and needs lots of manual tweaking.
+\subsection{Associative Law}
+We can split the summands as follows:
 
-Furthermore, not sure whether you notice it or not, but the color box of \texttt{Remark} is not quite right! It extends to the right, another trick bug...
+\[
+	\sum_{k\in\mathcal{K}}(a_k + b_K) = \sum_{k\in\mathcal{K}}a_k + \sum_{k\in\mathcal{K}}b_k
+\]
 
-\subsection{Mdframe Environment}
-Though \texttt{mdframe} package is nice and is the key theme throughout this template, but it has some kind of weird behavior. Let's see the demo.
+\begin{eg}
+	\[\begin{aligned}
+		\sum_{k = 1}^n(k + k^2) &= (1 + 1^2) + (2 + 2^2) + \cdots + (n + n^2) \\
+		&= (1 + 2 + \cdots + n) + (1^2 + 2^2 + \cdots + n^2) \\
+		&= \sum_{k = 1}^n k + \sum_{k = 1}^n k^2
+	\end{aligned}\]
+\end{eg}
 
-\begin{proof}[Proof of \autoref{thm}]
-	We need to prove the followings.
-	\begin{claim}
-		\(E = mc^{2} \).
-	\end{claim}
-	\begin{explanation}
-
-		Nonsense.
-
-		Nonsense,
-
-		Nonsense,
-
-		Nonsense,
-
-		Nonsense,
-
-		Nonsense.
-	\end{explanation}
-
-\end{proof}
-
-I expect it should break much earlier, and this seems to be an \href{https://github.com/marcodaniel/mdframed/issues/9}{algorithmic issue} of \href{https://ctan.org/pkg/mdframed?lang=en}{\texttt{mdframe}}. One potential solution is to use \href{https://ctan.org/pkg/tcolorbox?lang=en}{\texttt{tcolorbox}} instead, but I haven't completely figure it out, hence I can't really say anything right now.
+\section{Close Form Formula}
