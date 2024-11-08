@@ -23,6 +23,8 @@ This repository is not intended for teaching purposes.
 |  ENGG1110  |  Problem Solving By Programming  |  [Repo](ENGG1110)  |  X  |
 |  IERG1000  |  Introduction to Information Engineering  |  X  |  X  |
 
+> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
+
 ### 23-24 Spring
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
@@ -30,6 +32,8 @@ This repository is not intended for teaching purposes.
 |  IERG2060  |  Basic Analog and Digital Circuits  |  X  |  X  |
 |  IERG2080  |  Introduction to System Programming   |  X  |  X  |
 |  ENGG1120  |  Linear Algebra for Engineers  |  X  |  X  |
+
+> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
 
 ### 23-24 Fall
 |  Code  |  Course  |  Repository  |  Notes  |
@@ -39,6 +43,7 @@ This repository is not intended for teaching purposes.
 |  ENGG2760  |  Probability for Engineers  |  X  |  X  |
 
 > MATERIALS WILL BE UPLOADED AFTER 20/10/2024.
+> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
 
 ### 23-24 Spring
 ...
