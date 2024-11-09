@@ -23,6 +23,8 @@ This repository is not intended for teaching purposes.
 |  ENGG1110  |  Problem Solving By Programming  |  [Repo](ENGG1110)  |  X  |
 |  IERG1000  |  Introduction to Information Engineering  |  X  |  X  |
 
+> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
+
 ### 23-24 Spring
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
@@ -31,14 +33,17 @@ This repository is not intended for teaching purposes.
 |  IERG2080  |  Introduction to System Programming   |  X  |  X  |
 |  ENGG1120  |  Linear Algebra for Engineers  |  X  |  X  |
 
+> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
+
 ### 23-24 Fall
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
 |  CSCI1130  |  Introduction to Computing Using Java  |  X  |  X  |
-|  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](https://github.com/dizzyryan/Notes/blob/b5ada08437728b756276dced2cec9b30b24cc8ed/ENGG2440/ENGG2440.pdf)  |
+|  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](ENGG2440/ENGG2440.pdf)  |
 |  ENGG2760  |  Probability for Engineers  |  X  |  X  |
 
 > MATERIALS WILL BE UPLOADED AFTER 20/10/2024.
+> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
 
 ### 23-24 Spring
 ...
