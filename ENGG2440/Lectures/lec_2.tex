@@ -160,3 +160,51 @@ There are some shortcut expression that might be used without finding the closed
 \end{proposition}
 
 \section{Guess-and-Verify method}
+As the name suggests, we can often guess the closed-form formula. But how can we be certain it's correct? This is where mathematical induction comes in handy.
+\begin{eg}
+	\[
+		S_n = \sum_{k = 1}^n k^2
+	\]
+	Observe that \(S_n\) behaves like the sum of terms in a polynomial, allowing us to form an \(n\)-term polynomial. Since \(n^2\) is the largest term in \(S_n\), we conclude that \(S_n \leq  n^3\) 
+	\[
+		S_n = a + bn + cn^2 + dn^3
+	\]
+	\begin{alignat*}{2}
+		1 &= S_1 &&= a + b + c + d,\\
+		5 &= S_2 &&= a + 2b + 4c + 8d,\\
+		14 &= S_3 &&= a + 3b + 9c + 27d,\\
+		30 &= S_4 &&= a + 4b + 16c + 64d
+	\end{alignat*}
+	Solving for above, we have \(a = 0,\ b = \dfrac{1}{6},\ c = \dfrac{1}{2},\ d = \dfrac{1}{3}\).
+	\[
+		S_n = \dfrac{1}{6}n + \dfrac{1}{2}n^2 + \dfrac{1}{3}n^3
+	\]
+	After hypothesizing the closed-form formula, we need to use induction to verify its correctness. The steps are straightforward, and you can try proving it yourself. This process confirms that the formula is indeed the closed form for the summation.
+\end{eg}
+
+\newpage
+\section{Multiple Summation}
+All the summations above use only a single index. For example, 
+\[
+	S_n = \sum_{k = 1}^n k^2 = 1^2 + 2^2 + \cdots + n^2.
+\]
+
+In this section, however, we introduce a summation with multiple indices. You can think of a single-index summation as summing over a 1D array. Extending this idea, a summation with two indices corresponds to summing over a 2D array. For example,
+\[
+	A = \begin{bmatrix}
+		a_{11} & a_{12} & \cdots & a_{1n}  \\
+		a_{21} & a_{22} & \cdots & a_{2n}  \\
+		\vdots & \vdots & \ddots & \vdots  \\
+		a_{m1} & a_{m2} & \cdots & a_{mn}  \\
+	\end{bmatrix}
+\]
+To sum up all the terms, we can use
+\[
+	r_j = a_{j1} + a_{j2} + \cdots + a_{jn} = \sum_{k = 1}^n a_{jk} 
+\]
+Then, we can rewrite it as
+\[
+	S = \sum_{j = 1}^m r_j = \sum_{j = 1}^m\sum_{k = 1}^n a_{jk}
+\]
+
+We can also interchange the order of summation, which can be very useful for finding the closed-form formula.
