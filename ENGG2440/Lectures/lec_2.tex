@@ -207,4 +207,82 @@ Then, we can rewrite it as
 	S = \sum_{j = 1}^m r_j = \sum_{j = 1}^m\sum_{k = 1}^n a_{jk}
 \]
 
-We can also interchange the order of summation, which can be very useful for finding the closed-form formula.
+We can also interchange the order of summation, which can be very useful for finding the closed-form formula. For the above summation, it is rather simple, we can simply do the interchange by
+\[
+	\sum_{j = 1}^m\sum_{k = 1}^n a_{jk} = \sum_{k = 1}^n\sum_{j = 1}^m a_{jk}
+\]
+
+However, this does not work for all the summation.
+\begin{eg}
+	Considering
+	\[
+		S = \sum_{j = 1}^n \sum_{k = j}^n a_{jk}
+	\]
+	To visualize that, we can again use matrix
+	\[
+		\begin{bmatrix}
+		a_{11} & a_{12} & \cdots & a_{1n}  \\
+			& a_{22} & \cdots & a_{2n}  \\
+			&	& \ddots & \vdots  \\
+			& 	&	& a_{nn}  \\
+		\end{bmatrix}
+	\]
+	Then, we have
+	\begin{alignat*}{6}
+		S &= a_{11} &+ a_{12} &+ a_{13} &+ \cdots &+ a_{1n} \\
+		&	&+ a_{22} &+ a_{23} &+ \cdots &+ a_{2n} \\
+		&	&	&	&\ddots &\\
+		&	&	&	&	&+ a_{nn}
+	\end{alignat*}
+	Let \[
+	c_k = a_{1k}  + a_{2k} + \cdots + a_{nk} = \sum_{j = 1}^n a_{jk}, \]
+
+	we get
+	\[
+		S = \sum_{k = 1}^n c_k = \sum_{k = 1}^n \sum_{j = 1}^k a_{jk}
+	\]
+	\begin{remark}
+		Informally, form
+		\[
+			S = \sum_{j = 1}^n \sum_{k = j}^n a_{jk}
+		\]
+		we have \(1 \leq j \leq k \leq n\), then we can simply interchange the order by
+		\[
+			S = \sum_{k = 1}^n \sum_{j = 1}^{k} a_{jk}
+		\]
+	\end{remark}
+\end{eg}
+
+Let's see another example, \(n\)-th harmonic number (\(H_n\)).
+
+\begin{eg}
+	\[
+		H_n = \sum_{k = 1}^n \dfrac{1}{k}
+	\]
+	Again we can visualize it by using matrix
+	\[
+		\begin{bmatrix}
+			1 &  &  &  &   \\
+			1 & \dfrac{1}{2} &  &  &   \\
+			1 & \dfrac{1}{2} & \dfrac{1}{3} &  &   \\
+			  &  &  & \ddots &   \\
+			1 & \dfrac{1}{2} & \dfrac{1}{3} & \cdots &\dfrac{1}{n}
+		\end{bmatrix}
+	\]
+	\[
+		S = \sum_{j = 1}^n H_j = \sum_{j = 1}^n  \sum_{k = 1}^j \dfrac{1}{k} 
+	\]
+	Since \(1 \leq k \leq j \leq n\) 
+	\[
+		S = \sum_{j = 1}^n H_j = \sum_{j = 1}^n  \sum_{k = 1}^j \dfrac{1}{k} = \sum_{k = 1}^n  \sum_{j = k}^n \dfrac{1}{k}
+	\]
+	Then we get
+	\[
+		\begin{aligned}
+			S &= \sum_{k = 1}^n  \sum_{j = k}^n \dfrac{1}{k} \\
+			&= \sum_{k = 1}^n \dfrac{n - k + 1}{k} \\
+			&= \sum_{k = 1}^n \dfrac{n}{k} - \sum_{k = 1}^n 1 + \sum_{k = 1}^n \dfrac{1}{k} \\
+			&= (n+1)H_n - n
+		\end{aligned}
+	\]
+\end{eg}
