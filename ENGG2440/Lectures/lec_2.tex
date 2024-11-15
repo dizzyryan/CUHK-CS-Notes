@@ -263,10 +263,10 @@ Let's see another example, \(n\)-th harmonic number (\(H_n\)).
 	\[
 		\begin{bmatrix}
 			1 &  &  &  &   \\
-			1 & \dfrac{1}{2} &  &  &   \\
-			1 & \dfrac{1}{2} & \dfrac{1}{3} &  &   \\
+			1 & 1/2 &  &  &   \\
+			1 & 1/2 & 1/3 &  &   \\
 			  &  &  & \ddots &   \\
-			1 & \dfrac{1}{2} & \dfrac{1}{3} & \cdots &\dfrac{1}{n}
+			1 & 1/2 & 1/3 & \cdots &1/n
 		\end{bmatrix}
 	\]
 	\[
@@ -286,3 +286,51 @@ Let's see another example, \(n\)-th harmonic number (\(H_n\)).
 		\end{aligned}
 	\]
 \end{eg}
+
+\begin{exercise}
+	For any real number \(x\), \(\lfloor x \rfloor \leq  x \leq  \lfloor x \rfloor + 1\).
+
+	Find the closed form formula for 
+	\[
+		S_n = \sum_{k = 1}^n \lfloor\sqrt{k}\rfloor
+	\]
+	where, for simplicity, we assume that \(n\) is a perfect square, i.e., \(n = a^2\) for some integer \(a \geq 1\). 
+	\begin{remark}
+		Consider \(\lfloor x \rfloor = \sum_{k = 1}^x 1\), then how to do the order interchange such that we can get the following summation 
+		\[
+			S_n = \sum_{j = 1}^a \sum_{k = j^2}^{a^2} 1
+		\]
+	\end{remark}
+\end{exercise}
+
+Let's look at the last example.
+\begin{eg}
+	Let \(n \leq 1\) be an integer and \(x \neq 1\) be a real number. 
+	\[
+		S = \sum_{j = 1}^n \sum_{k = 1}^j kx^j
+	\]
+	By interchanging the summation orders yields
+	\[
+		S = \sum_{k = 1}^n \sum_{j = k}^n kx^j
+	\]
+	Notice that for any integer \(k\) satisfying \(1 \leq k \leq n\) it holds that
+	\[
+		\sum_{j = k}^n x^j = \sum_{j = 1}^n x^j - \sum_{j = 1}^{k - 1} x^j = \dfrac{x - x^{n + 1}}{1 - x} - \dfrac{x - x^k}{1 - x} = \dfrac{x^k - x^{n + 1}}{1 - x}
+	\]
+	Equivalently,
+	\[
+		\sum_{j = k}^n x^j = \dfrac{x^k - x^{n + 1}}{1 - x} = x^{k - 1} \cdot \dfrac{x - x^{n - k + 2}}{1 - x} = x^{k - 1} \cdot \sum_{j = 1}^{n - k + 1} x^j
+	\]
+	Then we have
+	\[
+		\begin{aligned}
+			S &= \sum_{k = 1}^n \sum_{j = k}^n kx^j \\
+			&= \sum_{k = 1}^n k \sum_{j = k}^n x^j \\
+			&= \sum_{k = 1}^n k \cdot \dfrac{x^k - x^{n + 1}}{1 - x} \\
+			&= \dfrac{1}{1 - x} \cdot \sum_{k = 1}^n kx^k - \dfrac{x^{n + 1}}{1 - x} \cdot \sum_{k = 1}^n k \\
+			&= \dfrac{1}{1 - x} \cdot \dfrac{x\cdot(nx^{n + 1} - (n + 1)x^n + 1)}{(x - 1)^2} - \dfrac{x^{n + 1}}{1 - x} \cdot \dfrac{n(n + 1)}{2}
+		\end{aligned}
+	\]
+\end{eg}
+
+% END OF DOCUMENT
