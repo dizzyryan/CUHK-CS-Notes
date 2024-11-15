@@ -82,6 +82,32 @@ However, if the root of the characteristic equation has a multiplicity \(m \leq 
     \]
 \end{eg}
 
+Let's see another example
+\begin{eg}
+\[
+    \begin{dcases}
+        T(n) = 4T(n-1) - 5T(n-2) + 2T(n-3)\quad\text{for} n\geq 3,\\
+        T(0) = 0, T(1) = 1, T(2) = 3.
+    \end{dcases}
+\]
+Characteristic equation: \(x^3 = 4x^2 - 5x + 2\) 
 
+This equation has two distinct roots, \(r_1 = 1, r_2 = 2\). The multiplicity of \(r_1\) is \(m_1 = 2\). Hence,
+\[
+    T_0(n) = \theta_1 (1)^n + n\theta_2 (1)^n + \theta_3 2^n = \theta_1 + n\theta_2 + \theta_3 2^n
+\]
+Using initial conditions, we have
+\[
+    \begin{aligned}
+        0 &= T_0(0) = \theta_1 + \theta_3 \\
+        1 &= T_0(1) = \theta_1 + \theta_2 + 2\theta_3 \\
+        3 &= T_0(2) = \theta_1 + 2\theta_2 + 4\theta_3
+    \end{aligned}
+\]
+Solving for above, we have
+\[
+    T(n) = -1 + n\times0 + 1 \times 2^n = -1 + 2^n
+\]
+\end{eg}
 
 \section{Inhomogeneous Recurrences}
