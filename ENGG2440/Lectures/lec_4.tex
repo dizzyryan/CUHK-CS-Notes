@@ -1,1 +1,31 @@
 \chapter{Asymptotics}
+
+Asymptotic notation is a shorthand used to give a quick measure of the behavior of a function \(f(n)\) as \(n\) grows large. For example, "little oh" indicating that one function grows at
+a significantly slower rate than another, and "Big Oh" indicating that one function grows not much more rapidly than another.
+
+\section{Little O}
+
+\begin{definition}[Little O notation]
+    For functions \(f, g\ :\ \mathbb{R} \to \mathbb{R}\), with \(g\) nonnegative, we say \(f\) is asymptotically smaller than \(g\), in symbols,
+    \[
+        f(x) = o(g(x))\quad\text{iff}\quad\lim_{x \to \infty} \dfrac{f(x)}{g(x)} = 0. 
+    \]
+\end{definition}
+For example, \(x = o(e^x - 1)\), because 
+\[
+    \lim_{x \to \infty} \dfrac{x}{e^x - 1} = 0.
+\]
+
+By observing another example, \(1000x^{1.9} = o(x^2)\), since \(1000x^{1.9} / x^2 = 1000 / x^0.1\), \(x^{0.1}\) goes to infinity with x and 1000 is constant. Then the limit will equal 0. This argument generalizes directly to yield
+\begin{lemma}
+    \(x^a = o(x^b)\) for all nonnegative constants \(a < b\).
+\end{lemma}
+
+Since \(\log x < x\) for all \(x > 1\), 
+\begin{lemma}
+    \(\log x = o(x^\epsilon)\) for all \(\epsilon > 0\)
+\end{lemma}
+
+\begin{corollary}
+    
+\end{corollary}
