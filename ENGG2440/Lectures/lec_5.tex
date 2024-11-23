@@ -57,7 +57,6 @@ It also holds true that if we can break \(S\) into non-overlapping parts, the ca
     \[
         \vert S \vert = T(n) = T(n - 1) + T(n - 2)
     \]
-
     Using the initial conditions \(T(1) = 2\) (string starts with 1 or 0) and \(T(2) = 3\) (if the string starts with 1, then we have only one option for the next digit; otherwise, we have two options), one can find the number of the desired binary strings. 
 \end{eg}
 
@@ -66,7 +65,6 @@ Multiplication principle states that if each element in \(S\) can be generated b
 \[
     \vert S \vert = p_1 \times p_2 \times \cdots \times p_N
 \] 
-
 \begin{eg}
     Consider a set of \(n\) elements: \(S_0 = \{1, \dots, n\}\). We call \(S_0\) the ground set. Also, let \(r \geq 1\) be integer. An \(r\)-permutation of the \(n\)-elements ground set \(S_0\) is an ordered selection of \(r\) elements from \(S_0\). Let \(S\) be the set of all different \(r\)-permutations of the \(n\)-element ground set \(S_0\). For instance, when \(S_0 = \{1, 2, 3\}\) and \(r = 2\), we have
     \[
@@ -93,14 +91,15 @@ Thus, we have
 \]
 
 \begin{eg}
-    Let us count the number of integers between 0 and 9999 that have exactly one digit equal to 5. 
-
-    Let \(S\) be the set of such integers. We can then partition this set to \(S_1, S_2, S_3, S_4\),  where \(S_1\) is the set of integers in \(S\) with "5" appearing in the first position from the right, and so on. For example, we have \(2051 \in S_2\). 
-
-    By the addition principle, we have
+    Let us count the number of integers between 0 and 9999 that have exactly one digit equal to 5. Let \(S\) be the set of such integers. We can then partition this set to \(S_1, S_2, S_3, S_4\),  where \(S_1\) is the set of integers in \(S\) with "5" appearing in the first position from the right, and so on. For example, we have \(2051 \in S_2\). By the addition principle, we have
     \[
         \vert S \vert = \vert S_1 \vert + \vert S_2 \vert + \vert S_3 \vert + \vert S_4 \vert 
     \]
-
     Since every integer in \(S_1\) takes the form \(xxx5\), with each "\(x\)" having 9 choices. We then have \(\vert S_1 \vert = 9^3\). It holds true for the other sets. Hence, we have \(\vert S \vert = 4 * 9^3 = 2916\)
+\end{eg}
+
+\begin{eg}
+    Let us count the number of odd integers between 1000 and 9999 that have all distinct digits. Let \(S\) be the set of such integers. 
+    
+    Method 1: Observe that 
 \end{eg}
