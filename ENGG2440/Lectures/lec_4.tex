@@ -42,6 +42,26 @@ Hence, by taking \(c = 1\) and \(x_0 = 1\) we have \(\ln x = O(x).\)
     Let \(f(x) = x^2\) and \(g(x) = 2^x\). Show that \(f(x) = O(g(x))\).
 \end{exercise}
 
+\begin{eg}
+    Let
+    \[
+        f(n) = n \cdot (n + 1) \cdot (n + 2) + (-1)^n, \quad g(n) = n^\alpha 
+    \]
+    for any integer \(n \geq 1\). What is the smallest \(\alpha \in \mathbb{R}\) such that \(f(n) = O(g(n))\)?
+    Note that
+    \[
+        \begin{aligned}
+            \vert f(n) \vert &= \vert n \cdot (n + 1) \cdot (n + 2) + (-1)^n \vert \\
+            &= \vert n^3 + 3n^2 + 2n + (-1)^n \vert \\
+            &= n^3 + 3n^2 + 2n + (-1)^n\quad (\text{for any}\ n \geq 1)
+        \end{aligned}
+    \] 
+    We claim that \(\alpha = 3\) is the smallest \(\alpha \in \mathbb{R}\) such that \(f(n) = O(g(n))\).
+
+
+\end{eg}
+
+
 \section{Big Omega}
 As we use Big O notation to express upper bound, for lower bound, we have the "Big Omega" notation.
 \begin{definition}
@@ -72,7 +92,7 @@ Since Big O and Big Omega are essentially "mirror image" of one another, we have
 \end{proof}
 
 \section{Theta}
-Theta can be understood as the approximation of the function. 
+Theta can be understood as the approximation of a function. 
 \begin{definition}
     We say that \(f(x) = \Theta(g(x))\) iff \(f(x) = O(g(x))\) and \(g(x) = O(f(x))\). 
     \begin{remark}
