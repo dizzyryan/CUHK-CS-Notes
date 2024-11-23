@@ -1,1 +1,38 @@
 \chapter{Set Theory and Counting Principle}
+
+\section{Set Theory}
+
+Some concepts of Set Theory will be introduced in this section.
+
+Set is simply a collection of elements, in which each element appears only once. 
+For example, let \(S\) be the set of first 5 positive integers.
+\[
+    S = \{1, 2, 3, 4, 5\}
+\]
+
+Given a set \(S\), the number of elements in \(S\) is denoted by \(\vert S \vert \). The quantity \(\vert S \vert \) is also referred to as the \textbf{cardinality} of \(S\).
+
+For example, the above set has cardinality \(\vert S \vert = 5\). 
+
+A set with no elements in it is called an empty set, which is denoted by \(\varnothing\).
+
+Given two sets \(S\) and \(T\), we say that \(T\) is a subset of \(S\), denoted by \(T \subseteq S\), if every element in \(T\) is also in \(S\). It follows that if \(T \subseteq S\), then \(\vert T \vert \leq \vert S \vert \). 
+
+For example, let
+\[
+    S = \{1, 2, 3, 4, 5\},\quad T = \{2, 4\}, \quad U = \{2, 4, 6\}
+\]
+
+Then, we have \(T \subseteq S\) and \(T \subseteq U\).
+
+Let \(S_1\) and \(S_2\) be two given sets. 
+
+The union of \(S_1\) and \(S_2\), denoted by \(S_1 \cup  S_2\), is the set containing all elements from both \(S_1\) and \(S_2\). 
+
+We can also see union as the relationship "or", while intersection is the relationship "and".
+
+Now, let \(S\) be a set and \(m \geq 1\) be an integer. A partition of \(S\) into \(m\) parts is a collection of \(m\) subsets of \(S\), denoted by \(S_1, \dots, S_m\), with the following properties:
+\begin{itemize}
+    \item Exhaustion \(S = S_1 \cup S_2 \cup \cdots \cup S_m.\)
+    \item Non-Overlapping \(\text{For}\ i \neq j\), we have \(S_i \cap S_j = \varnothing\)
+\end{itemize}
