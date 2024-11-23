@@ -60,7 +60,22 @@ Hence, by taking \(c = 1\) and \(x_0 = 1\) we have \(\ln x = O(x).\)
 
     Let us first prove that \(\alpha\) satisfies \(\alpha \geq 3\) and then that \(\alpha = 3\). 
 
-    Indeed, we must have 
+    Indeed, we must have \(\alpha \geq 3\). The proof is by contradiction. If \(\alpha < 3\), then
+    \[
+        \lim_{n \to \infty} \dfrac{\vert f(n) \vert }{g(n)} = \lim_{n \to \infty} \dfrac{n^3 + 3n^2 + 2n + (-1)^n}{n^\alpha} = \infty,
+    \]
+    which shows that \(f(n) = \omega (g(n))\). However, this implies that \(f(n) = O(g(n))\) is wrong. We have reached the promised contradiction.
+
+    So let us now show that for \(\alpha = 3\) we have \(f(n) = O(g(n))\). Indeed, choosing \(c = 7\) and \(n_0 = 1\), we get 
+
+    \[
+        \begin{aligned}
+            \vert f(n) \vert &= n^3 + 3n^2 + 2n + (-1)^n \\
+            &\leq n^3 + 3n^2 \cdot n + 2n \cdot n^2 + n^3 \\
+            &= 7n^3 \\
+            &= cn^3 \quad (\text{for all}\ n \geq n_0)
+        \end{aligned}
+    \] 
 \end{eg}
 
 
@@ -123,7 +138,7 @@ Little O notation can be understood as the strict upper bound on the growth of a
     \]
     Hence, we have \(f(x) = o(g(x))\) 
 \end{eg}
-\newpage
+
 \begin{eg}
 Let
 \[
@@ -150,7 +165,7 @@ for \(n \geq 1\). By the sandwich theorem, we then obtain
 \] 
 Thus, \(f(n) = o(n)\).
 \end{eg}
-
+\newpage
 \section{Little Omega}
 Little Omega notation can be understood as the strict lower bound on the growth of a function.
 
