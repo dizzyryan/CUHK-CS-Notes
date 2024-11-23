@@ -2,22 +2,19 @@
 
 \section{Set Theory}
 
-Some concepts of Set Theory will be introduced in this section.
+\begin{definition}
+    Set is a collection of elements, in which each element appears only once. 
+\end{definition}
 
-Set is simply a collection of elements, in which each element appears only once. 
-For example, let \(S\) be the set of first 5 positive integers.
-\[
-    S = \{1, 2, 3, 4, 5\}
-\]
-
-Given a set \(S\), the number of elements in \(S\) is denoted by \(\vert S \vert \). The quantity \(\vert S \vert \) is also referred to as the \textbf{cardinality} of \(S\).
-
-For example, the above set has cardinality \(\vert S \vert = 5\). 
+\begin{definition}
+    Given a set \(S\), the number of elements in \(S\) is denoted by \(\vert S \vert \). The quantity \(\vert S \vert \) is also referred to as the \textbf{cardinality} of \(S\).
+\end{definition}
 
 A set with no elements in it is called an empty set, which is denoted by \(\varnothing\).
 
-Given two sets \(S\) and \(T\), we say that \(T\) is a subset of \(S\), denoted by \(T \subseteq S\), if every element in \(T\) is also in \(S\). It follows that if \(T \subseteq S\), then \(\vert T \vert \leq \vert S \vert \). 
-
+\begin{definition}
+    Given two sets \(S\) and \(T\), we say that \(T\) is a subset of \(S\), denoted by \(T \subseteq S\), if every element in \(T\) is also in \(S\). It follows that if \(T \subseteq S\), then \(\vert T \vert \leq \vert S \vert \). 
+\end{definition}
 For example, let
 \[
     S = \{1, 2, 3, 4, 5\},\quad T = \{2, 4\}, \quad U = \{2, 4, 6\}
@@ -25,46 +22,46 @@ For example, let
 
 Then, we have \(T \subseteq S\) and \(T \subseteq U\).
 
-Let \(S_1\) and \(S_2\) be two given sets. 
+\begin{definition}
+    Let \(S_1\) and \(S_2\) be two given sets. 
 
-The union of \(S_1\) and \(S_2\), denoted by \(S_1 \cup  S_2\), is the set containing all elements from both \(S_1\) and \(S_2\). 
+    The union of \(S_1\) and \(S_2\), denoted by \(S_1 \cup S_2\), is the set containing all elements from both \(S_1\) and \(S_2\). 
 
+    The intersection of \(S_1\) and \(S_2\), denoted by \(S_1 \cap S_2\), is the set containing all elements that are common to both \(S_1\) and \(S_2\). 
+\end{definition}
 We can also see union as the relationship "or", while intersection is the relationship "and".
 
-Now, let \(S\) be a set and \(m \geq 1\) be an integer. A partition of \(S\) into \(m\) parts is a collection of \(m\) subsets of \(S\), denoted by \(S_1, \dots, S_m\), with the following properties:
-\begin{itemize}
-    \item Exhaustion: \(S = S_1 \cup S_2 \cup \cdots \cup S_m.\)
-    \item Non-Overlapping: \(\text{For}\ i \neq j\), we have \(S_i \cap S_j = \varnothing\)
-\end{itemize}
+\begin{definition}
+    Now, let \(S\) be a set and \(m \geq 1\) be an integer. A partition of \(S\) into \(m\) parts is a collection of \(m\) subsets of \(S\), denoted by \(S_1, \dots, S_m\), with the following properties:
+    \begin{itemize}
+        \item Exhaustion: \(S = S_1 \cup S_2 \cup \cdots \cup S_m.\)
+        \item Non-Overlapping: \(\text{For}\ i \neq j\), we have \(S_i \cap S_j = \varnothing\)
+    \end{itemize}
+\end{definition}
 
-\section{Counting Principle}
+\section{Permutation}
 \subsection{Addition Principle}
-Again we use the above set 
-\[
-    S = \{1, 2, 3, 4, 5\}
-\]
-as an example. Let \(S_1 = \{1, 2\}, S_2 = \{3\}, S_3 = \{4, 5\}\) form a partition of \(S\) with 3 parts. Indeed, we have \(S = S_1 \cup S_2 \cup S_3\) and \(S_1 \cap S_2 = \varnothing\), \(S_1 \cap S_3 = \varnothing\), \(S_2 \cap S_3 = \varnothing\).
-It also holds true that if we can break \(S\) into non-overlapping parts, the cardinality of \(S\) can be determined by the cardinalities of the constituent parts, i.e. \(\vert S \vert = \vert S_1 \vert + \vert S_2 \vert + \cdots + \vert S_m \vert \).
+Given \(S = \{1, 2, 3, 4, 5\}\). Let \(S_1 = \{1, 2\}, S_2 = \{3\}, S_3 = \{4, 5\}\) form a partition of \(S\) with 3 parts. Then, the cardinality of \(S\) can be determined by the cardinalities of the constituent parts, i.e. \(\vert S \vert = \vert S_1 \vert + \vert S_2 \vert + \cdots + \vert S_m \vert \).
 
-\begin{eg}
-    How to count the number of binary strings of length \(n\) with no consecutive 1's? Let \(S\) be the desired string, then we can apply the addition principle.
+\begin{eg}[Count the number of binary strings of length \(n\) with no consecutive 1's.]
+
+    Let \(S\) be the desired string, then we can apply the addition principle.
 
     Let \(S_0\) be the set of strings in \(S\) that start with 0; \(S_1\) be the set of strings in \(S\) that start with 1. We have \(\vert S \vert = \vert S_0 \vert + \vert S_1 \vert\).
 
-    We can set up a recurrence relationship. Let \(\vert S \vert = T(n)\). Then, we have \(\vert S_0 \vert = T(n - 1)\) and \(\vert S_1 \vert = T(n - 2)\).
-
-    Then we have 
+    We can set up a recurrence relationship. Let \(\vert S \vert = T(n)\). Then, we have \(\vert S_0 \vert = T(n - 1)\) and \(\vert S_1 \vert = T(n - 2)\).Then we have 
     \[
         \vert S \vert = T(n) = T(n - 1) + T(n - 2)
     \]
     Using the initial conditions \(T(1) = 2\) (string starts with 1 or 0) and \(T(2) = 3\) (if the string starts with 1, then we have only one option for the next digit; otherwise, we have two options), one can find the number of the desired binary strings. 
 \end{eg}
 
-\section{Multiplication Principle}
-Multiplication principle states that if each element in \(S\) can be generated by performing an ordered sequence of actions, say, \(A_1, A_2, \dots, A_N\), and action \(A_i\) has \(p_i\) choices, where \(i = 1, \dots, N\), then the cardinality of \(S\) can be computed by
+\subsection{Multiplication Principle}
+If each element in \(S\) can be generated by performing an ordered sequence of actions, say, \(A_1, A_2, \dots, A_N\), and action \(A_i\) has \(p_i\) choices, where \(i = 1, \dots, N\), then the cardinality of \(S\) can be computed by
 \[
     \vert S \vert = p_1 \times p_2 \times \cdots \times p_N
 \] 
+
 \begin{eg}
     Consider a set of \(n\) elements: \(S_0 = \{1, \dots, n\}\). We call \(S_0\) the ground set. Also, let \(r \geq 1\) be integer. An \(r\)-permutation of the \(n\)-elements ground set \(S_0\) is an ordered selection of \(r\) elements from \(S_0\). Let \(S\) be the set of all different \(r\)-permutations of the \(n\)-element ground set \(S_0\). For instance, when \(S_0 = \{1, 2, 3\}\) and \(r = 2\), we have
     \[
@@ -73,6 +70,7 @@ Multiplication principle states that if each element in \(S\) can be generated b
     where the order of the two elements matters. 
 \end{eg}
 
+\subsection{Permutation}
 For general values of \(n\) and \(r\). Let \(P(n, r)\) denotes this number. By performing the following ordered sequence of action,
 \begin{table}[H]
     \centering
@@ -91,7 +89,7 @@ Thus, we have
 \]
 
 \begin{eg}
-    Let us count the number of integers between 0 and 9999 that have exactly one digit equal to 5. Let \(S\) be the set of such integers. We can then partition this set to \(S_1, S_2, S_3, S_4\),  where \(S_1\) is the set of integers in \(S\) with "5" appearing in the first position from the right, and so on. For example, we have \(2051 \in S_2\). By the addition principle, we have
+    To count the number of integers between 0 and 9999 that have exactly one digit equal to 5, let \(S\) be the set of such integers. We can then partition this set to \(S_1, S_2, S_3, S_4\),  where \(S_1\) is the set of integers in \(S\) with "5" appearing in the first position from the right, and so on. For example, \(2051 \in S_2\). By the addition principle, we have
     \[
         \vert S \vert = \vert S_1 \vert + \vert S_2 \vert + \vert S_3 \vert + \vert S_4 \vert 
     \]
@@ -101,5 +99,47 @@ Thus, we have
 \begin{eg}
     Let us count the number of odd integers between 1000 and 9999 that have all distinct digits. Let \(S\) be the set of such integers. 
     
-    Method 1: Observe that 
+    \textbf{Method 1:} Observe that each integer in \(S\) can be generated by the following ordered sequence of action:
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{c|c|c}
+                action & choices & no. of choices  \\
+            \midrule
+                \(A_1:\) pick the unit digit & \(\{1, 3, 5, 7, 9\}\)  & 5  \\
+                \(A_2:\) pick the tens digit & \(\{0, 1, \dots, 9\}\) except the digit chosen in \(A_1\) & 9  \\
+                \(A_3:\) pick the hundreds digit & \(\{0, 1, \dots, 9\}\) except the digit chosen in \(A_1, A_2\) & 8  \\
+                \(A_4:\) pick the thousands digit & \(\{1, \dots, 9\}\) except the digit chosen in \(A_1, A_2, A_3\) & ?  \\
+        \end{tabular}
+    \end{table}
+    We cannot find the choice for \(A_4\) directly since 0 may or may not be chosen in the previous cases. Thus, we can partition \(S\) into
+
+    \(S_1\): set of integers in \(S\) whose tens digit is 0 \(\implies \vert S_1 \vert = 5 \times 1 \times 8 \times 7 = 280\),
+
+    \(S_1\): set of integers in \(S\) whose hundreds digit is 0 \(\implies \vert S_2 \vert = 5 \times 8 \times 1 \times 7 = 280\),
+
+    \(S_3\): set of integers in \(S\) with no 0 \(\implies \vert S_3 \vert = 5 \times 8 \times 7 \times 6 = 1680\).
+
+    Then we have \(\vert S \vert = 280 + 280 + 1680 = 2240\). 
+
+    \textbf{Method 2:} Consider a different sequence of actions:
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{c|c|c}
+                action & choices & no. of choices  \\
+            \midrule
+                \(A_1:\) pick the unit digit & \(\{1, 3, 5, 7, 9\}\)  & 5  \\
+                \(A_2:\) pick the thousands digit & \(\{1, \dots, 9\}\) except the digit chosen in \(A_1\) & 8  \\
+                \(A_3:\) pick the tens digit & \(\{0, 1, \dots, 9\}\) except the digit chosen in \(A_1, A_2\) & 8  \\
+                \(A_4:\) pick the hundreds digit & \(\{0, 1, \dots, 9\}\) except the digit chosen in \(A_1, A_2, A_3\) & 7  \\
+        \end{tabular}
+    \end{table}
+    Then we have \(\vert S \vert = 5 \times 8 \times 8 \times 7 = 2240\). 
 \end{eg}
+
+\section{Subtraction Principle}
+\begin{definition}
+    Let \(S\) be a set and \(A \subseteq S\) be a subset of \(S\). The complement of \(A\) in \(S\), denoted by \(\overline{A}\), is the set that contains all the elements in \(S\) but not in \(A\).
+    \[
+        \vert S \vert = \vert A \vert + \vert \overline{A} \vert 
+    \]
+\end{definition}
