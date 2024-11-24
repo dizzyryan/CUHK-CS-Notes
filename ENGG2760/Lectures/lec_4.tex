@@ -1,0 +1,219 @@
+\chapter{Asymptotics}
+
+Asymptotic notation is a shorthand used to give a quick measure of the behavior of a function \(f(n)\) as \(n\) grows large. 
+
+\section{Big O}
+Big O is the most frequently used asymptotic notation. It is used to give an upper bound on the growth of a function, such as the running time of an algorithm.
+
+\begin{definition}
+    We say that \(f(x) = O(g(x))\) iff there exists a constant \(c > 0\) and an \(x_0 \geq 0\) such that
+    \[
+    f(x) \leq cg(x)\quad\text{for all}\ x \geq x_0
+    \]
+\end{definition}
+
+Let's see an example
+\begin{eg}
+    Let \(f(x) = x^2\) and \(g(x) = x^3\). 
+
+    By taking \(c = 1\) and \(x_0 = 1\), we can simply conclude that \(x^2 = O(x^3)\). 
+    
+    However, to prove that \textbf{there is no constant \(c\) such that \(x^2 \leq cx^3\) for all \(0 \leq x \leq 1\)}, we need to use proof by contradiction. 
+    
+    For \(0 \leq x \leq 1\), we have \(x^2 \geq x^3\). Therefore, if such a constant \(c > 0\) exists, then we must have \(c \geq 1\) such that \(x^2 \leq cx^3\). However, whenever \(0 \leq x \leq \frac{1}{c}\), we have
+    \[
+        x^3 \geq \dfrac{1}{c}x^2 > x^3.
+    \]
+    Since we get \(x^3 > x^3\), by contradiction, we know that there is no constant \(c\) such that \(x^2 \leq cx^3\) for all \(0 \leq x \leq 1\)
+\end{eg}
+
+We can also use differentiation to show the upper bound of a function.
+\begin{eg}
+Let \(f(x) = \ln x\) and \(g(x) = x\). 
+
+Observe that \(f(1) = \ln 1 = 0 < 1 = g(1)\).  Moreover, \(f^{\prime} (x) = \frac{1}{x}\) and \(g^{\prime} (x) = 1\) for all \(x > 0\), which implies that \(g^{\prime}(x) > f^{\prime}(x)\) for all \(x > 1\). It is the same as saying that \(g(x)\) grows faster than the function \(f(x)\) because the slope of the former is larger than that of the latter. It follows that
+\[
+    \ln x \leq x\ \text{for all}\ x \geq 1.
+\] 
+Hence, by taking \(c = 1\) and \(x_0 = 1\) we have \(\ln x = O(x).\) 
+\end{eg}
+
+\begin{exercise}
+    Let \(f(x) = x^2\) and \(g(x) = 2^x\). Show that \(f(x) = O(g(x))\).
+\end{exercise}
+
+\begin{eg}
+    Let
+    \[
+        f(n) = n \cdot (n + 1) \cdot (n + 2) + (-1)^n, \quad g(n) = n^\alpha 
+    \]
+    for any integer \(n \geq 1\). What is the smallest \(\alpha \in \mathbb{R}\) such that \(f(n) = O(g(n))\)?
+    Note that
+    \[
+        \begin{aligned}
+            \vert f(n) \vert &= \vert n \cdot (n + 1) \cdot (n + 2) + (-1)^n \vert \\
+            &= \vert n^3 + 3n^2 + 2n + (-1)^n \vert \\
+            &= n^3 + 3n^2 + 2n + (-1)^n\quad (\text{for any}\ n \geq 1)
+        \end{aligned}
+    \] 
+    We claim that \(\alpha = 3\) is the smallest \(\alpha \in \mathbb{R}\) such that \(f(n) = O(g(n))\).
+
+    Let us first prove that \(\alpha\) satisfies \(\alpha \geq 3\) and then that \(\alpha = 3\). 
+
+    Indeed, we must have \(\alpha \geq 3\). The proof is by contradiction. If \(\alpha < 3\), then
+    \[
+        \lim_{n \to \infty} \dfrac{\vert f(n) \vert }{g(n)} = \lim_{n \to \infty} \dfrac{n^3 + 3n^2 + 2n + (-1)^n}{n^\alpha} = \infty,
+    \]
+    which shows that \(f(n) = \omega (g(n))\). However, this implies that \(f(n) = O(g(n))\) is wrong. We have reached the promised contradiction.
+
+    So let us now show that for \(\alpha = 3\) we have \(f(n) = O(g(n))\). Indeed, choosing \(c = 7\) and \(n_0 = 1\), we get 
+
+    \[
+        \begin{aligned}
+            \vert f(n) \vert &= n^3 + 3n^2 + 2n + (-1)^n \\
+            &\leq n^3 + 3n^2 \cdot n + 2n \cdot n^2 + n^3 \\
+            &= 7n^3 \\
+            &= cn^3 \quad (\text{for all}\ n \geq n_0)
+        \end{aligned}
+    \] 
+\end{eg}
+
+
+\section{Big Omega}
+As we use Big O notation to express upper bound, for lower bound, we have the "Big Omega" notation.
+\begin{definition}
+    We say that \(f(x) = \Omega(g(x))\) iff there exists a constant \(c > 0\) and an \(x_0 \geq 0\) such that
+    \[
+    f(x) \geq cg(x)\quad\text{for all}\ x \geq x_0
+    \]
+\end{definition}
+
+Since Big O and Big Omega are essentially "mirror image" of one another, we have
+
+\begin{theorem}[Big O vs. Big Omega]
+   \[
+    f(x) = O(g(x)) \Longleftrightarrow g(x) = \Omega (f(x)).
+   \] 
+\end{theorem}
+
+\begin{proof}
+    By definition of big O, \(f(x) = O(g(x))\) means
+    \[
+        \exists c_1 > 0, x_1 > 0 \text{ such that } f(x) \leq c_1 g(x) \quad \forall x \geq x_1,
+    \] 
+    which means the same as
+    \[
+        \exists c_1 > 0, x_1 > 0 \text{ such that } g(x) \geq \dfrac{1}{c_1}f(x) \quad \forall x \geq x_1,
+    \]
+    Hence, by taking \(c_0 = \frac{1}{c_1} > 0\) and \(x_0 = x_1 \geq 0\), we have \(g(x) = \Omega(f(x))\) 
+\end{proof}
+
+\section{Theta}
+Theta can be understood as the approximation of a function. 
+\begin{definition}
+    We say that \(f(x) = \Theta(g(x))\) iff \(f(x) = O(g(x))\) and \(g(x) = O(f(x))\). 
+    \begin{remark}
+        It is important to note that \(f(x) = \Theta(g(x))\) does not mean that \(f(x) = g(x)\), it just means that
+    \[
+        \exists c_1, _2 > 0 \quad\text{such that}\quad c_1 g(x) \leq f(x) \leq c_2 g(x)\quad \forall x \geq  x_0 
+    \] 
+    \end{remark}
+    
+\end{definition}
+
+\section{Little O}
+Little O notation can be understood as the strict upper bound on the growth of a function.
+
+\begin{definition}[Little O notation]
+    For functions \(f, g: \mathbb{R} \to \mathbb{R}\), with \(g\) nonnegative, we say \(f\) is asymptotically smaller than \(g\), in symbols,
+    \[
+        f(x) = o(g(x))\quad\text{iff}\quad\lim_{x \to \infty} \dfrac{f(x)}{g(x)} = 0. 
+    \]
+\end{definition}
+
+\begin{eg}
+    For example, let \(f(x) = x, g(x) = e^x - 1\). Because 
+    \[
+        \lim_{x \to \infty} \dfrac{f(x)}{g(x)} = \lim_{x \to \infty} \dfrac{x}{e^x - 1} = 0.
+    \]
+    Hence, we have \(f(x) = o(g(x))\) 
+\end{eg}
+
+\begin{eg}
+Let
+\[
+    f(n) = \begin{dcases}
+        0\quad \text{if \(n\) is odd},\\
+        2\quad \text{if \(n\) is even}.
+    \end{dcases}
+\]
+Is \(f(n) = o(1)\)?
+
+Let \(g(n) = 1\). Upon noting \(f(n) = 1 + (-1)^n\), we see that
+\[
+    \lim_{n \to \infty} \dfrac{f(x)}{g(x)} = \lim_{n \to \infty} f(n).
+\] 
+However, this limit does not exist, as \(f(n)\) fluctuates between 0 and 2. Thus, \(f(n) \neq o(1)\).
+
+On the other hand, if \(f(n) = o(n)\)? Here, let \(g(n) = n\). Note that \(0 \leq f(n) \leq 2\). It follows that 
+\[
+    0 \leq \dfrac{f(n)}{g(n)} \leq \dfrac{2}{n}
+\]
+for \(n \geq 1\). By the sandwich theorem, we then obtain
+\[
+    \lim_{n \to \infty} \dfrac{f(n)}{g(n)} = 0.
+\] 
+Thus, \(f(n) = o(n)\).
+\end{eg}
+\newpage
+\section{Little Omega}
+Little Omega notation can be understood as the strict lower bound on the growth of a function.
+
+\begin{definition}[Little O notation]
+    For functions \(f, g: \mathbb{R} \to \mathbb{R}\), with \(g\) nonnegative, we say \(f\) is asymptotically smaller than \(g\), in symbols,
+    \[
+        f(x) = \omega (g(x))\quad\text{iff}\quad\lim_{x \to \infty} \dfrac{g(x)}{f(x)} = 0. 
+    \]
+\end{definition}
+
+\section{Properties for Asymptotic Analysis}
+\subsection{Rules for Asymptotic Analysis}
+\begin{itemize}
+    \item Transitivity
+        \[
+            \text{If}\ f(n) = \Pi (g(n))\ \text{and}\ g(n) = \Pi (h(n)),\ \text{then}\ f(n) = \Pi (h(n)),\ \text{where}\ \Pi = O, o, \Omega, \omega, \Theta
+        \]
+    \item Rule of sums
+        \[
+            f(n) + g(n) = \Pi (max\{f(n), g(n)\}),\ \text{where}\ \Pi = O, \Omega,\ \text{or}\ \Theta.
+        \]
+    \item Rule of products
+        \[
+            \text{If}\ f_1(n) = \Pi (g_1(n)), f_2(n) = \Pi (g_2(n)),\ \text{then}\ f_1(n)f_2(n) = \Pi (g_1(n)g_2(n)),\ \text{where}\ \Pi = O, o, \Omega, \omega, \Theta.
+        \]
+    \item Transpose symmetry
+        \[
+            f(n) = O(g(n))\ \text{iff}\ g(n) = \Omega(f(n)).
+        \]
+    \item Transpose symmetry
+        \[
+            f(n) = o(g(n))\ \text{iff}\ g(n) = \omega(f(n)).
+        \]
+    \item Reflexivity
+        \[
+            f(n) = \Pi(f(n)),\ \text{where}\ \Pi = O, \Omega, \Theta.
+        \]
+    \item Symmetry
+        \[
+            f(n) = \Theta(g(n))\ \text{iff}\ g(n) = \Theta(f(n)).
+        \]
+\end{itemize}
+
+\subsection{Graph for Functions}
+One can understand the growth of functions by the following graph.
+
+\begin{center}
+    \import{./Figures/}{time_complexity.tex}
+\end{center}
+
+% END OF DOCUMENT

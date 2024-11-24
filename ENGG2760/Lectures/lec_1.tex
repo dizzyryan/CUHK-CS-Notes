@@ -1,0 +1,134 @@
+\chapter{Mathematical Induction}
+
+\section{Introduction}
+
+In mathematics, there are some basic proof techniques that we can apply, including direct proof, proof by induction, proof by contradiction, and proof by contraposition. For most of these proving methods, you won't be learning their reasons or applications, but you will still use them in some simple proving questions. In this chapter, we will mainly discuss mathematical induction.
+
+\begin{definition}[Proposition]
+  A \textbf{proposition} is a statement that is either true or false. 
+\end{definition}
+
+\begin{definition}[Predicate]
+  A \textbf{predicate} is a proposition whose truth depends on one or more variables.
+\end{definition}
+
+\section{Mathematical Induction}
+
+An analogy of the principle of mathematical induction is the game of dominoes. Suppose the dominoes are lined up properly, so that when one falls, the successive one will also fall. Now by pushing the first domino, the second will fall; when the second falls, the third will fall; and so on. We can see that all dominoes will ultimately fall.
+
+The key point is only two steps:
+
+1. the first domino falls;
+
+2. when a domino falls, the next domino falls.
+
+We use the above principle of Mathematical Induction to prove. 
+
+Process:
+
+1. Let \(P(n)\) be a predicate.
+
+2. (Base Case) Show that \(P(1)\) is true.
+
+3. (Inductive Steps) Show that for \(n = 1, 2, \dots\), if \(P(n)\) is true, then \(P(n+1)\) is true.
+
+\begin{eg}
+  \[
+    P(n): 1 + 2 + \dots + n = \dfrac{n(n+1)}{2}
+  \] 
+  1. Base Case
+
+  We need to show that \(P(1)\) is true. 
+  \[
+    1 = \dfrac{(1)(1+1)}{2}, 
+  \] 
+  which is obviously true.
+  
+  2. Inductive Step
+
+  For inductive hypothesis, we can assume \[1 + 2 + \dots + n = \dfrac{n(n+1)}{2}\]
+
+  Now, to show that \(P(n+1)\) is true, 
+
+  \[
+  \begin{aligned}
+    L.H.S. &= 1 + 2 + \cdots + n + (n+1)\\
+    &= \dfrac{n(n+1)}{2} + (n+1) \\
+    &= \dfrac{n(n+1) + 2(n+1)}{2} \\
+    &= \dfrac{(n+1)(n+2)}{2} \\
+    &= R.H.S
+  \end{aligned},
+  \]
+
+  which shows that \(P(n+1)\) is also true.
+
+  Hence, by the principle of MI, we can conclude that \(P(n)\) is true for all integers \(n \geq 1\).
+\end{eg}
+
+\begin{exercise}
+  Show that for any integer \(n \geq 1\), \(n^3 - n\) is divisible by 3.
+  \begin{note}
+    In inductive step, consider putting a constant \(q\) as \(3q\) is divisible by 3.
+  \end{note}
+\end{exercise}
+
+\begin{exercise}
+  Prove that \(n^3 < 2^n\) for all integers \(n \geq 10\).  
+  \begin{note}
+    Consider bonding the lower order terms in terms of \(n^3\).
+  \end{note}
+\end{exercise}
+
+\section{Strong Mathematical Induction}
+As the name suggests, the method of induction used in this section is "stronger". This is because assuming only that \(P(n)\) is true may be too restrictive, i.e., insufficient to prove the predicate. Thus, in the inductive step, you may show that \(P(1), P(2), \cdots, P(n)\) are true, and then prove that \(P(n+1)\) is true.
+
+\begin{eg}
+  The Fibonacci sequence is a sequence of number defined via the following recursion: 
+  
+  \[
+  F_n = F_{n-1} + F_{n-2},\ n \geq 2
+  \]
+  \[
+    F_0 = 0; F_1 = 1
+  \]
+  
+  Prove that \[
+  P(n): F_n \leq \phi^{n-1}, \text{where}\ \phi = \dfrac{1 + \sqrt{5}}{2}
+  \]
+
+  1. Base Case
+  \[
+    F_1 = 1 \leq \phi^0 = 1
+  \]
+  \[
+    F_2 = 1 \leq \phi^1 \approx 1.618
+  \]
+
+  Thus, \(P(1)\) and \(P(2)\) hold true, which means \(P(3)\) also holds true. 
+
+  2. Inductive Step
+
+  For inductive hypothesis, we assume \[F_k \leq \phi^{k-1}\ \text{for}\ k = 1, 2, \dots, n\]
+  
+  Given the Fibonacci sequence 
+  \[
+    F_{n+1} = F_n + F_{n-1}
+  \]
+
+  By the strong inductive hypothesis, we have 
+  \[
+    F_n \leq \phi^{n-1},\quad F_{n-1} \leq \phi^{n-2}
+  \]
+
+  From the definition of \(\phi\) we have \(\phi^2 = 1 + \phi\) 
+
+  Hence, we obtain
+  \[
+    F_{n+1} \leq \phi^{n-1} + \phi^{n-2} = \phi^{n-2}(1 + \phi) = \phi^n
+  \]
+
+   
+
+\end{eg}
+
+% END OF DOCUMENT
