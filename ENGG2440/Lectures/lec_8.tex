@@ -10,7 +10,6 @@ If each edge connects two different vertices, and no two edges connect the same 
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
-    \centering
     \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
     \node[vertex] (Z) at (0, 0) {Z};
     \node[vertex] (W) at (0, 1.5) {W};
@@ -27,7 +26,6 @@ If each edge connects two different vertices, and no two edges connect the same 
   \end{tikzpicture}
   \quad\quad\quad
   \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
-    \centering
     \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
     \node[vertex] (Z) at (0, 0) {Z};
     \node[vertex] (W) at (0, 1.5) {W};
@@ -48,7 +46,6 @@ A directed graph G consists of a nonempty set \(V\)  of vertices and a set \(E\)
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
-    \centering
     \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
     \node[vertex] (Z) at (0, 0) {Z};
     \node[vertex] (W) at (0, 1.5) {W};
@@ -71,7 +68,7 @@ Let \(e\) be an edge that connects vertices \(u\) and \(v\). We say
   \item if \(u\) = \(v\), the edge e is called a loop
 \end{itemize}
 
-The degree of a vertex \(v\), denoted by \(deg(v)\), is the number of edges incident with \(v\), except that a
+The degree of a vertex \(v\), denoted by \(\deg(v)\), is the number of edges incident with \(v\), except that a
 loop at \(v\) contributes twice to the degree of \(v\).
 
 \begin{eg}
@@ -79,7 +76,6 @@ loop at \(v\) contributes twice to the degree of \(v\).
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
-      \centering
       \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
       \node[vertex] (A) at (0, 0) {A};
       \node[vertex] (B) at (0, -1.5) {B};
@@ -98,7 +94,7 @@ loop at \(v\) contributes twice to the degree of \(v\).
       ;
     \end{tikzpicture}
   \end{figure}
-  We have \(deg(A) = 3,\ deg(B) = 3,\ deg(C) =5,\ deg(D) = 2,\ deg(E) = 1,\ deg(F) = 0\)  
+  We have \(\deg(A) = 3,\ \deg(B) = 3,\ \deg(C) =5,\ \deg(D) = 2,\ \deg(E) = 1,\ \deg(F) = 0\)  
 \end{eg}
 
 For a simple graph \(G\) with \(n\) vertices, if it is an undirected graph, we have a maximum of \(\binom{n}{2} = \frac{n(n-1)}{2}\) edges; if it is a directed graph, then we have a maximum of \(n(n-1)\) edges. 
@@ -110,7 +106,6 @@ For a simple graph \(G\) with \(n\) vertices, if it is an undirected graph, we h
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
-      \centering
       \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
       \node[vertex] (A) at (0, 0) {A};
       \node[vertex] (B) at (1, 1) {B};
@@ -137,11 +132,10 @@ For a simple graph \(G\) with \(n\) vertices, if it is an undirected graph, we h
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
-      \centering
       \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
       \node[vertex] (B) at (0, 0) {B};
       \node[vertex] (C) at (2, 1) {C};
-      \node[vertex] (D) at (4,0) {D};
+      \node[vertex] (D) at (4, 0) {D};
       \node[vertex] (A) at (2, -0.5) {A};
       \path
       (A) edge (B)
@@ -161,11 +155,10 @@ For a simple graph \(G\) with \(n\) vertices, if it is an undirected graph, we h
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
-      \centering
       \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
       \node[vertex] (B) at (0, 0) {B};
       \node[vertex] (C) at (2, 1) {C};
-      \node[vertex] (D) at (4,0) {D};
+      \node[vertex] (D) at (4, 0) {D};
       \node[vertex] (A) at (2, -0.5) {A};
       \path
       (B) edge [dashed] (C)
@@ -179,3 +172,348 @@ For a simple graph \(G\) with \(n\) vertices, if it is an undirected graph, we h
 
   Otherwise, \(A\) and at least 2 members from \(B, C, D\) will form a group of 3 mutual strangers.
 \end{eg}
+
+\subsection{Handshaking Theorem}
+\begin{theorem}[Handshaking Theorem]
+  Let \(G = (V, E)\) be an undirected graph with \(\vert E \vert\) edges. Since each edge \(e\) contributes exactly twice to the sum on the left side (one to each endpoint).
+  \[
+    \sum_{v \in V} \deg(v) = 2\vert E \vert
+  \]
+\end{theorem}
+
+\begin{corollary}
+  An undirected graph has an even number of vertices of odd degree.
+  \[
+    2\vert E \vert = \sum_{i = 1}^n \deg(v_i) = \sum_{i:\deg(v_i) = \text{odd}} \deg(v_i) + \sum_{i:\deg(v_i) = \text{even}} \deg(v_i)
+  \]
+  \(\sum_{i:\deg(v_i) = \text{odd}} \deg(v_i) \) is an even number, then the number of terms summed is even. Thus, the number of odd-degree vertices is even.
+\end{corollary}
+
+\section{Simple Graph}
+
+\begin{definition}[Simple Paths]
+  A simple path in \(G\) is either a single vertex or an ordered list of distinct vertices \(v_0 - v_1 - \dots - v_k\).
+\end{definition}
+Consider the following graph
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex] (A) at (0, 0) {A};
+    \node[vertex] (B) at (1, 1) {B};
+    \node[vertex] (C) at (2, 0) {C};
+    \node[vertex] (D) at (3, 0.5) {D};
+    \node[vertex] (E) at (1.5, -1) {E};
+    \node[vertex] (F) at (0.5, -1) {F};
+    \draw
+    (A) -- (B) -- (C) -- (E) -- (F) -- (A)
+    (A) -- (E)
+    (C) -- (D)
+    (B) -- (F)
+    ;
+  \end{tikzpicture}
+\end{figure}
+We then have simple path from \(C\) to \(F\): \(C - E - F\). However, \(C - B - C - E - F\) is not a simple path. 
+
+\begin{definition}[Cycles]
+  A cycle in \(G\) is a path \(v_0 - v_1 - \dots - v_k\) such that \(v_0 = v_k\) and \(k \geq 3\). 
+\end{definition}
+Again, by observing the graph above, we can see that one example for cycle is \(C - E - A - B - C\). However, \(C - D - C\) is not a cycle. 
+The length of a path/cycle is the number of edges in the path. 
+
+\subsection{Properties of Graphs}
+\begin{itemize}
+  \item A graph is connected if every pair of vertices has a path between them. (fig.1 is connected, fig.2 is not connected)
+  \item A graph is acyclic if it does not contain cycle. (fig.3, fig.4)
+  \item A connected, acyclic graph is called a tree. (fig.3)
+  \item A leaf of a tree is a vertex of degree1. (both vertices in fig.4 are leaves)
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfloat}[fig.1]{
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (2, 1) {B};
+  \node[vertex] (C) at (3, 0) {C};
+  \node[vertex] (D) at (1, -1) {D};
+  \draw
+  (A) -- (B) -- (C) -- (D) -- (A)
+  (B) -- (D)
+  ;
+  \end{tikzpicture}
+  }
+  \end{subfloat}
+  \hspace{10pt}
+  \begin{subfloat}[fig.2]{
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex] (A) at (0, 0) {A};
+    \node[vertex] (B) at (2, 0) {B};
+    \node[vertex] (C) at (1, 1) {C};
+    \node[vertex] (D) at (3, 0) {D};
+    \node[vertex] (E) at (1, -1) {E};
+    \draw
+    (A) -- (B)
+    (C) -- (D) -- (E) -- (C)
+    ;
+  \end{tikzpicture}
+  }
+  \end{subfloat}
+  \hspace{10pt}       
+  \begin{subfloat}[fig.3]{
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (2, 1) {B};
+  \node[vertex] (C) at (3,0) {C};
+  \draw
+  (A) -- (B) -- (C)
+  ;
+  \end{tikzpicture}
+  }
+  \end{subfloat}
+  \hspace{10pt}
+  \begin{subfloat}[fig.4]{
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (2, 1) {B};
+  \draw
+  (A) -- (B)
+  ;
+  \end{tikzpicture}
+  }
+  \end{subfloat}
+\end{figure}
+
+\subsection{Special Simple Graphs}
+A complete graph on \(n\) vertices, denoted by \(K_n\), is a simple graph that contains one edge between each pair of distinct vertices. For example, for graph \(K_5\), we have:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at(0, 0) {A};
+  \node[vertex] (B) at(1, 0.75) {B};
+  \node[vertex] (C) at(2, 0) {C};
+  \node[vertex] (D) at(1.5, -1) {D};
+  \node[vertex] (E) at(0.5, -1) {E};
+  \draw
+  (A) -- (B) -- (C) -- (D) -- (E) -- (A) -- (C) -- (E) -- (B) -- (D) -- (A)
+  ;
+  \end{tikzpicture}
+\end{figure}
+
+An \(n\)-cube, denoted by \(Q_n\), is a graph that consists of \(2^n\)  vertices, each representing a distinct n-bit string. An edge exists between two vertices is the corresponding strings differ
+in exactly one bit position.
+
+A bipartite graph is a graph such that the vertices can be partitioned into two sets \(V\) and \(W\), so that each edge has exactly one endpoint from \(V\), and one endpoint from \(W\). For example, in the following graph, \(A, B, C \in V_1,\ D, E \in V_2\) such that \(V = V_1 \cup V_2,\ V_1 \cap V_2 = \varnothing\). One can also assign one of two different colors to each vertex, so that no adjacent vertices are assigned the same color. 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at(0, 0) {A};
+  \node[vertex] (B) at(0, -1) {B};
+  \node[vertex] (C) at(0, -2) {C};
+  \node[vertex] (D) at(1, -0.5) {D};
+  \node[vertex] (E) at(1, -1.5) {E};
+  \draw
+  (B) -- (D) -- (A) -- (E) -- (C)
+  ;
+  \end{tikzpicture}
+\end{figure}
+
+\subsection{Graph Isomorphism}
+A graph \(G = (V_1, E_1)\) and \(H = (V_2, E_2)\) are isomorphic if we can set up a bijection \(f: V_1 \to V_2\) such that \(x\) and \(y\) are adjacent in \(G\). For example, the following graphs are isomorphic to each other. 
+\begin{figure}[H]
+  \centering
+  \begin{subfloat}{
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1, 0) {B};
+  \node[vertex] (C) at (0, -1) {C};
+  \node[vertex] (D) at (1, -1) {D};
+  \draw
+  (D) -- (A) -- (C) -- (D) -- (B) -- (C)
+  ;
+  \end{tikzpicture}
+  }
+  \end{subfloat}
+  \hspace{10pt}
+  \begin{subfloat}{
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+      \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+      \node[vertex] (B) at (0, 0) {B};
+      \node[vertex] (D) at (1, 0) {D};
+      \node[vertex] (A) at (0, -1) {A};
+      \node[vertex] (C) at (1, -1) {C};
+      \draw
+      (D) -- (A) -- (C) -- (D) -- (B) -- (C)
+      ;
+      \end{tikzpicture}
+  }
+  \end{subfloat}
+  \hspace{10pt}       
+  \begin{subfloat}{
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+      \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+      \node[vertex] (A) at (0, 0) {A};
+      \node[vertex] (D) at (1, 0) {D};
+      \node[vertex] (C) at (0, -1) {C};
+      \node[vertex] (B) at (1, -1) {B};
+      \draw
+      (D) -- (A) -- (C) -- (D) -- (B) -- (C)
+      ;
+      \end{tikzpicture}
+  }
+  \end{subfloat}
+  \hspace{10pt}
+  \begin{subfloat}{
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+      \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+      \node[vertex] (A) at (0, 0) {A};
+      \node[vertex] (B) at (0, -0.5) {B};
+      \node[vertex] (C) at (-1, -1) {C};
+      \node[vertex] (D) at (1, -1) {D};
+      \draw
+      (D) -- (A) -- (C) -- (D) -- (B) -- (C)
+      ;
+      \end{tikzpicture}
+  }
+  \end{subfloat}
+\end{figure}
+By observation, one can see that if two graphs are isomorphic, then the adjacent vertices in the original graph will still be adjacent, and the degree of such vertices also remains unchanged.
+
+\section{Graph Search}
+\subsection{Eulerian Paths and Circuits}
+In graph theory, an Eulerian path in a graph is a path that contains each edge exactly once (allowing for revisiting vertices). If such a path is also a circuit, it is called an Eulerian circuit. For example, the following graph contains an Eulerian path:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at(0, 0) {A};
+  \node[vertex] (B) at(-1, -1) {B};
+  \node[vertex] (C) at(1, -1) {C};
+  \node[vertex] (D) at(-1, -2) {D};
+  \node[vertex] (E) at(1, -2) {E};
+  \node[vertex] (F) at(0, -1.5) {F};
+  \draw
+  (B) -- (C) -- (A) -- (B) -- (D) -- (E) -- (F)
+  ;
+  \end{tikzpicture}
+\end{figure}
+\begin{remark}
+  A connected graph \(G\) has an Eulerian circuit if and only if each vertex of \(G\) has even degree.
+\end{remark}
+
+\subsection{Graph Representation}
+We can use the adjacency matrix or adjacency list to represent an undirected graph.
+\begin{eg}
+Below shows two types of graph representation:
+
+\begin{minipage}{.3\textwidth}
+  \centering
+  Undirected Graph
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (X) at (0, 0) {X};
+  \node[vertex] (Y) at (1.5, 0) {Y};
+  \node[vertex] (Z) at (0, -1.5) {Z};
+  \node[vertex] (W) at (1.5, -1.5) {W};
+  \node[vertex] (V) at (3, -0.75) {V};
+  \draw
+  (Y) -- (X) -- (Z) -- (W) -- (Y) -- (V) -- (W)
+  ;
+  \end{tikzpicture}
+\end{figure}
+\end{minipage}
+\begin{minipage}{.3\textwidth}
+  \centering
+  Adjacency Matrix
+  \[
+    \begin{bNiceMatrix}[first-row,first-col]
+        & \text{X} & \text{Y} & \text{Z} & \text{W} & \text{V} \\
+      \text{X} & 0 & 1 & 1 & 0 & 0 \\
+      \text{Y} & 1 & 0 & 0 & 1 & 1 \\
+      \text{Z} & 1 & 0 & 0 & 1 & 0 \\
+      \text{W} & 0 & 1 & 1 & 0 & 1 \\
+      \text{V} & 0 & 1 & 0 & 1 & 0 \\
+  \end{bNiceMatrix}
+  \]
+\end{minipage}
+\begin{minipage}{.3\textwidth}
+  \centering
+  Adjacency List
+  \begin{tabular}{l l}
+      [0] & X \(\to\) Y \(\to\) Z \\\relax
+      [1] & Y \(\to\) X \(\to\) W \(\to\) V \\\relax
+      [2] & Z \(\to\) X \(\to\) W \\\relax
+      [3] & W \(\to\) Y \(\to\) Z \(\to\) V \\\relax
+      [4] & V \(\to\) Y \(\to\) W \\
+    \end{tabular}
+\end{minipage}
+\end{eg}
+
+\subsection{Breadth-Frist Search (BFS)}
+For Breadth-Frist Search, we have graph \(G = (V, E)\) as input, and source vertex \(s \in V\). Then, the distance (\(d[u]\)) from \(s\) to \(u\), for all \(u \in V\), and \(\pi [u]\), which is the predecessor of \(u\) are the outputs.
+
+\begin{eg}
+  Consider the following graph. 
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex] (A) at (0, 0) {A};
+    \node[vertex] (B) at (1, 1) {B};
+    \node[vertex] (E) at (2, 1) {E};
+    \node[vertex] (F) at (3, 1) {F};
+    \node[vertex] (I) at (4, 0) {I};
+    \node[vertex] (C) at (2, 0) {C};
+    \node[vertex] (D) at (1, -1) {D};
+    \node[vertex] (H) at (2, -1) {H};
+    \node[vertex] (G) at (3, -1) {G};
+    \draw
+    (A) -- (B) -- (E) -- (F) -- (I) -- (G) -- (H) -- (D) -- (A) -- (C) -- (F)
+    (C) -- (G)
+    (E) -- (C) -- (H)
+    ;
+    \end{tikzpicture}
+  \end{figure}
+    We have the following traversal:
+    A \(\to\) B \(\to\) C \(\to\) D \(\to\) E \(\to\) F \(\to\) H \(\to\) I \(\to\) G. 
+
+    We can also use the following adjacency list to show the same result
+    \begin{table}[H]
+      \centering
+      \begin{tabular}{l|l}
+          Node & Queue  \\
+        \midrule
+          A & (1, B), (1, C), (1, D) \\
+          B & (1, C), (1, D), (1, E) \\
+          C & (1, D), (1, E), (1, F), (1, G), (1, H) \\
+          D & (1, E), (1, F), (1, G), (1, H) \\
+          E & (1, F), (1, G), (1, H) \\
+          F & (1, G), (1, H), (1, I) \\
+          G & (1, H), (1, I) \\
+          H & (1, I) \\
+          I & -
+      \end{tabular}
+    \end{table}
+  Then, for predecessor and distance, we have:
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|c|c|c}
+      \(u\)  & A & B & C & D & E & F & G & H & I  \\
+      \midrule
+      \(\pi[u]\) &   & A & A & A & B & C & C & C & F \\
+      \midrule
+      \(d[u]\) & 0 & 1 & 1 & 1 & 2 & 2 & 2 & 2 & 3 \\
+    \end{tabular}
+  \end{table}
+\end{eg}
+
+\subsection{Depth-First Search}
