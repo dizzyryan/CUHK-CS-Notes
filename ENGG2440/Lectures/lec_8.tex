@@ -458,9 +458,9 @@ Below shows two types of graph representation:
 \end{minipage}
 \end{eg}
 
-\subsection{Breadth-Frist Search (BFS)}
-For Breadth-Frist Search, we have graph \(G = (V, E)\) as input, and source vertex \(s \in V\). Then, the distance (\(d[u]\)) from \(s\) to \(u\), for all \(u \in V\), and \(\pi [u]\), which is the predecessor of \(u\) are the outputs.
-
+\subsection{Breadth-First Search (BFS)}
+For Breadth-First Search, we have graph \(G = (V, E)\) as input, and source vertex \(s \in V\). Then, the distance (\(d[u]\)) from \(s\) to \(u\), for all \(u \in V\), and \(\pi [u]\), which is the predecessor of \(u\) are the outputs.
+One can take the idea of Breadth-First Search as a wave spread out from one vertex.
 \begin{eg}
   Consider the following graph. 
   \begin{figure}[H]
@@ -516,4 +516,385 @@ For Breadth-Frist Search, we have graph \(G = (V, E)\) as input, and source vert
   \end{table}
 \end{eg}
 
-\subsection{Depth-First Search}
+\subsection{Depth-First Search (DFS)}
+For Depth-First Search, we have graph \(G = (V, E)\) as input, and source vertex \(s \in V\). Then, the discovery time (\(d[v]\)) from \(s\) to \(v\), for all \(v \in V\), and \(f[v]\), which is the finishing time are the outputs.
+Depth-First Search is just like when we discover a vertex, we explore from it as far as we can. 
+\begin{eg}
+  Consider the following graph.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex] (A) at (0, 0) {A};
+    \node[vertex] (B) at (1.5, 0) {B};
+    \node[vertex] (D) at (3, 0) {D};
+    \node[vertex] (E) at (4.5, 0) {E};
+    \node[vertex] (C) at (1.5, -1.5) {C};
+    \node[vertex] (F) at (3, -1.5) {F};
+    \node[vertex] (G) at (4.5, -1.5) {G};
+    \node[vertex] (H) at (6, -1.5) {H};
+    \path[->]
+    (A) edge (B)
+    (B) edge (D)
+    (D) edge (E)
+    (A) edge (C)
+    (C) edge (F)
+    (F) edge (B)
+    (C) edge (B)
+    (D) edge (F)
+    (G) edge (H)
+    (H) edge (G)
+    (G) edge (E)
+    ;
+    \end{tikzpicture}
+  \end{figure}
+  By using Depth-First Search, we have the following traversal:
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex][label={1/12}] (A) at (0, 0) {A};
+    \node[vertex][label={2/9}] (B) at (1.5, 0) {B};
+    \node[vertex][label={3/8}] (D) at (3, 0) {D};
+    \node[vertex][label={4/5}] (E) at (4.5, 0) {E};
+    \node[vertex][label=below:{10/11}] (C) at (1.5, -1.5) {C};
+    \node[vertex][label=below:{6/7}] (F) at (3, -1.5) {F};
+    \node[vertex][label=below:{13/16}] (G) at (4.5, -1.5) {G};
+    \node[vertex][label=below:{14/15}] (H) at (6, -1.5) {H};
+    \path[->]
+    (A) edge (B)
+    (B) edge (D)
+    (D) edge (E)
+    (A) edge (C)
+    (C) edge (F)
+    (F) edge (B)
+    (C) edge (B)
+    (D) edge (F)
+    (G) edge (H)
+    (H) edge (G)
+    (G) edge (E)
+    ;
+    \end{tikzpicture}
+  \end{figure}
+  We use the notation "\(d[v]/f[v]\)" to show the discovery and finishing time. For example, the discovery time of node A is 1, finishing time is 12, then we use "1/12" to denote this timestamp.
+  For discovery time and finishing time, we also have:
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c|c|c|c}
+      \(v\)  & A & B & C & D & E & F & G & H \\
+      \midrule
+      \(d[v]\) & 1 & 2 & 10 & 3 & 4 & 6 & 13 & 14 \\
+      \midrule
+      \(f[v]\) & 12 & 9 & 11 & 8 & 5 & 7 & 16 & 15 \\
+    \end{tabular}
+  \end{table}
+\end{eg}
+
+A graph is said to be strongly connected if every vertex is reachable from every other vertex. The strongly connected components of an arbitrary directed graph form a partition into subgraphs that are themselves strongly connected.
+
+A vertex \(v\) is an articulation point (also called articulation vertex) if removing \(v\) increases the number of connected components.
+
+A topological sort or topological ordering of a directed graph is a linear ordering of its vertices such that for every directed edge \(uv\) from vertex \(u\) to vertex \(v\), \(u\) comes before \(v\) in the ordering. Topological sorting can only be used on directed acyclic graphs. If a graph contains cycles, it cannot be topologically sorted.
+\begin{eg}[Topological Sort]
+  Two methods for solving topological sort will be introduced. Consider the following graph.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex] (A) at (0, 0) {A};
+    \node[vertex] (B) at (1.5, 0) {B};
+    \node[vertex] (C) at (3, 0) {C};
+    \node[vertex] (D) at (0.75, -1) {D};
+    \node[vertex] (E) at (2.25, -1) {E};
+    \node[vertex] (F) at (0, -2) {F};
+    \node[vertex] (G) at (1.5, -2) {G};
+    \node[vertex] (H) at (3, -2) {H};
+    \path[->]
+    (A) edge (D)
+    (A) edge (F)
+    (B) edge (D)
+    (B) edge (E)
+    (C) edge (E)
+    (E) edge (G)
+    (F) edge (G)
+    (D) edge (H)
+    ;
+    \end{tikzpicture}
+  \end{figure}
+  We can use DFS to find the topological order. We first select an unvisited node; for example, we choose node \textbf{B} in this case.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex] (B) at (1.5, 0) {B};
+    \node[vertex] (D) at (0.75, -1) {D};
+    \node[vertex] (E) at (2.25, -1) {E};
+    \node[vertex] (G) at (1.5, -2) {G};
+    \node[vertex] (H) at (3, -2) {H};
+    \path[->]
+    (B) edge (D)
+    (B) edge (E)
+    (E) edge (G)
+    (D) edge (H)
+    ;
+    \end{tikzpicture}
+  \end{figure}
+  We have: B \(\to\) D \(\to\) E \(\to\) H \(\to\) G
+  Then, we choose another node, in this case we choose node \textbf{A}.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex] (A) at (0, 0) {A};
+    \node[vertex] (F) at (2, 0) {F};
+    \path[->]
+    (A) edge (F)
+    ;
+    \end{tikzpicture}
+  \end{figure}
+  We have: A \(\to\) F \(\to\) B \(\to\) D \(\to\) E \(\to\) H \(\to\) G. 
+
+  Finally, we have C \(\to\) A \(\to\) F \(\to\) B \(\to\) D \(\to\) E \(\to\) H \(\to\) G.
+
+  This is one of the possible topological sorts. 
+\end{eg}
+
+\subsection{Shortest Path Problem}
+Consider a weighted graph, which has weighted edges. We define such a graph by \(G = (V, E, w)\), where the newly introduced parameter \(w\) is the weight of an edge. Then how do we find the shortest path on a large graph from one point to another? We can use Dijkstra's Algorithm. 
+
+We initialize the algorithm by (A) maintain a table of cost \(c(v)\), where starting vertex has cost \(c(v_0) = 0\), and other vertices have cost \(c(v_i) = \infty, i \neq 0\); (B) maintain a set of visited vertices \(S = \varnothing\). After choosing the unvisited vertex with minimum cost, we update the cost of its adjacent vertices. After updating, we repeat this process. When every vertex is visited, the algorithm will then end. These operations are called relaxation.
+
+\begin{eg}[Shortest Path Problem]
+  Consider the following graph, find the shortest path from vertex \textit{A} to vertex \textit{Z}.
+  \begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex] (A) at (0, 0) {A};
+    \node[vertex] (B) at (1.5, 1) {B};
+    \node[vertex] (C) at (1.5, -1) {C};
+    \node[vertex] (D) at (3.5, 1) {D};
+    \node[vertex] (E) at (3.5, -1) {E};
+    \node[vertex] (Z) at (5, 0) {Z};
+    \draw
+    (A) -- node[anchor=south east]{5} (B)
+    (B) -- node[above]{4} (D)
+    (D) -- node[anchor=south west]{3} (Z)
+    (Z) -- node[anchor=north west]{5} (E)
+    (E) -- node[below]{10} (C)
+    (C) -- node[anchor=north east]{3} (A)
+    (B) -- node[left]{1} (C)
+    (C) -- node[anchor=south east]{20} (Z)
+    ;
+  \end{tikzpicture}
+\end{figure}
+To solve this problem, we can use the method mentioned above:
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex,fill=yellow][label=left:{0}] (A) at (0, 0) {A};
+    \node[vertex][label={5}] (B) at (1.5, 1) {B};
+    \node[vertex][label=below:{3}] (C) at (1.5, -1) {C};
+    \node[vertex][label={\(\infty\)}] (D) at (3.5, 1) {D};
+    \node[vertex][label=below:{\(\infty\)}] (E) at (3.5, -1) {E};
+    \node[vertex][label=right:{\(\infty\)}] (Z) at (5, 0) {Z};
+    \draw
+    (A) -- node[anchor=south east]{5} (B)
+    (B) -- node[above]{4} (D)
+    (D) -- node[anchor=south west]{3} (Z)
+    (Z) -- node[anchor=north west]{5} (E)
+    (E) -- node[below]{10} (C)
+    (C) -- node[anchor=north east]{3} (A)
+    (B) -- node[left]{1} (C)
+    (C) -- node[anchor=south east]{20} (Z)
+    ;
+  \end{tikzpicture}
+  \quad\quad
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex,fill=gray][label=left:{0}] (A) at (0, 0) {A};
+    \node[vertex][label={4}] (B) at (1.5, 1) {B};
+    \node[vertex,fill=yellow][label=below:{3}] (C) at (1.5, -1) {C};
+    \node[vertex][label={\(\infty\)}] (D) at (3.5, 1) {D};
+    \node[vertex][label=below:{13}] (E) at (3.5, -1) {E};
+    \node[vertex][label=right:{23}] (Z) at (5, 0) {Z};
+    \draw
+    (A) -- node[anchor=south east]{5} (B)
+    (B) -- node[above]{4} (D)
+    (D) -- node[anchor=south west]{3} (Z)
+    (Z) -- node[anchor=north west]{5} (E)
+    (E) -- node[below]{10} (C)
+    (C) -- node[anchor=north east]{3} (A)
+    (B) -- node[left]{1} (C)
+    (C) -- node[anchor=south east]{20} (Z)
+    ;
+  \end{tikzpicture}
+
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex,fill=gray][label=left:{0}] (A) at (0, 0) {A};
+    \node[vertex,fill=yellow][label={4}] (B) at (1.5, 1) {B};
+    \node[vertex,fill=gray][label=below:{3}] (C) at (1.5, -1) {C};
+    \node[vertex][label={8}] (D) at (3.5, 1) {D};
+    \node[vertex][label=below:{13}] (E) at (3.5, -1) {E};
+    \node[vertex][label=right:{23}] (Z) at (5, 0) {Z};
+    \draw
+    (A) -- node[anchor=south east]{5} (B)
+    (B) -- node[above]{4} (D)
+    (D) -- node[anchor=south west]{3} (Z)
+    (Z) -- node[anchor=north west]{5} (E)
+    (E) -- node[below]{10} (C)
+    (C) -- node[anchor=north east]{3} (A)
+    (B) -- node[left]{1} (C)
+    (C) -- node[anchor=south east]{20} (Z)
+    ;
+  \end{tikzpicture}
+  \quad\quad
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex,fill=gray][label=left:{0}] (A) at (0, 0) {A};
+    \node[vertex,fill=gray][label={4}] (B) at (1.5, 1) {B};
+    \node[vertex,fill=gray][label=below:{3}] (C) at (1.5, -1) {C};
+    \node[vertex,fill=yellow][label={8}] (D) at (3.5, 1) {D};
+    \node[vertex][label=below:{13}] (E) at (3.5, -1) {E};
+    \node[vertex][label=right:{11}] (Z) at (5, 0) {Z};
+    \draw
+    (A) -- node[anchor=south east]{5} (B)
+    (B) -- node[above]{4} (D)
+    (D) -- node[anchor=south west]{3} (Z)
+    (Z) -- node[anchor=north west]{5} (E)
+    (E) -- node[below]{10} (C)
+    (C) -- node[anchor=north east]{3} (A)
+    (B) -- node[left]{1} (C)
+    (C) -- node[anchor=south east]{20} (Z)
+    ;
+  \end{tikzpicture}
+
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+    \node[vertex,fill=gray][label=left:{0}] (A) at (0, 0) {A};
+    \node[vertex,fill=gray][label={4}] (B) at (1.5, 1) {B};
+    \node[vertex,fill=gray][label=below:{3}] (C) at (1.5, -1) {C};
+    \node[vertex,fill=gray][label={8}] (D) at (3.5, 1) {D};
+    \node[vertex,fill=gray][label=below:{13}] (E) at (3.5, -1) {E};
+    \node[vertex,fill=gray][label=right:{11}] (Z) at (5, 0) {Z};
+    \draw
+    (A) -- node[anchor=south east]{5} (B)
+    (B) -- node[above]{4} (D)
+    (D) -- node[anchor=south west]{3} (Z)
+    (Z) -- node[anchor=north west]{5} (E)
+    (E) -- node[below]{10} (C)
+    (C) -- node[anchor=north east]{3} (A)
+    (B) -- node[left]{1} (C)
+    (C) -- node[anchor=south east]{20} (Z)
+    ;
+  \end{tikzpicture}
+
+  We can also use tables to represent the algorithm:
+
+  \begin{minipage}{.3\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+        \toprule
+         & \(c(\cdot)\) & Path \\
+      \midrule
+      \colorbox{Yellow}{A} & 0 & A  \\
+        B & \(\infty\) &   \\
+        C & \(\infty\) &   \\
+        D & \(\infty\) &   \\
+        E & \(\infty\) &   \\
+        Z & \(\infty\) &   \\
+    \end{tabular}
+    \caption*{\(S = \varnothing\)}
+  \end{table}
+\end{minipage}
+\begin{minipage}{.3\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+        \toprule
+         & \(c(\cdot)\) & Path \\
+      \midrule
+      \colorbox{Gray}{A} & 0 & A  \\
+        B & 5 & A, B  \\
+        \colorbox{Yellow}{C} & 3 & A, C  \\
+        D & \(\infty\) &   \\
+        E & \(\infty\) &   \\
+        Z & \(\infty\) &   \\
+    \end{tabular}
+    \caption*{\(S = A\)}
+  \end{table}
+\end{minipage}
+\begin{minipage}{.3\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+        \toprule
+         & \(c(\cdot)\) & Path \\
+      \midrule
+      \colorbox{gray}{A} & 0 & A  \\
+      \colorbox{Yellow}{B} & 4 & A, C, B  \\
+      \colorbox{gray}{C} & 3 & A, C  \\
+        D & \(\infty\) &   \\
+        E & 13 & A, C, E  \\
+        Z & 23 & A, C, Z  \\
+    \end{tabular}
+    \caption*{\(S = A, C\)}
+  \end{table}
+\end{minipage}
+
+\begin{minipage}{.3\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+      \toprule
+       & \(c(\cdot)\) & Path \\
+    \midrule
+    \colorbox{Gray}{A} & 0 & A  \\
+    \colorbox{Gray}{B} & 4 & A, C, B  \\
+    \colorbox{Gray}{C} & 3 & A, C  \\
+    \colorbox{Yellow}{D} & 8 & A, C, B, D  \\
+      E & 13 & A, C, E  \\
+      Z & 23 & A, C, Z  \\
+  \end{tabular}
+    \caption*{\(S = A, C\)}
+  \end{table}
+\end{minipage}
+\begin{minipage}{.3\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+      \toprule
+       & \(c(\cdot)\) & Path \\
+    \midrule
+    \colorbox{Gray}{A} & 0 & A  \\
+    \colorbox{Gray}{B} & 4 & A, C, B  \\
+    \colorbox{Gray}{C} & 3 & A, C  \\
+    \colorbox{Gray}{D} & 8 & A, C, B, D  \\
+      E & 13 & A, C, E  \\
+    \colorbox{Yellow}{Z} & 11 & A, C, B, D, Z  \\
+  \end{tabular}
+    \caption*{\(S = A, C, B, D\)}
+  \end{table}
+\end{minipage}
+\begin{minipage}{.3\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+      \toprule
+       & \(c(\cdot)\) & Path \\
+    \midrule
+    \colorbox{Gray}{A} & 0 & A  \\
+    \colorbox{Gray}{B} & 4 & A, C, B  \\
+    \colorbox{Gray}{C} & 3 & A, C  \\
+    \colorbox{Gray}{D} & 8 & A, C, B, D  \\
+    \colorbox{Yellow}{E} & 13 & A, C, E  \\
+    \colorbox{Gray}{Z} & 11 & A, C, B, D, Z  \\
+  \end{tabular}
+    \caption*{\(S = A, C, B, D, Z\)}
+  \end{table}
+\end{minipage}
+
+Therefore, the shortest path from \(A\) to \(Z\) is \(A \to C \to B \to D \to Z\) 
+\end{eg}
