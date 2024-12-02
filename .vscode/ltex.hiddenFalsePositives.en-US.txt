@@ -1,0 +1,1 @@
+{"rule":"NUMEROUS_DIFFERENT","sentence":"^\\QHow many different distributions of the presents are there?\\E$"}

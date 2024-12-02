@@ -898,3 +898,548 @@ To solve this problem, we can use the method mentioned above:
 
 Therefore, the shortest path from \(A\) to \(Z\) is \(A \to C \to B \to D \to Z\) 
 \end{eg}
+
+\subsection{Minimum Spanning Trees (MST)}
+Given an undirected graph \(G = (V, E)\) with weights on the edges, a minimum spanning tree (MST) of \(G\) is an acyclic subset \(T \subseteq E\) that connects all nodes in \(V\) and whose total weight \(w(T) = \sum_{(u, v) \in T} w(u, v)\) is minimum. 
+
+A minimum spanning tree has precisely \(n-1\) edges, where \(n\) is the number of vertices in the graph.
+
+We have two algorithms for finding the MST. Prim's algorithm starts from finding the minimum edges among all edges, then finds the minimum edges that are connected to the vertices that are adjacent in the previous edges selected.
+
+Kruskal's algorithm again starts from finding the minimum edges among all edges. However, we will keep finding the minimum edges until all vertices are being visited. 
+
+\begin{eg}
+  Find the minimum spanning tree for the following graph. 
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+      \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+      \node[vertex] (A) at (0, 0) {A};
+      \node[vertex] (B) at (1.5, 1) {B};
+      \node[vertex] (C) at (3, 1) {C};
+      \node[vertex] (D) at (4.5, 1) {D};
+      \node[vertex] (E) at (6, 0) {E};
+      \node[vertex] (F) at (4.5, -1) {F};
+      \node[vertex] (G) at (3, -1) {G};
+      \node[vertex] (H) at (1.5, -1) {H};
+      \node[vertex] (I) at (2.25, 0) {I};
+      \draw
+      (A) -- node[anchor=south east]{4} (B)
+      (B) -- node[above]{8} (C)
+      (C) -- node[above]{7} (D)
+      (D) -- node[anchor=south west]{9} (E)
+      (E) -- node[anchor=north west]{10} (F)
+      (F) -- node[below]{2} (G)
+      (G) -- node[below]{1} (H)
+      (A) -- node[anchor=north east]{8} (H)
+      (B) -- node[left]{11} (H)
+      (D) -- node[right]{14} (F)
+      (H) -- node[anchor=south east]{7} (I)
+      (I) -- node[anchor=south east]{2} (C)
+      (C) -- node[anchor=south west]{4} (F)
+      (I) -- node[anchor=south west]{6} (G)
+      ;
+    \end{tikzpicture}
+  \end{figure}
+\textbf{Prim's Algorithm}
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (B) -- node[above]{8} (C)
+  (C) -- node[above]{7} (D)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (F) -- node[below]{2} (G)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south west]{6} (G)
+  (I) -- node[anchor=south east]{2} (C)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  ;
+\end{tikzpicture}
+\quad\quad
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (B) -- node[above]{8} (C)
+  (C) -- node[above]{7} (D)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south west]{6} (G)
+  (I) -- node[anchor=south east]{2} (C)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (F) -- node[below]{2} (G)
+  ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (B) -- node[above]{8} (C)
+  (C) -- node[above]{7} (D)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (I) -- node[anchor=south west]{6} (G)
+  (I) -- node[anchor=south east]{2} (C)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  ;
+\end{tikzpicture}
+\quad\quad
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (B) -- node[above]{8} (C)
+  (C) -- node[above]{7} (D)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south east]{2} (C)
+  ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (B) -- node[above]{8} (C)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south east]{2} (C)
+  (C) -- node[above]{7} (D)
+  ;
+\end{tikzpicture}
+\quad\quad
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south east]{2} (C)
+  (C) -- node[above]{7} (D)
+  (B) -- node[above]{8} (C)
+  ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south east]{2} (C)
+  (C) -- node[above]{7} (D)
+  (B) -- node[above]{8} (C)
+  (A) -- node[anchor=south east]{4} (B)
+  ;
+\end{tikzpicture}
+\quad\quad
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south east]{2} (C)
+  (C) -- node[above]{7} (D)
+  (B) -- node[above]{8} (C)
+  (A) -- node[anchor=south east]{4} (B)
+  (D) -- node[anchor=south west]{9} (E)
+  ;
+\end{tikzpicture}
+
+\textbf{Kruskal's Algorithm}
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (B) -- node[above]{8} (C)
+  (C) -- node[above]{7} (D)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (F) -- node[below]{2} (G)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south west]{6} (G)
+  (I) -- node[anchor=south east]{2} (C)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  ;
+\end{tikzpicture}
+\quad\quad
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (B) -- node[above]{8} (C)
+  (C) -- node[above]{7} (D)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (F) -- node[below]{2} (G)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (I) -- node[anchor=south east]{2} (C)
+  ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (B) -- node[above]{8} (C)
+  (C) -- node[above]{7} (D)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (C) -- node[anchor=south west]{4} (F)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (I) -- node[anchor=south east]{2} (C)
+  (F) -- node[below]{2} (G)
+  ;
+\end{tikzpicture}
+\quad\quad
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (A) -- node[anchor=south east]{4} (B)
+  (B) -- node[above]{8} (C)
+  (C) -- node[above]{7} (D)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (I) -- node[anchor=south east]{2} (C)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (B) -- node[above]{8} (C)
+  (C) -- node[above]{7} (D)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (I) -- node[anchor=south east]{2} (C)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  (A) -- node[anchor=south east]{4} (B)
+  ;
+\end{tikzpicture}
+\quad\quad
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (B) -- node[above]{8} (C)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (A) -- node[anchor=north east]{8} (H)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (H) -- node[anchor=south east]{7} (I)
+  (I) -- node[anchor=south west]{6} (G)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (I) -- node[anchor=south east]{2} (C)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  (A) -- node[anchor=south east]{4} (B)
+  (C) -- node[above]{7} (D)
+  ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (B) -- node[above]{8} (C)
+  (D) -- node[anchor=south west]{9} (E)
+  (E) -- node[anchor=north west]{10} (F)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (I) -- node[anchor=south west]{6} (G)
+  (H) -- node[anchor=south east]{7} (I)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (I) -- node[anchor=south east]{2} (C)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  (A) -- node[anchor=south east]{4} (B)
+  (C) -- node[above]{7} (D)
+  (A) -- node[anchor=north east]{8} (H)
+  ;
+\end{tikzpicture}
+\quad\quad
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at (0, 0) {A};
+  \node[vertex] (B) at (1.5, 1) {B};
+  \node[vertex] (C) at (3, 1) {C};
+  \node[vertex] (D) at (4.5, 1) {D};
+  \node[vertex] (E) at (6, 0) {E};
+  \node[vertex] (F) at (4.5, -1) {F};
+  \node[vertex] (G) at (3, -1) {G};
+  \node[vertex] (H) at (1.5, -1) {H};
+  \node[vertex] (I) at (2.25, 0) {I};
+  \draw
+  (B) -- node[above]{8} (C)
+  (E) -- node[anchor=north west]{10} (F)
+  (B) -- node[left]{11} (H)
+  (D) -- node[right]{14} (F)
+  (I) -- node[anchor=south west]{6} (G)
+  (H) -- node[anchor=south east]{7} (I)
+  ;
+  \draw[ultra thick,red]
+  (G) -- node[below]{1} (H)
+  (I) -- node[anchor=south east]{2} (C)
+  (F) -- node[below]{2} (G)
+  (C) -- node[anchor=south west]{4} (F)
+  (A) -- node[anchor=south east]{4} (B)
+  (C) -- node[above]{7} (D)
+  (A) -- node[anchor=north east]{8} (H)
+  (D) -- node[anchor=south west]{9} (E)
+  ;
+\end{tikzpicture}
+\end{eg}
+
+% END OF DOCUMENT
