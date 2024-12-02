@@ -1,3 +1,151 @@
 \chapter{Elements of Discrete Probability}
 
-\section{A}
+\section{Basic Definition}
+\begin{definition}[Probability Space]
+    A probability space is a pair \((S, p(\cdot))\), where \(S\) (Sample space) is the set of all possible outcomes of the random experiment, and \(p(\cdot)\) is a function that assigns a number to each outcome in \(S\) such that \(p(s) \geq 0, s \in S\), and
+    \[
+        \sum_{s \in S} p(s) = 1.
+    \]
+\end{definition}
+
+\begin{definition}[Probability of an Event]
+    Let \((S, p(\cdot))\) be a probability space. An event \(T\) is simply a subset of \(S\). The probability of an event \(T\) is given by
+    \[
+        p(T) = \sum_{s \in T} p(s)
+    \]
+\end{definition}
+
+\begin{eg}
+Consider two rolls of a 6-sided die. Then, the set of all possible outcomes are given by
+\[
+    S = \{(1, 1), (1, 2), (1, 3), \cdots, (2, 1), \cdots, (6, 1), \cdots, (6, 6)\},
+\]
+where \((i, j)\) means that the first roll gives the value \(i\) and the second roll gives that value \(j\). Suppose that every outcome is equally likely. Then we have \(\vert S \vert = 6 \times 6 = 36\), where \(p(i, j) = \frac{1}{36}\).
+
+Let \(T\) be the event that both rolls are even. We have
+\[
+    T = \{(2, 2), (2, 4), (2, 6), (4, 2), (4, 4), (4, 6), (6, 2), (6, 4), (6, 6)\}. 
+\]
+Then, we have
+\[
+    p(T) = \sum_{s \in T} p(s) = 9 \times \dfrac{1}{36} = \dfrac{1}{4}.
+\]
+\end{eg}
+
+\begin{eg}[Poker]
+A hand of 5 cards is drawn from a standard 52-card deck. Suppose that every hand of 5 cards is equally likely. What is the probability of getting a hand with all distinct face values?
+
+Sample Space \(S\) is the set of all possible hands of 5 cards from a standard 52-cards deck: \(\vert S \vert = \binom{52}{5}\). 
+
+Then, let \(T\) be the set of all possible hands of 5 cards whose face values are distinct. To choose 5 distinct values to appear in the hand, we have \(\binom{13}{5}\). To choose one suit for each of the 5 distinct values, we have \(4^5\). Then, we have 
+\(\vert T \vert = \binom{13}{5} \times 4^5\).
+\[
+    p(T) = \vert T \vert \times \dfrac{1}{\vert S \vert } = \binom{13}{5} \times 4^5 \times \dfrac{1}{\binom{52}{5}}
+\]
+\end{eg}
+
+\begin{eg}[Poker]
+Consider distributing 5 cards (one hand) each to two persons from a deck of 52 playing cards. What is the number of distributions that both people receive a "Four of a King", i.e. the hand of 5 cards contains all the 4 cards from the same face value? 
+
+The sample space is the ways to distribute the cards, 
+\[
+    \vert S \vert = \binom{52}{5} \times \binom{47}{5} = \dfrac{52!}{5!5!42!}
+\]
+The event is when both persons receive a "Four of a King". It can be understood as each person will only have two distinct face values in hand. There are 
+\[
+\vert T \vert = 13 \times 12 \times 44 \times 43
+\]
+possibilities, where we have \(13 \times 12\) for choosing two face value for the first person, and \(44 \times 43\) is to choose two face values for the second person. Then we have 
+\[
+    p(T) = \dfrac{\vert T \vert}{\vert S \vert} = \dfrac{13 \times 12 \times 44 \times 43}{\dfrac{52!}{5!5!42!}}
+\]
+\end{eg}
+
+\begin{eg}[Monty Hall Problem]
+    You are given three identical boxes, \(A, B,\) and \(C\). Let \(A\) contains the grand prize, and the rest contains nothing. You do not know this. After you pick a box and announce your choice, one of the empty boxes that is not picked by you is opened. Then you are offered the option to change your choice. Should you change your choice?
+
+    What we are trying to do here is just to maximize the probability of winning the grand prize. Therefore, we can describe the sequence of actions in the game by a 3-tuple \((u, v, w)\), where \(u\) is your initial choice, \(v\) is the opened empty box, and \(w\) is your final choice. 
+
+    \textbf{Situation 1: Always change} 
+
+    In this case, the sample space is given as
+    \[
+        S = \{(A, B, C), (A, C, B), (B, C, A), (C, B, A)\}
+    \]
+    In this case, only \((B, C, A), (C, B, A)\) will guarantee the winning outcomes. Observing that winning or losing outcomes merely depend on the first box you choose if you always change your option. Since boxes are identical, the winning probability will be 
+    \[
+    p(T) = \dfrac{1}{3} + \dfrac{1}{3} = \dfrac{2}{3}.
+    \]
+
+    \textbf{Situation 2: Never change} 
+
+    In this case, the sample space is given as
+    \[
+        S = \{(A, B, A), (A, C, A), (B, C, B), (C, B, C)\}
+    \]
+    In this case, only \((A, B, A), (A, C, A)\) will guarantee the winning outcomes. Observing that winning or losing outcomes still depend on the first box you choose if you never change your option. Since boxes are identical, the winning probability will be 
+    \[
+    p(T) = \dfrac{1}{3}.
+    \]
+\end{eg}
+
+\newpage
+\begin{eg}[Binomial Distribution]
+    Suppose that we flip a coin \(n\) times, where each flip is independent of one another. Furthermore, suppose that the probability of getting a head in a flip is \(p\). What is the probability of getting exactly \(k\) heads, where \(k = 0, 1, \dots, n\)?
+
+    We can derive the following function for the general case, i.e. among \(n\) flips, we have \(k\) heads, where \(p\) is the probability of getting a head and \(q = 1 - p\) is the probability of getting a tail.
+    \[
+        p(E) = \binom{n}{k}p^k q^{n-k} 
+    \]
+    One should be able to examine the legitimacy of the above probability assignment.
+\end{eg}
+
+\begin{eg}[Birthday Paradox]
+    Suppose there are \(n\) people in a room. We assume that a year only has 365 days, and that every day is equally likely to be the birthday of a person. What is the probability that at least two people have the same birthday? Here we assume that \(n < 365\). 
+
+    For sample space \(S\) we have the set of all possible sequences of \(n\) birthday, the \(\vert S \vert = 365^n\). 
+    
+    Let \(T\) be the event in which at least two birthdays are the same. We can find the complement \(\overline{T}\), i.e. all birthdays are distinct. Then we have
+    \[
+        \vert T \vert = \vert S \vert - \vert \overline{T} \vert = 365^n - P(365, n) = 365^n - \dfrac{365!}{(365 - n)!}
+    \]
+\end{eg}
+
+Birthday paradox could be visualized as below:
+\begin{figure}[H]
+\begin{tikzpicture}
+    \begin{axis}[
+        width=15cm, height=8cm,     % size of the image
+        grid = major,
+        grid style={dashed, gray!30},
+        %xmode=log,log basis x=10,
+        %ymode=log,log basis y=10,
+        xmin=0,     % start the diagram at this x-coordinate
+        xmax=62,    % end   the diagram at this x-coordinate
+        ymin=0,     % start the diagram at this y-coordinate
+        ymax=1.1,   % end   the diagram at this y-coordinate
+        /pgfplots/xtick={0,5,...,60}, % make steps of length 5
+        extra x ticks={23},
+        extra y ticks={0.507297},
+        axis background/.style={fill=white},
+        ylabel=probability of at least one birthday-collision,
+        xlabel=people,
+        tick align=outside]
+
+      % import the correct data from a CSV file
+      \addplot table [id=exp]{./Figures/data.csv};
+
+      % mark x=23
+      \coordinate (a) at (axis cs:23,0.507297);
+      \draw[blue, dashed, thick](a -| current plot begin) -- (a);
+      \draw[blue, dashed, thick](a |- current plot begin) -- (a);
+
+      % plot the stirling-formulae
+      \addplot[domain=0:60, red, thick]
+        {1-(365/(365-x))^(365.5-x)*e^(-x)};
+    \end{axis}
+\end{tikzpicture}
+\caption*{Adapted from \href{https://github.com/MartinThoma/LaTeX-examples/tree/2286e6e3833904b2c058b2a855db9b7f81776c59/tikz/birthday-paradox}{MartinThoma}}
+\end{figure}
+
+% END OF DOCUMENT
