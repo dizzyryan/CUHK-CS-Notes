@@ -3,16 +3,14 @@
 \section{Introduction}
 In this section, we introduce Binomial Coefficients.
 
-\subsection{Combinations}
-As it is introduced before,
+\subsection{Combinations and Permutation}
+As introduced before,
 \begin{definition} An r-combination of the n-element ground set $S_0$ is an \textbf{unordered selection} of $r$ elements from $S_0$. 
 \[
 	\binom{n}{r} = \dfrac{n!}{r!(n-r)!}
 \]
 \end{definition}
 
-\subsection{Permutation}
-Again, as it is introduced before, 
 \begin{definition} An r-permutation of the n-element ground set $S_0$ is an \textbf{ordered selection} of $r$ elements from $S_0$. 
 	\[
 	P(n,r) = \dfrac{n!}{(n-r)!}
@@ -38,15 +36,16 @@ We have two ways to prove this proposition, namely Algebraic Proof and Combinato
 	Both side of the identity are supposed to be two different ways of solving a counting problem. We can define the counting problem as counting the number of different unordered selections of \(r\) elements from an \(n\)-element ground set. Then, we can define the RHS as the selecting number to be excluded. Then this identity holds.  
 \end{proof}
 
+\newpage
 \subsection{Pascal's Identity}
-\begin{theorem}
-	For any integers \(n,\ r \geq 0\) with \(1 \leq r \leq n-1\),
+\begin{theorem}[Pascal's Identity]
+	For any integers \(n, r \geq 0\) with \(1 \leq r \leq n-1\),
 	\[
 		\binom{n}{r} = \binom{n-1}{r} + \binom{n-1}{r-1} \mathbf{\text{ OR }} \binom{n+1}{r} = \binom{n}{r} + \binom{n}{r-1}
 	\]  
 \end{theorem}
 
-Again, we can prove this theorem by two ways.
+Again, we can prove this theorem in two ways.
 
 \begin{proof}[Algebraic Proof]
 	\[
@@ -64,11 +63,75 @@ Again, we can prove this theorem by two ways.
 \begin{proof}[Combinatorial Proof] 
 	Recall that \(\binom{n}{k}\) equals the number of subsets with \(k\) elements from a set with \(n\) elements. Suppose one particular element is uniquely labeled \(X\) in a set with \(n\) elements.
 	
-	To construct a subset of \(k\) elements containing \(X\), include \(X\) and choose \(k-1\) elements from the remaining \(n-1\) elements in the set. There are \(\binom{n-1}{k-1}\) such subsets.
-
 	To construct a subset of \(k\) elements \textbf{not} containing \(X\), choose \(k\) elements from the remaining \(n-1\) elements in the set. There are \(\binom{n-1}{k}\) such subsets.
+	
+	To construct a subset of \(k\) elements containing \(X\), include \(X\) and choose \(k-1\) elements from the remaining \(n-1\) elements in the set. There are \(1 \times \binom{n-1}{k-1}\) such subsets.
 
 	Every subset of \(k\) elements either contains \(X\) or not. The total number of subsets with \(k\) elements in a set of \(n\) elements is the sum of the number of subsets containing \(X\) and the number of subsets that do not contain \(X\), \(\binom{n-1}{k-1} + \binom{n-1}{k}\).
 
 	This equals \(\binom{n}{k}\).
 \end{proof}
+
+\subsection{Binomial Theorem}
+\begin{theorem}[Binomial Theorem]
+	Let \(n \geq 1\) be an integer. For any real number \(x, y\),
+	\[
+		(x + y)^n = \sum_{k = 0}^n \binom{n}{k} x^k y^{n-k}.
+	\]
+\end{theorem}
+
+\begin{proof}[Algebraic Proof]
+	We use mathematical induction for this proof.
+
+	Base case: for n = 1, we have
+	\[
+		\begin{aligned}
+			RHS &= \sum_{k = 0}^1 \binom{1}{k} x^k y^{1-k} \\
+			&= \binom{1}{0} y + \binom{1}{1}x \\
+			&= x + y \\ 
+			&= LHS
+		\end{aligned}
+	\]
+	Inductive step: assume that
+	\[
+		(x + y)^n = \sum_{k = 0}^n \binom{n}{k} x^k y^{n-k}.
+	\]
+	For \(n + 1\), we have
+	\[
+		\begin{aligned}
+			LHS &= (x + y)^{n+1} \\
+			&= (x + y)^n (x + y) \\
+			&= (x + y)\sum_{k = 0}^n \binom{n}{k} x^k y^{n-k} \\
+			&= \sum_{k = 0}^n \binom{n}{k} x^{k+1}  y^{n-k} + \sum_{k = 0}^n \binom{n}{k} x^k y^{n-k+1}\\
+			&= \sum_{j = 1}^{n+1} \binom{n}{j-1} x^j y^{n-j+1} + \sum_{j = 0}^n \binom{n}{j} x^j y^{n-j+1}\quad(\text{in the first term, let} j = k + 1)\\
+			&= \sum_{j = 1}^{n} \left(\binom{n}{j-1} + \binom{n}{j}\right)x^j y^{n-j+1} + \binom{n}{n}x^{n+1} + \binom{n}{0}y^{n+1}  \\
+			&= \sum_{j = 1}^{n} \binom{n+1}{j} x^j y^{n-j+1} + \binom{n+1}{n+1}x^{n+1} + \binom{n+1}{0}y^{n+1}\quad(\text{Pascal's identity}) \\
+			&= \sum_{j = 0}^{n+1} \binom{n+1}{j} x^j y^{n-j+1} \\
+			&= \sum_{k = 0}^{n+1} \binom{n+1}{k} x^k y^{n-k+1}
+		\end{aligned}
+	\]
+\end{proof}
+
+\begin{proof}[Combinatorial Proof] 
+	Consider the case when \(n = 3\), the LHS of the theorem could be written as
+	\[
+		(x + y)(x + y)(x + y).
+	\]
+	The idea of expanding the above expression could be done by taking one of \(x\) or \(y\) from each \((x + y)\) term. For instance, if we take one \(x\) and two \(y\) from the expression above, we will have three \(xy^2\) terms. \((x + y)^3\) is simply equal to the sum of the terms. 
+
+	Then, for the general case, consider the term \(x^k y^{n-k}\) in the expression of \((x + y)^n\), where \(0 \leq k \leq n\). Such a term could be obtained as taking an \(x\) from \(k\) of the \(n\ (x + y)\) terms, and taking \(y\) from the remaining \(n - k\) terms. By definition, there are \(\binom{n}{k}\) ways to perform this task. Hence, the term
+	\[
+		\binom{n}{k}x^k y^{n-k} 
+	\]
+	appears in the expansion of \((x + y)^n\). By summing the above over \(k = 0, 1, \dots, n\), we obtain the desired identity.
+\end{proof}
+
+\subsection{Multinomial Theorem}
+\begin{theorem}[Multinomial Theorem]
+	Let \(n \geq 1\) be an integer. For any real number \(x_1, x_2, \dots, x_k\),
+	\[
+		(x_1 + x_2 + \cdots + x_k)^n = \sum_{\substack{n_1, n_2, \cdots, n_k \\ n_1 + n_2 + \cdots + n_k = n}} \dfrac{n!}{n_1! \times n_2! \times \cdots \times n_k!} x_1^{n_1}x_2^{n_2}\cdots x_k^{n_k}
+	\]
+\end{theorem}
+
+% END OF DOCUMENT
