@@ -39,7 +39,6 @@ If each edge connects two different vertices, and no two edges connect the same 
   \end{tikzpicture}
 \end{figure}
 
-
 \subsection{Directed Graph}
 A directed graph G consists of a nonempty set \(V\)  of vertices and a set \(E\)  of directed edges, where each edge is associated with an ordered pair of vertices. We write \(G = (V, E)\) to denote the graph. For example
 
@@ -173,6 +172,86 @@ For a simple graph \(G\) with \(n\) vertices, if it is an undirected graph, we h
   Otherwise, \(A\) and at least 2 members from \(B, C, D\) will form a group of 3 mutual strangers.
 \end{eg}
 
+\subsection{Regular Graph}
+A regular graph is a graph where each vertex has the same number of neighbors; i.e. every vertex has the same degree or valency. We called the graph \(k\)-regular if the common degree is \(k\).
+For example, the following graph is 3-regular:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+  \tikzstyle{vertex}=[circle,draw=black,thick,fill=white,minimum size=15pt, inner sep=0pt]
+  \node[vertex] (A) at(0, 0) {A};
+  \node[vertex] (B) at(1, 0.75) {B};
+  \node[vertex] (C) at(2, 0) {C};
+  \node[vertex] (D) at(1.5, -1) {D};
+  \node[vertex] (E) at(0.5, -1) {E};
+  \draw
+  (A) -- (B) -- (C) -- (D) -- (E) -- (A) -- (C) -- (E) -- (B) -- (D) -- (A)
+  ;
+  \end{tikzpicture}
+\end{figure}
+If every vertex in a simple graph has the same degree, then it is also called a regular graph. However, it should be noted that a regular graph need not be a simple graph; it only needs to have the same degree for every vertex, in which loops are also allowed.
+
+\subsection{Cartesian Product}
+In graph theory, the Cartesian product \(G \times H\) of graph \(G\) and \(H\) is a graph such that:
+\begin{itemize}
+  \item the vertex set of \(G \times H\) is the Cartesian product \(V(G) \times V(H)\);
+  \item two vertices \((u, v)\) and \((u^{\prime} , v^{\prime})\) are adjacent in \(G \times H\) if and only if either
+  \begin{itemize}
+    \item \(u = u^{\prime}\) and \(v\) is adjacent to \(v^{\prime}\) in \(H\) or 
+    \item \(v = v^{\prime}\) and \(u\) is adjacent to \(u^{\prime}\) in \(G\)
+  \end{itemize}
+\end{itemize}
+For example:
+
+\begin{minipage}{.3\textwidth}
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+      \tikzstyle{vertex}=[circle,draw=black,thick,fill=black,minimum size=4pt, inner sep=0pt]
+      \node[vertex][label=left:{\(u_1\)}] (u1) at(0, 0) {};
+      \node[vertex][label=left:{\(v_1\)}] (v1) at(0, -1.5) {};
+      \draw
+      (u1) -- (v1)
+      ;
+      \end{tikzpicture}
+      \caption*{\(G_1\)}
+  \end{figure}
+\end{minipage}
+\begin{minipage}{.3\textwidth}
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+      \tikzstyle{vertex}=[circle,draw=black,thick,fill=black,minimum size=4pt, inner sep=0pt]
+      \node[vertex][label=above:{\(u_2\)}] (u2) at(0, 0.75) {};
+      \node[vertex][label=above:{\(v_2\)}] (v2) at(1.5, 0.75) {};
+      \node[vertex][label=above:{\(w_2\)}] (w2) at(3, 0.75) {};
+      \draw
+      (u2) -- (v2) -- (w2)
+      ;
+      \end{tikzpicture}
+      \caption*{\(G_2\)}
+  \end{figure}
+\end{minipage}
+\begin{minipage}{.3\textwidth}
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+      \tikzstyle{vertex}=[circle,draw=black,thick,fill=black,minimum size=4pt, inner sep=0pt]
+      \node[vertex][label=above:{\((u_1, u_2)\)}] (u1u2) at(0, 0) {};
+      \node[vertex][label=above:{\((u_1, v_2)\)}] (u1v2) at(1.5, 0) {};
+      \node[vertex][label=above:{\((u_1, w_2)\)}] (u1w2) at(3, 0) {};
+      \node[vertex][label=below:{\((v_1, u_2)\)}] (v1u2) at(0, -1.5) {};
+      \node[vertex][label=below:{\((v_1, v_2)\)}] (v1v2) at(1.5, -1.5) {};
+      \node[vertex][label=below:{\((v_1, w_2)\)}] (v1w2) at(3, -1.5) {};
+      \draw
+      (u1u2) -- (u1v2) -- (u1w2) -- (v1w2) -- (v1v2) -- (v1u2) -- (u1u2)
+      (u1v2) -- (v1v2)
+      ;
+      \end{tikzpicture}
+      \caption*{\(G_1 \times G_2\)}
+  \end{figure}
+\end{minipage}
+
 \subsection{Handshaking Theorem}
 \begin{theorem}[Handshaking Theorem]
   Let \(G = (V, E)\) be an undirected graph with \(\vert E \vert\) edges. Since each edge \(e\) contributes exactly twice to the sum on the left side (one to each endpoint).
@@ -189,6 +268,7 @@ For a simple graph \(G\) with \(n\) vertices, if it is an undirected graph, we h
   \(\sum_{i:\deg(v_i) = \text{odd}} \deg(v_i) \) is an even number, then the number of terms summed is even. Thus, the number of odd-degree vertices is even.
 \end{corollary}
 
+\newpage
 \section{Simple Graph}
 
 \begin{definition}[Simple Paths]
@@ -308,7 +388,9 @@ A complete graph on \(n\) vertices, denoted by \(K_n\), is a simple graph that c
 An \(n\)-cube, denoted by \(Q_n\), is a graph that consists of \(2^n\)  vertices, each representing a distinct n-bit string. An edge exists between two vertices is the corresponding strings differ
 in exactly one bit position.
 
-A bipartite graph is a graph such that the vertices can be partitioned into two sets \(V\) and \(W\), so that each edge has exactly one endpoint from \(V\), and one endpoint from \(W\). For example, in the following graph, \(A, B, C \in V_1,\ D, E \in V_2\) such that \(V = V_1 \cup V_2,\ V_1 \cap V_2 = \varnothing\). One can also assign one of two different colors to each vertex, so that no adjacent vertices are assigned the same color. 
+A bipartite graph is a graph such that the vertices can be partitioned into two sets \(V\) and \(W\), so that each edge has exactly one endpoint from \(V\), and one endpoint from \(W\). 
+
+For example, in the following graph, \(A, B, C \in V_1,\ D, E \in V_2\) such that \(V = V_1 \cup V_2,\ V_1 \cap V_2 = \varnothing\). One can also assign one of two different colors to each vertex, so that no adjacent vertices are assigned the same color. 
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
@@ -408,6 +490,7 @@ In graph theory, an Eulerian path in a graph is a path that contains each edge e
   A connected graph \(G\) has an Eulerian circuit if and only if each vertex of \(G\) has even degree.
 \end{remark}
 
+\newpage
 \subsection{Graph Representation}
 We can use the adjacency matrix or adjacency list to represent an undirected graph.
 \begin{eg}
@@ -516,6 +599,7 @@ One can take the idea of Breadth-First Search as a wave spread out from one vert
   \end{table}
 \end{eg}
 
+\newpage
 \subsection{Depth-First Search (DFS)}
 For Depth-First Search, we have graph \(G = (V, E)\) as input, and source vertex \(s \in V\). Then, the discovery time (\(d[v]\)) from \(s\) to \(v\), for all \(v \in V\), and \(f[v]\), which is the finishing time are the outputs.
 Depth-First Search is just like when we discover a vertex, we explore from it as far as we can. 
@@ -595,8 +679,9 @@ A graph is said to be strongly connected if every vertex is reachable from every
 A vertex \(v\) is an articulation point (also called articulation vertex) if removing \(v\) increases the number of connected components.
 
 A topological sort or topological ordering of a directed graph is a linear ordering of its vertices such that for every directed edge \(uv\) from vertex \(u\) to vertex \(v\), \(u\) comes before \(v\) in the ordering. Topological sorting can only be used on directed acyclic graphs. If a graph contains cycles, it cannot be topologically sorted.
+
 \begin{eg}[Topological Sort]
-  Two methods for solving topological sort will be introduced. Consider the following graph.
+  Consider the following graph.
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
@@ -621,6 +706,7 @@ A topological sort or topological ordering of a directed graph is a linear order
     ;
     \end{tikzpicture}
   \end{figure}
+  \newpage
   We can use DFS to find the topological order. We first select an unvisited node; for example, we choose node \textbf{B} in this case.
   \begin{figure}[H]
     \centering
