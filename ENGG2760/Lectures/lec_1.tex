@@ -161,10 +161,7 @@ For example, when finding all possible outcomes for rolling two dice with differ
     
     Let \(A\) be the desired event. Then we have
     \[
-        \vert A \vert = 6 \times 5 \times 4 \times 3 \times 2 \times 1 = 6! = 720
-    \]
-    \[
-        \mathbb{P}(A) = \dfrac{\vert A \vert }{\vert \Omega \vert } = \dfrac{6!}{6^6}
+        \vert A \vert = 6 \times 5 \times 4 \times 3 \times 2 \times 1 = 6! = 720, \quad \mathbb{P}(A) = \dfrac{\vert A \vert }{\vert \Omega \vert } = \dfrac{6!}{6^6}
     \]
 \end{eg}
 
@@ -198,7 +195,7 @@ Birthday paradox could be visualized as below:
         extra y ticks={0.507297},
         axis background/.style={fill=white},
         ylabel=probability of at least one birthday-collision,
-        xlabel=people,
+        xlabel=number of people,
         tick align=outside]
 
       % import the correct data from a CSV file
@@ -216,3 +213,33 @@ Birthday paradox could be visualized as below:
 \end{tikzpicture}
 \caption*{Adapted from \href{https://github.com/MartinThoma/LaTeX-examples/tree/2286e6e3833904b2c058b2a855db9b7f81776c59/tikz/birthday-paradox}{MartinThoma}}
 \end{figure}
+
+\subsection{Binomial Coefficient}
+\begin{proposition}[Binomial Coefficient or "\(n\)-Choose-\(k\)"]
+    Given a set \(S\) of size \(n\), the number of subsets of size \(k\) will be 
+    \[
+        \binom{n}{k} = \dfrac{n!}{k!(n-k)!}
+    \]
+    It can also be understood as the number of possible arrangements of \(k\) objects of Type A and \(n - k\) objects of Type B into an ordered sequence.
+\end{proposition}
+
+\begin{eg}
+    A box contains 8 red balls and 2 blue balls. You draw 2 balls at random(without replacement). What is the probability that the two balls have different colors?
+
+    \textbf{Solution:}
+    
+    Let \(A\) be the desired event.
+    \[
+        \mathbb{P}(A) = \dfrac{\vert A \vert}{\vert \Omega \vert} = \dfrac{\binom{8}{1}\binom{2}{1}}{\binom{10}{2}} = \dfrac{16}{45}
+    \]
+\end{eg}
+
+\begin{proposition}[Multinomial Coefficient]
+    For a set \(S\) of size \(n\), the number of partitioning of the set to partitions of size \(k_1, k_2, \cdots, k_t\) (noted that \(n = k_1 + k_2 + \cdots + k_t\)) will be
+    \[
+        \binom{n}{k_1, k_2, \cdots, k_t} = \dfrac{n!}{k_1!k_2!\cdots k_t!}
+    \]
+    It can also be understood as the number of possible permutations of \(k_1\) objects of Type 1, \(k_2\) objects of Type 2, ..., and \(k_t\) objects of Type \(t\).
+\end{proposition}
+
+% END OF DOCUMENT
