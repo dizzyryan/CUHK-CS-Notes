@@ -1,3 +1,135 @@
-\chapter{}
+\chapter{Probability Models and Axioms}
 
-\section{}
+\section{Basic Definitions}
+We will introduce some definitions here as well. 
+
+\begin{definition}[Complement]
+    The complement of event \(A\) (denoted by \(A^c\)) is the opposite event of \(A\). In other words, \(A^c\) happens if and only if \(A\) does not happen.
+\end{definition}
+
+Again, when flipping three coins, we have the following sample space:
+\[
+    \Omega = \{\text{HHH}, \text{HHT}, \text{HTH}, \text{HTT}, \text{THH}, \text{THT}, \text{TTH}, \text{TTT}\}.
+\]
+Let \(A\) be the event that at least two heads occur. Then for \(A^c\), we have:
+\[
+    A^c = \{\text{TTT}, \text{HTT}, \text{THT}, \text{TTH}\}
+\]
+
+\begin{definition}[Intersection of Events]
+    The intersection of events happens when all the events occur. We denote this intersection of event \(A\) and \(B\) with \(A \cap B\). 
+\end{definition}
+
+Let \(B\) be the event that no consecutive heads occurs. Then, for \(A \cap B\), we have the event that at least two heads and no consecutive heads occur.
+\[
+    A \cap B = \{\text{HTH}\}
+\]
+
+\begin{definition}[Union of Events]
+    The union of events happens when at least one of the events occur. We denote the union of events \(A\) and \(B\) with \(A \cup B\). 
+\end{definition}
+
+For example, for \(A \cup B\) in the above example, we have 
+\[
+    A \cup B = \{\text{HHH}, \text{HHT}, \text{HTH}, \text{HTT}, \text{THH}, \text{THT}, \text{TTH}, \text{TTT}\}
+\]
+
+\begin{definition}[Disjoint Events]
+    We call event \(A_1, A_2, \cdots\) disjoint events (or mutually exclusive events) if the intersection of every two events \(A_i, A_j (i \neq j)\) is the null event:
+    \[
+        \forall i \neq j:\quad A_i \cap A_j = \varnothing
+    \]  
+\end{definition}
+
+Let \(C\) be the event that at least three heads occur. Then 
+\[
+    B \cap C = \varnothing.
+\]
+\newpage
+
+\section{Probability Axioms}
+
+\begin{definition}[Axioms of Probability]
+    A probability assignment \(\mathcal{P}\) to sample space \(\Omega\) should satisfy the following three axioms:
+    \begin{enumerate}
+        \item For every event \(A\), \(0 \leq \mathbb{P}(A)\); 
+        \item \(\mathbb{P}(\Omega) = 1\); 
+        \item If event \(A_1, A_2, \cdots\) are disjoint, \(\mathbb{P}(A_1 \cup A_2 \cup \cdots) = \mathbb{P}(A_1) + \mathbb{P}(A_2) + \cdots\)
+    \end{enumerate}
+\end{definition}
+
+Follow these axioms, and we can prove most of the rules for probability calculation.
+
+\section{Rules for Probability Calculation}
+
+\begin{proposition}[Complement Rule]
+    For every event \(E\) and its complement \(E^c\):
+    \[
+        \mathbb{P}(E^c) = 1 - \mathbb{P}(E)
+    \]
+\end{proposition}
+
+\begin{proposition}[Difference Rule]
+    If event \(E\), \(F\) satisfy \(E \subseteq F\), then: 
+    \[
+        \mathbb{P}(F \cap E^c) = \mathbb{P}(F) - \mathbb{P}(E)
+    \]
+
+    \begin{remark}
+        As a result, if \(E \subseteq F\), then \(\mathbb{P}(E) \leq \mathbb{P}(F)\) 
+    \end{remark}
+    \begin{proof}
+        \[
+            \begin{aligned}
+                \mathbb{P}(F \cap E^c) &= \mathbb{P}(F) - \mathbb{P}(E) \\
+                \mathbb{P}(F) &= \mathbb{P}(F \cap E^c) + \mathbb{P}(E) \\
+            \end{aligned}
+        \]
+        Since \((F \cap E^c) \cap E = F \cap (E^c \cap E) = F \cap \varnothing = \varnothing\), \(\mathbb{P}(F \cap E^c) + \mathbb{P}(E) \Rightarrow (F \cap E^c) \cup E\)
+        \[
+            \begin{aligned}
+                (F \cap E^c) \cup E &= (F \cup E) \cap (E^c \cup E) \\
+                (F \cap E^c) \cup E &= (F \cup E) \cap \Omega \\
+                (F \cap E^c) \cup E &= F \cup E \\
+                (F \cap E^c) \cup E &= F\ (\text{for}\ E \subseteq F)\\
+            \end{aligned}
+        \]
+    \end{proof}
+\end{proposition}
+
+\begin{proposition}[Inclusion-Exclusion Principle]
+    For events \(E, F\):
+    \[
+        \mathbb{P}(E \cup F) = \mathbb{P}(E) + \mathbb{P}(F) - \mathbb{P}(E \cap F)
+    \]
+
+    \begin{remark}
+        We can generalize the principle to more than two events. For example, 
+        \[
+            \mathbb{P}(E \cup F \cup G) = \mathbb{P}(E) + \mathbb{P}(F) + \mathbb{P}(G) - \mathbb{P}(E \cap F) - \mathbb{P}(E \cap G) - \mathbb{P}(F \cap G) + \mathbb{P}(E \cap F \cap G)
+        \]
+    \end{remark}
+\end{proposition}
+
+\begin{eg}
+In a city, \(10\%\) of the people are rich, \(5\%\) are famous, and \(3\%\) are both rich and famous. For a randomly-selected person in the city, find the probability for the following Events. 
+
+Here we let \(R\) be the event that the person is rich, \(F\) be the event that the person is famous, 
+
+1. The person is not rich.
+\[
+    \mathbb{P}(R^c) = 1 - \mathbb{P}(R) = 1 - 0.1 = 0.9
+\]
+
+2. The person is not rich but is famous.
+\[
+    \mathbb{P}(R^c \cap F) = \mathbb{P}(F) - \mathbb{P}(F \cap R) = 0.05 - 0.03 = 0.02
+\]
+
+3. The person is neither rich nor famous.
+\[
+    \mathbb{P}(F^c \cap R^c) = 1 - \mathbb{P}(F \cup R) = 1 - \mathbb{P}(F) - \mathbb{P}(R) + \mathbb{P}(F \cap R) = 1 - 0.05 - 0.1 + 0.03 = 0.88
+\]
+\end{eg}
+
+% END OF DOCUMENT
