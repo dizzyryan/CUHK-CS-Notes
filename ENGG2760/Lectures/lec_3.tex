@@ -211,10 +211,7 @@ Let us revisit the example above. Let \(R\) represent the event that a red ball 
     \mathbb{P}(C_i \vert R) = \dfrac{\mathbb{P}(R \vert C_i)\mathbb{P}(C_i)}{\mathbb{P}(R \vert C_1)\mathbb{P}(C_1) + \mathbb{P}(R \vert C_2)\mathbb{P}(C_2) +\mathbb{P}(R \vert C_3)\mathbb{P}(C_3)}
 \]
 
-For sample space, we have: 
-\[
-    \Omega = \{1B, 1R, 2B_1, 2B_2, 2R, 3B_1, 3B_2, 3B_3, 3R\}\quad (\text{not equally likely})
-\]
+For sample space, we have: \(\Omega = \{1B, 1R, 2B_1, 2B_2, 2R, 3B_1, 3B_2, 3B_3, 3R\}\quad (\text{not equally likely}) \)
 \begin{table}[H]
     \centering
     \begin{tabular}{c|c|c|c}
@@ -231,12 +228,9 @@ For \(\mathbb{P}(R)\), by using total probability theorem, we have
 \[
     \mathbb{P}(R) = \mathbb{P}(R \vert C_1)\mathbb{P}(C_1) + \mathbb{P}(R \vert C_2)\mathbb{P}(C_2) + \mathbb{P}(R \vert C_3)\mathbb{P}(C_3) = \dfrac{1}{2}\times\dfrac{1}{3} + \dfrac{1}{3}\times\dfrac{1}{3} + \dfrac{1}{4}\times\dfrac{1}{3} = \dfrac{13}{36}
 \]
-
 Then we have:
 
-\(\mathbb{P}(C_1 \vert R) = \dfrac{\mathbb{P}(R \vert C_1)\mathbb{P}(C_1)}{\mathbb{P}(R)} = \dfrac{\frac{1}{2} \times \frac{1}{3}}{\frac{13}{36}} = \dfrac{6}{13}\)
-
-\(\mathbb{P}(C_2 \vert R) = \dfrac{\mathbb{P}(R \vert C_2)\mathbb{P}(C_2)}{\mathbb{P}(R)} = \dfrac{\frac{1}{3} \times \frac{1}{3}}{\frac{13}{36}} = \dfrac{4}{13}\)
+\(\mathbb{P}(C_1 \vert R) = \dfrac{\mathbb{P}(R \vert C_1)\mathbb{P}(C_1)}{\mathbb{P}(R)} = \dfrac{\frac{1}{2} \times \frac{1}{3}}{\frac{13}{36}} = \dfrac{6}{13}\), \(\mathbb{P}(C_2 \vert R) = \dfrac{\mathbb{P}(R \vert C_2)\mathbb{P}(C_2)}{\mathbb{P}(R)} = \dfrac{\frac{1}{3} \times \frac{1}{3}}{\frac{13}{36}} = \dfrac{4}{13}\)
 
 \(\mathbb{P}(C_3 \vert R) = \dfrac{\mathbb{P}(R \vert C_3)\mathbb{P}(C_3)}{\mathbb{P}(R)} = \dfrac{\frac{1}{4} \times \frac{1}{3}}{\frac{13}{36}} = \dfrac{3}{13}\)
 
@@ -247,20 +241,164 @@ Then we have:
 
     \textbf{Solution:} 
     \[
-    \begin{aligned}
-        \mathbb{P}(A \vert F) &= \dfrac{\mathbb{P}(F \vert A)\mathbb{P}(A)}{\mathbb{P}(F \vert A)\mathbb{P}(A) + \mathbb{P}(F \vert B)\mathbb{P}(B)} \\
-        &= \dfrac{20\% \times \frac{10}{11}}{20\% \times \frac{10}{11} + 80\% \times \frac{1}{11}} \\
-        & = \dfrac{5}{7} 
-    \end{aligned} 
+        \mathbb{P}(A \vert F) = \dfrac{\mathbb{P}(F \vert A)\mathbb{P}(A)}{\mathbb{P}(F \vert A)\mathbb{P}(A) + \mathbb{P}(F \vert B)\mathbb{P}(B)} = \dfrac{20\% \times \frac{10}{11}}{20\% \times \frac{10}{11} + 80\% \times \frac{1}{11}} = \dfrac{5}{7}
     \]
 \end{eg}
 
 This example demonstrates a counterintuitive result. Although the proportion of females in Class B is greater than that in Class A, the probability of a female student belonging to Class A is higher. This highlights the importance of using Bayes' rule to update our beliefs, as our initial hypotheses may not always align with the actual probabilities.
 
-To summarize this chapter, we see that conditional probability will be a very powerful tool when
+To summarize, we see that conditional probability will be a very powerful tool when
 
 1. the studied environment includes causes and effect. This is especially useful for calculating the probability of a cause under an observation of the effect. 
 
 2. we want to calculate an ordinary probability and conditioning on the right event can simplify the description of the sample space. 
+
+\section{Independence}
+\subsection{Independence of Two Events}
+\begin{definition}[Independent Events]
+    We call Events \(A\) and \(B\) independent if 
+    \[
+        \mathbb{P}(A \cap B) = \mathbb{P}(A)\mathbb{P}(B)\quad\text{or equivalently}\quad  \mathbb{P}(A \vert B) = \mathbb{P}(A)
+    \]
+\end{definition}
+
+\begin{eg}
+    We toss a coin three times. Then the following events are independent: 
+    \[
+        \Omega = \{\text{HHH}, \text{HHT}, \text{HTH}, \text{HTT}, \text{THH}, \text{THT}, \text{TTH}, \text{TTT}\}
+    \]
+    Event \(E_1\): The first toss show heads 
+
+    Event \(E_2\): The second and third toss both show tails 
+    
+    We have: 
+    \(\mathbb{P}(E_1) = \frac{4}{8}, \mathbb{P}(E_2) = \frac{2}{8}, \mathbb{P}(E_1 \cap E_2) = \frac{1}{8}, \mathbb{P}(E_1)\mathbb{P}(E_2) = \frac{4}{8} \times \frac{2}{8} = \frac{1}{8} = \mathbb{P}(E_1 \cap E_2)\)
+
+    This shows that the events are independent.
+\end{eg}
+
+\begin{eg}
+    We roll two dice. Consider events:
+    
+    \(E_1\): the first die is 4; \(S_6\): the sum of dice is 6; \(S_7\): the sum of dice is 7. 
+    \[
+    \mathbb{P}(E_1) = \dfrac{1}{6};\ \mathbb{P}(S_6) = \dfrac{5}{36};\ \mathbb{P}(S_7) = \dfrac{1}{6};\ \mathbb{P}(E_1 \cap S_6) = \dfrac{1}{36};\ \mathbb{P}(E_1 \cap S_7) = \dfrac{1}{36};\ \mathbb{P}(S_6 \cap S_7) = 0. 
+    \]
+    Then we know that (\(E_1, S_6\)) and (\(S_6, S_7\)) are not independent, (\(E_1, S_7\)) are independent.
+    \begin{remark}
+        Mutually exclusive does not mean independent. 
+    \end{remark}
+\end{eg}
+
+\begin{proposition}~ 
+
+    \begin{minipage}{0.7\textwidth}
+        If \(E, F\) are independent events, then events \(E^c, F\) will also be independent. 
+        \[
+            \mathbb{P}(E^c \cap F) = \mathbb{P}(E^c)\mathbb{P}(F)
+        \]
+    \end{minipage}
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=0.7\textwidth]{Figures/PropIndp.pdf}
+    \end{minipage}
+    
+    \begin{proof}
+        \[
+            \begin{aligned}
+                \mathbb{P}(E^c \cap F) &= \mathbb{P}(F) - \mathbb{P}(E \cap F) \\
+                &= \mathbb{P}(F) - \mathbb{P}(E)\mathbb{P}(F) \\
+                &= \mathbb{P}(F)(1 - \mathbb{P}(E)) \\
+                &= \mathbb{P}(E^c)\mathbb{P}(F)
+            \end{aligned}
+        \]
+    \end{proof}
+\end{proposition}
+
+\subsection{Independence of Several Events}
+We call three events \(A, B, C\) independent events if these four conditions are satisfies:
+\begin{enumerate}
+    \item \(A\) and \(B\) are independent: \(\mathbb{P}(A \cap B) = \mathbb{P}(A)\mathbb{P}(B)\) 
+    \item \(B\) and \(C\) are independent: \(\mathbb{P}(B \cap C) = \mathbb{P}(B)\mathbb{P}(C)\) 
+    \item \(A\) and \(C\) are independent: \(\mathbb{P}(A \cap C) = \mathbb{P}(A)\mathbb{P}(C)\) 
+    \item And we require \(\mathbb{P}(A \cap B \cap C) = \mathbb{P}(A)\mathbb{P}(B)\mathbb{P}(C)\) 
+\end{enumerate}
+
+\begin{eg}
+    We roll two dice. Consider events:
+    
+    \(E_1\): the first die is 4; \(E_2\): the second die is 3; \(S_7\): the sum of dice is 7. 
+    \[
+    \mathbb{P}(E_1) = \dfrac{1}{6};\ \mathbb{P}(E_2) = \dfrac{1}{6};\ \mathbb{P}(S_7) = \dfrac{1}{6};\ \mathbb{P}(E_1 \cap E_2) = \mathbb{P}(E_1 \cap S_7) = \mathbb{P}(E_2 \cap S_7) = \dfrac{1}{36}.
+    \]
+    Then we know that (\(E_1, E_2\)), (\(E_1, S_7\)) and (\(E_2, S_7\)) are independent. 
+    \[
+        \mathbb{P}(E_1 \cap E_2 \cap S_7) = \dfrac{1}{36} \neq \mathbb{P}(E_1) \times \mathbb{P}(E_2) \times \mathbb{P}(S_7)
+    \]
+    Then we know that (\(E_1, E_2, S_7\)) are not independent. 
+\end{eg}
+
+We call \(n\) events \(A_1, A_2, \cdots, A_n\) independent events if for every subset \(\{j_1, j_2, \cdots, j_t\}\) of \(\{A_1, \cdots, A_n\}\), the probability of the intersection is the product of their probabilities:
+\[
+    \mathbb{P}(A_{j_1} \cap A_{j_2} \cap \cdots \cap A_{j_t}) = \mathbb{P}(A_{j_1})\mathbb{P}(A_{j_2})\cdots\mathbb{P}(A_{j_t})
+\]
+
+If \(n\) events \(A_1, A_2, \cdots, A_n\) are independent events, then the independence is preserved when we replace some event(s) by their complements, intersection, unions.
+
+For example, if \(A, B, C, D\) are independent events, then \(A \cup B\) and \(C \cap D\) are also independent events.
+
+\begin{eg}
+    Alice wins 60\% of her ping pong matches against Bob. They meet for a 3 match playoff. What are the chances that Alice will win the playoff? 
+
+    \textbf{Solution}
+    For Alice, we have
+    \[
+        \Omega = \{\text{WWW, WWL, WLW, LWW, WLL, LWL, LLW, LLL}\}
+    \]
+    \[
+        A = \{\text{WWW, WWL, WLW, LWW}\}
+    \]
+    \[
+        \mathbb{P}(A) = 0.6^3 + 0.6^2*0.4*3 = \frac{81}{125}
+    \]
+\end{eg}
+
+\subsection{Conditional Independence}
+\begin{definition}[Conditional Independence]
+    Events \(A\) and \(B\) are independent conditioned on event \(F\) if
+    \[
+        \mathbb{P}(A \cap B \vert F) = \mathbb{P}(A \vert F)\mathbb{P}(B \vert F)
+    \]
+    Note that the above is equivalent to
+    \[
+        \mathbb{P}(A \vert B \cap F) = \mathbb{P}(A \vert F)
+    \]
+\end{definition}
+
+\newpage
+\begin{eg}~ 
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{c|c}
+            \toprule
+                Today & Tomorrow \\
+            \midrule
+                Sunny & 80\% Sunny, 20\% Rainy \\
+                Rainy & 40\% Sunny, 60\% Rainy  \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+    If Today(Monday) is rainy, what is the probability that Wednesday will also be sunny? 
+
+    \textbf{Solution:}
+    We suppose weather on Monday and Wednesday are independent conditioned on weather on Tuesday. Let \(M\) be the event that Monday is sunny, same for \(T\) and \(W\). Then: 
+    \[
+    \begin{aligned}
+        \mathbb{P}(W \vert M^c) &= \mathbb{P}(W \vert M^c \cap T)\mathbb{P}(T \vert M^c) + \mathbb{P}(W \vert M^c \cap T^c)\mathbb{P}(T^c \vert M^c) \\
+        &= 80\% \times 40\% + 40\% \times 60\% \\
+        &= 0.56
+    \end{aligned}
+    \]
+\end{eg}
 
 % END OF DOCUMENT
