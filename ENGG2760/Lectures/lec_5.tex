@@ -1,3 +1,642 @@
-\chapter{}
+\chapter{Expectation, Variance and Conditional PMF}
 
-\section{}
+\section{Expectation}
+\subsection{Joint Probability Mass Function}
+The joint PMF of random variables \(X, Y\) is the bivariate function 
+\[
+    p(x, y) = \mathbb{P}(X = x, Y = y)
+\]
+
+\begin{eg}
+    There is a bag with 4 cards, with face values 1, 2, 3, and 4, respectively. You draw two cards without replacement. What is the joint PMF of the card values? Let \(Z\) be the sum of the card values. Then what is the PMF of \(Z\)? What is the expected value of \(Z\)?
+
+    \textbf{Solution:} 
+    Let \(X, Y\) represent the values of the first and second cards drawn respectively.
+
+    Joint PMF for \(X, Y\):
+    \[
+        p(x, y) = \mathbb{P}(X = x, Y = y) = \begin{dcases}
+            1/12 &\text{ if \(x \neq y\), \(x, y \in \{1, 2, 3,4\}\)}  ;\\
+            0 &\text{ if \(x = y\) }.
+        \end{dcases}
+    \]
+    PMF for \(Z\):
+    \[
+        \begin{tabular}{c|c|c|c|c|c}
+            \toprule
+                \(Z\)  & 3 & 4 & 5 & 6 & 7  \\
+            \midrule
+                \(p(Z)\) & \(\frac{2}{12}\) & \(\frac{2}{12}\) & \(\frac{4}{12}\) & \(\frac{2}{12}\) & \(\frac{2}{12}\)  \\
+            \bottomrule
+        \end{tabular}
+    \]
+    \[
+        \mathbb{E}[Z] = 3 \times \dfrac{2}{12} + 4 \times \dfrac{2}{12} + 5 \times \dfrac{4}{12} + 6 \times \dfrac{2}{12} + 7 \times \dfrac{2}{12} = 5
+    \]
+    However, due to the symmetry around 5, we can directly observe that the expected value is 5.
+\end{eg}
+
+\begin{eg}
+    Following the question setup in the previous example, the cards are now drawn with replacement. Let \(Z\) be the sum of the card values. 
+
+    \textbf{Solution:} 
+    PMF for \(Z\):
+    \[
+        \begin{tabular}{c|c|c|c|c|c|c|c}
+            \toprule
+                \(Z\)  & 2 & 3 & 4 & 5 & 6 & 7 & 8  \\
+            \midrule
+                \(p(Z)\) & \(\frac{1}{16}\) & \(\frac{2}{16}\) & \(\frac{3}{16}\) & \(\frac{4}{16}\) & \(\frac{3}{16}\) & \(\frac{2}{16}\) & \(\frac{1}{16}\) \\
+            \bottomrule
+        \end{tabular}
+    \]
+    \[
+        \mathbb{E}[Z] = 2 \times \dfrac{1}{16} + 3 \times \dfrac{2}{16} + 4 \times \dfrac{3}{16} + 5 \times \dfrac{4}{16} + 6 \times \dfrac{3}{16} + 7 \times \dfrac{2}{16} + 8 \times \dfrac{1}{16} = 5
+    \]
+    Again, due to the symmetry around 5, we can directly observe that the expected value is 5.
+\end{eg}
+
+If \(X, Y\) are two random variable with Joint PMF \(p_{XY} \), then \(Z=f(X, Y)\) will also be a random variable with PMF \(p_Z\): 
+\[
+    p_Z(z) = \sum_{x, y: f(x, y) = z} p_{XY}(x, y) 
+\]
+
+The Expected Value of \(f(X, Y)\) for a function \(f\) and random variables \(X, Y\) is:
+\[
+    \mathbb{E}[f(X, Y)] = \sum_{x, y} f(x, y)p_{XY}(x, y) 
+\]
+
+In the previous example, we can see that: 
+\[
+    p_Z(6) = \sum_{x, y: X + Y = 6} p_{XY}(x, y) = p_{XY}(2, 4) + p_{XY}(3, 3) + p_{XY}(4, 2)
+\]
+
+\begin{remark}
+    We use \(p_{XY}\) to represent Joint PMF, and use \(p_X\) or \(p_Y\) to represent marginal PMF. We can also convert from joint PMF to marginal PMF: 
+    \[
+        p_X(x) = \sum_{y} p_{XY} (x, y) \quad\quad p_Y(y) = \sum_{x} p_{XY} (x, y)
+    \]
+    i.e., summing over all the values of \(y\) or \(x\) to find the marginal PMF for \(X\) or \(Y\) 
+\end{remark}
+
+\subsection{Linearity of Expectation}
+The Expected Value of \(X + Y\), i.e. the sum of random variables \(X, Y\) satisfies: 
+\[
+    \mathbb{E}[\alpha X + \beta Y] = \alpha \mathbb{E}[X] + \beta \mathbb{E}[Y]
+\]
+
+\begin{eg}
+    We again follow the question setup in the previous example.
+    \[
+        p_X = \dfrac{1}{4},\ x \in \{1, 2, 3, 4\} \quad\quad p_Y = \dfrac{1}{4},\ y \in \{1, 2, 3, 4\}
+    \]
+    Then we have 
+    \[
+        \mathbb{E}[X] = \mathbb{E}[Y] = 1 \times \dfrac{1}{4} + 2 \times \dfrac{1}{4} + 3 \times \dfrac{1}{4} + 4 \times \dfrac{1}{4} = \dfrac{5}{2} \Longrightarrow \mathbb{E}[X] + \mathbb{E}[Y] = 5 = \mathbb{E}[X + Y]
+    \]
+\end{eg}
+
+\subsection{Bernoulli Random Variable}
+A Bernoulli(\(p\)) random variable \(X\)  shows the result of a trial where \(X = 1\) for the success outcome with probability \(p\) and \(X = 0\) for the failure outcome with probability \(1 - p\). 
+
+This is the special case of Binomial(\(n, p\)) when \(n = 1\). Then we know that 
+\[
+    \mathbb{E}[X] = 0 \times (1 - p) + 1 \times p = p. 
+\]
+
+By observation, we see that a Binomial(\(n, p\)) random variable is the sum of \(n\) independent Bernoulli(\(p\)) random variables \(X_1, X_2, \cdots, X_n\):
+\[
+    X = X_1 + X_2 + \cdots + X_n
+\]
+where
+\[
+    X_i = \begin{dcases}
+        1, &\text{ if Experiment \(i\) is succeeded }  ;\\
+        0, &\text{ otherwise}  ;
+    \end{dcases}
+\]
+By the linearity of expectation, we see that 
+\[
+    \mathbb{E}[X] = \mathbb{E}[X_1 + X_2 + \cdots + X_n] = \mathbb{E}[X_1] + \mathbb{E}[X_2] + \cdots + \mathbb{E}[X_n] = np
+\]
+
+We now observe that in the PMF given in \hyperlink{page.17}{Chapter 4.2.2}, the PMF of a Binomial random variable attains its maximum value at \(n \times p\), which is also the expected value of the PMF. While this is not generally true for all random variables, it holds for Binomial random variables.
+
+\subsection{Poisson Random Variable}
+The expected value of a Poisson(\(\lambda\)) random variable \(X\) is 
+\[
+    \mathbb{E}[X] = \lambda
+\]
+This is quite intuitive since in Poisson(\(\lambda\)) random variable, \(\lambda\) is defined as the average rate. Therefore, it also aligns with the definition of the expected value. 
+\begin{proof}
+    For Poisson(\(\lambda\)) we know that 
+    \[
+        p(k) = e^{-\lambda}\dfrac{\lambda^k}{k!}
+    \]
+    \[
+        \begin{aligned}
+        \mathbb{E}[X] &= \sum_{k = 0}^{\infty} kp(k) \\
+        &= \sum_{k = 1}^{\infty} ke^{-\lambda}\dfrac{\lambda^k}{k!} \\
+        &= \sum_{k = 1}^{\infty} ke^{-\lambda}\dfrac{\lambda \times \lambda^{k-1}}{k!} \\
+        &= \sum_{k = 1}^{\infty} ke^{-\lambda}\dfrac{\lambda \times \lambda^{k-1}}{k!} \quad (\text{let } k^{\prime} = k - 1)\\
+        &= \lambda \times \sum_{k^{\prime} = 0}^{\infty} e^{-\lambda}\dfrac{\lambda^{k^{\prime}}}{(k^{\prime})!}\\
+        &= \lambda \times 1\\
+        &= \lambda
+    \end{aligned}
+    \]
+\end{proof}
+
+\subsection{Geometric Random Variable}
+The expected value of a Geometric(\(p\)) random variable \(X\) is 
+\[
+    \mathbb{E}[X] = \dfrac{1}{p}
+\]
+We will prove this in the later part of this chapter.
+
+\section{Variance}
+
+In the stock market, for each stock one of the following outcomes will happen:
+\begin{itemize}
+    \item Stock doubles in value with probability \(\frac{1}{2}\) 
+    \item Stock loses all its value with probability \(\frac{1}{2}\) 
+\end{itemize}
+Also, different stocks perform independently. We want to invest \$25 based on one of these scenarios:
+\begin{enumerate}
+    \item Scenario 1 (\(X\)): Invest all \$25 on one stock. 
+    \item Scenario 2 (\(Y\)): Keep all \$25 without investing
+    \item Scenario 3 (\(Z\)): Invest \$1 on each of 25 different stocks
+\end{enumerate}
+\[
+    X = \begin{dcases}
+        50, & w.p.\ \frac{1}{2}  ,\\
+        0, & w.p.\ \frac{1}{2}  .
+    \end{dcases};
+    \quad\quad 
+    Y = 25\ w.p.\ 1;
+    \quad\quad 
+    Z = 2 \times \ \text{Binomial}(25, \frac{1}{2})
+\]
+Then we have \(\mathbb{E}[X] = 25, \mathbb{E}[Y] = 25, \mathbb{E}[Z] = 25 \). Therefore, we cannot determine which investment strategy we should choose. 
+
+\begin{definition}[Variance and Standard Deviation]
+    Consider random variable \(X\) with expected value \(\mu = \mathbb{E}[X]\). Then, we define the variance of \(X\) as
+    \[
+        \Var(X) \coloneqq \mathbb{E}\left[(X - \mu)^2 \right] 
+    \]
+    Furthermore, we define the standard deviation of \(X\) to be
+    \[
+        \sigma \coloneqq \sqrt{\Var(X)} =  \sqrt{\mathbb{E}\left[(X - \mu)^2 \right]} 
+    \]
+\end{definition}
+
+Note that variance measures how close \(X\) and \(\mathbb{E}[X]\) are for a typical outcome of \(X\).
+
+So for the example above, we have 
+
+\(\Var(X) = \mathbb{E}[(X - 25)^2] = \dfrac{1}{2}(50 - 25)^2 + \dfrac{1}{2} (0 - 25)^2 = 625 \Longrightarrow \sigma = \sqrt{625} = 25\) 
+
+\(\Var(Y) = \mathbb{E}[(Y - 25)^2] = 1 \times (25 - 25)^2 = 0 \Longrightarrow \sigma = \sqrt{0} = 0\) 
+
+\(\Var(Z) = 2^2 \times 25 \times \dfrac{1}{2} \times (1 - \dfrac{1}{2}) = 25 \Longrightarrow \sigma = \sqrt{25} = 5\) 
+
+We can see that scenario 1 has the highest risk. 
+
+We have another formula for variance: 
+\[
+    \Var(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2
+\]
+\begin{proof}
+    \[
+        \begin{aligned}
+            \Var(X) &= \mathbb{E}\left[(X - \mu)^2 \right] \\
+            &= \mathbb{E}\left[X^2 -2 X \mu + \mu^2 \right] \\
+            &= \mathbb{E}[X^2] -2\mu\mathbb{E}[X] + \mu^2 \\
+            &= \mathbb{E}[X^2] - 2\mathbb{E}[X] \times \mathbb{E}[X] + \mathbb{E}[X]^2 \\
+            &= \mathbb{E}[X^2] - \mathbb{E}[X]^2
+        \end{aligned}
+    \]
+\end{proof}
+
+Using this formula, we can find the variance from the previous example.
+\[
+\Var(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{2} \times 0^2 + \dfrac{1}{2} \times 50^2 - (25^2) = 625
+\] 
+
+\begin{eg}
+    We roll a die. What are the expected value and variance?
+
+    \textbf{Solution:} 
+    
+    \(\mathbb{E}[X] = \dfrac{1}{6}(1 + 2 + 3 + 4 + 5 + 6) = \dfrac{7}{2}\)
+
+    \(\Var(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{6}(1 + 4 + 9 + 16 + 25 + 36) - (\dfrac{7}{2})^2 = \dfrac{35}{12}\)
+\end{eg}
+
+\newpage
+\section{Conditional PMF}
+
+\begin{definition}[Conditional PMF]
+The conditional PMF \(p_{X \vert Y} (\cdot\vert\cdot)\) of \(X\) given \(Y\) is defined as 
+\[
+    p_{X \vert Y} (x \vert y) = \dfrac{p_{X,Y}(x, y)}{P_Y (y)} = \dfrac{\mathbb{P}(X = x, Y = y)}{\mathbb{P}(X = x)} = \mathbb{P}(X = x \vert Y = y)
+\]
+\end{definition}
+
+\begin{eg}
+    We roll two 3-sided dice. 
+    
+    1. What is the PMF of the sum given the first roll? 
+
+    \textbf{Solution:} 
+    Let \(X, Y \in \{1, 2, 3\}\), \(S = X + Y \in \{2, 3, 4, 5, 6\}\). 
+
+    For the joint PMF of \(p_{X, S}(x, s)\), we have: 
+    \[
+        \begin{tabular}{c|c c c c c}
+                \(X \backslash S\)  & 2 & 3 & 4 & 5 & 6  \\
+            \midrule
+                1 & \(\frac{1}{9}\) & \(\frac{1}{9}\) & \(\frac{1}{9}\) & 0 & 0  \\[3pt]
+                2 & 0 & \(\frac{1}{9}\) & \(\frac{1}{9}\) & \(\frac{1}{9}\) & 0  \\[3pt]
+                3 & 0 & 0 & \(\frac{1}{9}\) & \(\frac{1}{9}\) & \(\frac{1}{9}\)
+        \end{tabular}
+        \quad ; \quad
+        \begin{tabular}{c|c|c|c}
+            X & 1 & 2 & 3  \\
+            \midrule
+            \(p(X)\) & \(\frac{1}{3}\) & \(\frac{1}{3}\) & \(\frac{1}{3}\)
+        \end{tabular}
+    \]
+
+    where we can use \(p_{X, S}(x, s) = \mathbb{P}(X = x, S = s) = \mathbb{P}(X = x, Y = y)\) to find the probability. 
+    
+    For example, for \(p_{X, S}(1, 2) = \mathbb{P}(X = 1, S = 2) = \mathbb{P}(X = 1, Y = 1) = (\dfrac{1}{3})^2 = \dfrac{1}{9}\)
+    
+    Then, for \(p_{S \vert X} (s \vert x)\), we have 
+    \[
+        \begin{tabular}{c|c c c c c}
+                \(X \backslash S\)  & 2 & 3 & 4 & 5 & 6  \\
+            \midrule
+                1 & \(\frac{1}{3}\) & \(\frac{1}{3}\) & \(\frac{1}{3}\) & 0 & 0  \\[3pt]
+                2 & 0 & \(\frac{1}{3}\) & \(\frac{1}{3}\) & \(\frac{1}{3}\) & 0  \\[3pt]
+                3 & 0 & 0 & \(\frac{1}{3}\) & \(\frac{1}{3}\) & \(\frac{1}{3}\)
+        \end{tabular}
+    \]
+    For the table above, if we sum the values in each row, we see that the sum equals 1. This is because we conditioned on a specific value of \(x\) in each row.
+
+    2. What is the PMF of the first roll given the sum? 
+
+    \textbf{Solution:} 
+    For the joint PMF of \(p_{X, S}(x, s)\), we have: 
+    \[
+        \begin{tabular}{c|c c c c c}
+                \(X \backslash S\)  & 2 & 3 & 4 & 5 & 6  \\
+            \midrule
+                1 & \(\frac{1}{9}\) & \(\frac{1}{9}\) & \(\frac{1}{9}\) & 0 & 0  \\[3pt]
+                2 & 0 & \(\frac{1}{9}\) & \(\frac{1}{9}\) & \(\frac{1}{9}\) & 0  \\[3pt]
+                3 & 0 & 0 & \(\frac{1}{9}\) & \(\frac{1}{9}\) & \(\frac{1}{9}\)
+        \end{tabular}
+        \quad ; \quad
+        \begin{tabular}{c|c|c|c|c|c}
+            S & 2 & 3 & 4 & 5 & 6  \\
+            \midrule
+            \(p(X)\) & \(\frac{1}{9}\) & \(\frac{2}{9}\) & \(\frac{3}{9}\) & \(\frac{2}{9}\) & \(\frac{1}{9}\)
+        \end{tabular}
+    \]
+    
+    Then, for \(p_{X \vert S} (x \vert s)\), we have 
+    \[
+        \begin{tabular}{c|c c c c c}
+                \(X \backslash S\)  & 2 & 3 & 4 & 5 & 6  \\
+            \midrule
+                1 & 1 & \(\frac{1}{2}\) & \(\frac{1}{3}\) & 0 & 0  \\[3pt]
+                2 & 0 & \(\frac{1}{2}\) & \(\frac{1}{3}\) & \(\frac{1}{2}\) & 0  \\[3pt]
+                3 & 0 & 0 & \(\frac{1}{3}\) & \(\frac{1}{2}\) & 1
+        \end{tabular}
+    \]
+    For the table above, if we sum the values in each column, we see that the sum equals 1. This is because we conditioned on a specific value of \(x\) in each row.
+\end{eg}
+
+\begin{definition}[Conditional Expectation]
+    The conditional expectation \(\mathbb{E}[X \vert Y = y]\) of \(X\) given \(Y = y\) is defined as 
+    \[
+        \mathbb{E}[X \vert Y = y] = \sum_{x} x \cdot p_{X \vert Y} (x \vert y).
+    \]
+
+    \begin{remark}
+        For a fixed \(y\), \(p_{X \vert Y} (\cdot \vert y)\) is a PMF as a function of \(X\). 
+    \end{remark} 
+\end{definition}
+
+\begin{theorem}[Total Expectation Theorem]
+    For random variables \(X, Y\), the following holds:
+    \[
+        \mathbb{E}[X] = \sum_{y} \mathbb{P}(Y = y)\mathbb{E}[X \vert Y = y]\quad\left(\text{or}\quad \mathbb{E}[X] = \mathbb{E}_{Y}\left[ \mathbb{E}[X \vert Y]\right]\right)
+    \]
+    \begin{proof}
+        \[
+            \begin{aligned}
+            \mathbb{E}[X] &= \sum_{x} x \cdot p(x) \\
+            &= \sum_{x} x \cdot \mathbb{P}(X = x) \\
+            &= \sum_{x} x \cdot \left(\sum_{y} \mathbb{P}(Y = y)\mathbb{P}(X = x \vert Y = y)\right) \quad(\text{partition \(X\) to \(Y\)}) \\
+            &= \sum_{y} \mathbb{P}(Y = y) \sum_{x} x \cdot p_{X \vert Y} (x \vert y). \\
+            &= \sum_{y} \mathbb{P}(Y = y)\mathbb{E}[X \vert Y = y]
+        \end{aligned}
+        \]
+    \end{proof}
+\end{theorem}
+
+Total expectation theorem can be equivalently shown for disjoint events \(A_1, A_2, \cdots, A_k\) partitioning the sample space \(A_1 \cup \cdots \cup A_k = \Omega\) as 
+\[
+    \mathbb{E}[X] = \sum_{i = 1}^k \mathbb{P}(A_i)\mathbb{E}[X \vert A_i]. 
+\] 
+
+\begin{eg}
+    You flip 10 coins. What is the expected number of heads given
+    that there is at least one heads?
+
+    \textbf{Solution:} 
+    Let \(X\) be the number of heads, \(A = \{X \geq 1\}, A^c = \{X = 0\}\). Then we have 
+    \[
+    \begin{aligned}
+        \mathbb{E}[X] &= p(A)\mathbb{E}[X \vert A] + p(A^c)\mathbb{E}[X \vert A^c] \\
+        10 \times \dfrac{1}{2} &= \left(1 - (\dfrac{1}{2})^{10}\right) \times \mathbb{E}[X \vert A] + (\dfrac{1}{2})^{10} \times 0\\
+        \mathbb{E}[X \vert A] &= \dfrac{5}{1 - (\dfrac{1}{2})^{10}}
+    \end{aligned}
+    \]
+\end{eg}
+
+Now we can prove the \hyperlink{page.27}{expected value of Geometric(\(p\)) random variable}. 
+\begin{proof}
+    \[
+        \begin{aligned}
+            \mathbb{E}[X] &= \mathbb{P}(X > 1)\mathbb{E}[X \vert X > 1] + \mathbb{P}(X = 1)\mathbb{E}[X \vert X = 1] \\
+            \mathbb{E}[X] &= (1 - \mathbb{P}(X = 1))\mathbb{E}[X \vert X > 1] + \mathbb{P}(X = 1) \times 1 \\
+            \mathbb{E}[X] &= (1 - \mathbb{P}(X = 1))(1 + \mathbb{E}[X]) + \mathbb{P}(X = 1)\\
+            \mathbb{E}[X] &= \dfrac{1}{\mathbb{P}(X = 1)} = \dfrac{1}{p}\\
+        \end{aligned}
+    \]
+\end{proof}
+
+Consider a Geometric(\(p\)) random variable \(X\). Then,
+\[
+    \Var(X) = \dfrac{1 - p}{p^{2}}
+\]
+
+\newpage
+To find the variance of Geometric(\(p\)) random variable, we can use the above example by letting \(A = \{X > 1\}, A^c = \{X = 1\}\):
+\[
+\begin{aligned}
+    \mathbb{E}[X^2] &= p(A^c)\mathbb{E}[X^2 \vert A^c] + p(A)\mathbb{E}[X^2 \vert A] \\
+    \mathbb{E}[X^2] &= p \times 1^2 + (1 - p) \times \mathbb{E}[X^2 \vert X > 1] \\
+    \mathbb{E}[X^2] &= p \times 1^2 + (1 - p) \times \mathbb{E}[(X + 1)^2] \\
+    \mathbb{E}[X^2] &= p \times 1^2 + (1 - p) \times (\mathbb{E}[X^2] + \dfrac{2}{p} + 1) \\
+    \mathbb{E}[X^2] &= p \times 1^2 + (1 - p) \times (\mathbb{E}[X^2] + \dfrac{2}{p} + 1) \\
+    \mathbb{E}[X^2] &= \dfrac{2 - p}{p^2} \\
+\end{aligned}
+\]
+
+Then, we have 
+\[
+    \Var(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{2 - p}{p^2} - \dfrac{1}{p^2} = \dfrac{1 - p}{p^{2}}
+\]
+
+\section{Independent Random Variable}
+\subsection{Introduction}
+\begin{definition}[Independent Random Variable]
+    \(X\) and \(Y\) are called independent random variables if every outcome pair \(X = x\) and \(Y = y\) are independent events for all \(x, y\) values: 
+    \[
+        \mathbb{P}(X = x, Y = y) = \mathbb{P}(X = x)\mathbb{P}(Y = y)
+    \]
+
+    \begin{remark}
+        Note that the joint PMF \(p_{X, Y}\)  of independent random variables \(X, Y\) can be written as the product of their marginal PMF \(p_X, p_Y\): 
+        \[
+            p_{X, Y}(x, y) = p_X(x)p_Y(y)
+        \]
+    \end{remark}
+\end{definition}
+
+Random Variables \(X, Y\) are independent if and only if for every outcome \(y\)  the conditional PMF \(p_{X \vert Y} (\cdot \vert y)\) is the same as \(X\)’s PMF \(p_X (\cdot)\): 
+\[
+    p_{X \vert Y} (x \vert y) = p_X(x)
+\]
+
+\begin{eg}~ 
+
+    (a) Let \(X, Y\) be the face values of two 4-sided dice. Are \(X\) and \(Y\) independent?
+
+    \textbf{Solution:} 
+    \[
+        p_{X, Y}(x, y) = \dfrac{1}{16} =\dfrac{1}{4} \times \dfrac{1}{4} = p_X(x)p_Y(y) \quad (x, y \in \{1, 2, 3, 4\})
+    \]
+
+    (b) How about \(Z = \max(X, Y)\) and \(W = \min(X, Y)\)?
+
+    \textbf{Solution:} 
+    \[
+        p_{Z, W}(2, 3) = 0;\quad p_Z(z) = \dfrac{3}{16};\quad p_W(w) =\dfrac{3}{16};\quad p_Z(z)p_W(w) = \dfrac{3}{16} \times \dfrac{3}{16} \neq 0
+    \]
+\end{eg}
+
+\begin{theorem}
+    \(X\) and \(Y\) are independent if and only if for every function \(f, g\) we have 
+    \[
+        \mathbb{E}[f(X)g(Y)] = \mathbb{E}[f(X)]\mathbb{E}[g(Y)]
+    \]
+    In particular, if \(X\) and \(Y\) are independent, then
+    \[
+        \mathbb{E}[XY] = \mathbb{E}[X]\mathbb{E}[Y]
+    \]
+\end{theorem}
+
+To show this, we can start from the expected value of joint PMF, 
+\[
+    \begin{aligned}
+        \mathbb{E}[f(X)g(Y)] &= \sum_{x, y} p_{X,Y}(x, y)f(x)g(y) \\
+        &= \sum_{x, y} p_{X}(x)p_{Y}(y)f(x)g(y) \\
+        &= \sum_{x} p_{X}(x)f(x) \sum_{y} p_{Y}(y)g(y) \\
+        &= \mathbb{E}[f(X)]\mathbb{E}[g(Y)]
+    \end{aligned}
+\]
+
+Note that \(\mathbb{E}[XY] = \mathbb{E}[X]\mathbb{E}[Y]\) is not enough to guarantee \(X\) and \(Y\) are independent. For example, for random variable \(X\) with \(\mathbb{P}(X = -1) = \mathbb{P}(X = 0) = \mathbb{P}(X = 1) = \frac{1}{3}\), \(X\) and \(Y = X^2\) satisfy 
+\[
+    \mathbb{E}[XY] = \mathbb{E}[X^3] = 0 = \mathbb{E}[X]\mathbb{E}[Y]
+\]
+However, we can see that 
+\[
+    p(X = 1, Y = 0) = 0,\ p(X = 1) = \frac{1}{3},\ p(Y = 0) = \frac{1}{3},\ p(X = 1) \times p(Y = 0) \neq p(X = 1, Y = 0).
+\] 
+
+\subsection{Covariance}
+
+\begin{definition}[Covariance]
+    The covariance of random variables \(X, Y\) with expected values \(\mu_X = \mathbb{E}[X]\) and \(\mu_Y = \mathbb{E}[Y]\) is defined as 
+    \[
+        \Cov[X, Y] \coloneqq \mathbb{E}[(X - \mu_X)(Y - \mu_Y)]
+    \]
+    The covariance can also be found using the formula 
+    \[
+        \Cov[X, Y] = \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]
+    \]
+
+    \begin{remark}
+        We call random variable \(X, Y\) uncorrelated if their covariance is zero: \(\Cov[X, Y] = 0\) or equivalently \(\mathbb{E}[XY] = \mathbb{E}[X]\mathbb{E}[Y]\). 
+
+        Therefore, every independent \(X, Y\) will be uncorrelated, but the converse of this statement is not always true. 
+    \end{remark}
+\end{definition}
+
+To show this, we proceed as follows:
+\[
+    \begin{aligned}
+        \Cov[X, Y] &= \mathbb{E}[(X - \mu_X)(Y - \mu_Y)] \\
+        &= \mathbb{E}[XY - X\mu_Y - Y\mu_X + \mu_X\mu_Y] \\
+        &= \mathbb{E}[XY] - \mathbb{E}[X\mu_Y] - \mathbb{E}[Y\mu_X] + \mu_X\mu_Y \\
+        &= \mathbb{E}[XY] - \mu_Y\mathbb{E}[X] - \mu_X\mathbb{E}[Y] + \mu_X\mu_Y \\
+        &= \mathbb{E}[XY] - \mu_X\mu_Y - \mu_X\mu_Y + \mu_X\mu_Y \\
+        &= \mathbb{E}[XY] - \mu_X\mu_Y \\
+        &= \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]
+    \end{aligned}
+\]
+
+If \(X = Y\), we see that \(\Cov[X, X] \coloneqq \mathbb{E}[(X - \mu_X)(X - \mu_X)] = \mathbb{E}[(X - \mu_X)^2] = \Var(X)\).
+
+\begin{eg}
+    There is a bag with 3 cards, with face values 1, 2, and 3.
+    
+    1. You draw two cards with replacement. \(X, Y\) are the face values of the first and second cards. What is \(\mathbb{E}[XY]\)?
+
+    \textbf{Solution 1:} 
+    \[
+        \mathbb{E}[XY] = \mathbb{E}[X]\mathbb{E}[Y] = \dfrac{1}{3}(1 + 2 + 3) \times \dfrac{1}{3}(1 + 2 + 3) = 4
+    \]
+
+    \textbf{Solution 2:} 
+    \[
+        \mathbb{E}[XY] = \dfrac{1}{9}((1 + 2 + 3)(1 + 2 + 3)) = 4
+    \]
+
+    2. You draw two cards without replacement. What is \(\mathbb{E}[XY]\)?
+
+    \textbf{Solution :} 
+    \[
+        \mathbb{E}[XY] = \dfrac{1}{6}(1 \times 2 + 1 \times 3 + 2 \times 1 + 2 \times 3 + 3 \times 1 + 3 \times 2) = \dfrac{11}{3}
+    \]
+\end{eg}
+
+\subsection{Variance of Sum of Independent Random Variables}
+\begin{theorem}[Variance of Sum of Independent Random Variables]
+    Suppose \(X, Y\) are independent. Then, 
+    \[
+        \Var[X + Y] = \Var[X] + \Var[Y]
+    \]
+
+    \begin{remark}
+        \(X\) and \(Y\) are uncorrelated if and only if 
+        \[
+            \Var[X + Y] = \Var[X] + \Var[Y]
+        \]
+    \end{remark}
+\end{theorem}
+
+To show this, we proceed as follows: 
+\[
+    \begin{aligned}
+        \Var[X + Y] &= \mathbb{E}[(X + Y - (\mu_X + \mu_Y))^2] \\
+        &= \mathbb{E}[((X - \mu_X) + (Y - \mu_Y))^2] \\
+        &= \mathbb{E}[(X - \mu_X)^2 + (Y - \mu_Y)^2 + 2(X - \mu_X)(Y - \mu_Y)] \\
+        &= \mathbb{E}[(X - \mu_X)^2] + \mathbb{E}[(Y - \mu_Y)^2] + \mathbb{E}[2(X - \mu_X)(Y - \mu_Y)] \\
+        &= \Var[X] + \Var[Y] + 2\Cov[X, Y] \\
+    \end{aligned}
+\]
+Since \(X\) and \(Y\) are independent (thus uncorrelated), \(\Cov[X, Y] = 0 \Longrightarrow \Var[X + Y] = \Var[X] + \Var[Y]\). 
+
+\begin{eg}
+    There is a bag with 3 cards, with face values 1, 2, and 3.
+    
+    1. You draw two cards with replacement. \(X, Y\) are the face values of the first and second cards. What is \(\Var[X + Y]\)?
+
+    \textbf{Solution:} 
+    \[
+    \begin{aligned}
+        \Var[X + Y] &= \Var[X] + \Var[Y] \\
+        &= 2 \times \Var[X] \\
+        &= 2 \times (\mathbb{E}[X^2] - \mathbb{E}[X]^2) \\
+        &= 2 \times (\dfrac{1}{3}(1^2 + 2^2 + 3^2) - (\dfrac{1}{3}(1 + 2 + 3))^2) \\
+        &= \dfrac{4}{3}
+    \end{aligned}
+    \]
+
+    2. You draw two cards without replacement. What is \(\Var[X + Y]\)?
+
+    \textbf{Solution:} 
+    \[
+        \begin{aligned}
+            \Var[X + Y] &= \Var[X] + \Var[Y] + 2\Cov[X, Y] \\
+            &= \dfrac{4}{3} + 2(\mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]) \\
+            &= \dfrac{4}{3} + 2(\dfrac{11}{3} - 2 \times 2) \\
+            &= \dfrac{2}{3}
+        \end{aligned}
+    \]
+
+    \begin{remark}
+        Covariance can have negative values while variance cannot.
+    \end{remark}
+\end{eg}
+
+Suppose \(X_1, X_2, \cdots, X_n\) are pairwise independent random variables, meaning for every \(i \neq j\), \(X_i\) and \(X_j\) are independent. Then,
+\[
+    \Var[X_1 + X_2 + \cdots + X_n] = \Var[X_1] + \Var[X_2] + \cdots + \Var[X_n]
+\]
+
+Compared to the statement that for independent random variables, we require all of them to be independent from each other, i.e., \(\mathbb{P}(X_1 = x_1, X_2 = x_2, \cdots, X_n = x_n) = \mathbb{P}(X_1 = x_1)\mathbb{P}(X_2 = x_2) \cdots \mathbb{P}(X_n = x_n)\), pairwise independence is a weaker statement, which only requires pairs of random variables to be independent.
+
+Also, we have: 
+\[
+    \Var[X_1 + X_2 + \cdots + X_n] = \sum_{i = 1}^n \Var[X_i] + \sum_{\substack{i \neq j \\ 1 \leq  i - j \leq n}}\Cov[X_i, X_j] \quad (\text{if pairwise uncorrelated, the later part = 0})
+\]
+
+\subsection{Variance of Binomial Random Variables}
+Suppose \(X\) is a Binomial(\(n, p\)) random variable. Then,
+\[
+    \Var[X] = np(1 - p)
+\]
+\begin{proof}
+    We know that \(X = X_1 + X_2 + \cdots + X_n\) is the sum of \(n\) independent Bernoulli(\(p\)) random variables. Therefore, 
+    \[
+    \begin{aligned}
+        \Var[X] &= \Var[X_1] + \Var[X_2] + \cdots + \Var[X_n] \\
+        &= n\Var[X_1] \\
+        &= n(\mathbb{E}[X^2] - \mathbb{E}[X]^2) \\
+        &= n(p - p^2) \\
+        &= np(1 - p)
+    \end{aligned}
+    \]
+\end{proof}
+
+To summarize, if you know \(X \sim\) Binomial(\(n, p\)), you can find
+\[
+    \begin{aligned}
+        \mathbb{E}[X] &= np \\
+        \Var[X] &= np(1 - p) \\
+        p &= 1- \dfrac{\Var[X]}{\mathbb{E}[X]} \\
+        n &= \dfrac{\mathbb{E}[X]}{1- \frac{\Var[X]}{\mathbb{E}[X]}}
+    \end{aligned}
+\]
+
+\subsection{Variance of Poisson Random Variable}
+Suppose \(Y\) is a Poisson(\(\lambda\)) random variable. Then,
+\[
+    \Var[Y] = \lambda 
+\]
+Informal Proof: 
+\[
+    \begin{aligned}
+        \text{Poisson}(\lambda) &= \lim_{n \to \infty} \text{Binomial}(n, \dfrac{\lambda}{n}) \\
+        \Var[Y] &= \lim_{n \to \infty} n \cdot \dfrac{\lambda}{n} \cdot (1 - \dfrac{\lambda}{n}) \\
+        \Var[Y] &= \lambda
+    \end{aligned}
+\]
+
+% END OF DOCUMENT
