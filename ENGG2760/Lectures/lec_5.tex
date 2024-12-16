@@ -238,7 +238,7 @@ Using this formula, we can find the variance from the previous example.
 \begin{definition}[Conditional PMF]
 The conditional PMF \(p_{X \vert Y} (\cdot\vert\cdot)\) of \(X\) given \(Y\) is defined as 
 \[
-    p_{X \vert Y} (x \vert y) = \dfrac{p_{X,Y}(x, y)}{P_Y (y)} = \dfrac{\mathbb{P}(X = x, Y = y)}{\mathbb{P}(X = x)} = \mathbb{P}(X = x \vert Y = y)
+    p_{X \vert Y} (x \vert y) = \dfrac{p_{X,Y}(x, y)}{P_Y (y)} = \dfrac{\mathbb{P}(X = x, Y = y)}{\mathbb{P}(Y = y)} = \mathbb{P}(X = x \vert Y = y)
 \]
 \end{definition}
 
@@ -250,7 +250,7 @@ The conditional PMF \(p_{X \vert Y} (\cdot\vert\cdot)\) of \(X\) given \(Y\) is 
     \textbf{Solution:} 
     Let \(X, Y \in \{1, 2, 3\}\), \(S = X + Y \in \{2, 3, 4, 5, 6\}\). 
 
-    For the joint PMF of \(p_{X, S}(x, s)\), we have: 
+    For the joint PMF of \(p_{X, S}(x, s)\), we have:
     \[
         \begin{tabular}{c|c c c c c}
                 \(X \backslash S\)  & 2 & 3 & 4 & 5 & 6  \\
