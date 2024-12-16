@@ -181,11 +181,11 @@ Then we have \(\mathbb{E}[X] = 25, \mathbb{E}[Y] = 25, \mathbb{E}[Z] = 25 \). Th
 \begin{definition}[Variance and Standard Deviation]
     Consider random variable \(X\) with expected value \(\mu = \mathbb{E}[X]\). Then, we define the variance of \(X\) as
     \[
-        \Var(X) \coloneqq \mathbb{E}\left[(X - \mu)^2 \right] 
+        \Var[X] \coloneqq \mathbb{E}\left[(X - \mu)^2 \right] 
     \]
     Furthermore, we define the standard deviation of \(X\) to be
     \[
-        \sigma \coloneqq \sqrt{\Var(X)} =  \sqrt{\mathbb{E}\left[(X - \mu)^2 \right]} 
+        \sigma \coloneqq \sqrt{\Var[X]} =  \sqrt{\mathbb{E}\left[(X - \mu)^2 \right]} 
     \]
 \end{definition}
 
@@ -193,22 +193,22 @@ Note that variance measures how close \(X\) and \(\mathbb{E}[X]\) are for a typi
 
 So for the example above, we have 
 
-\(\Var(X) = \mathbb{E}[(X - 25)^2] = \dfrac{1}{2}(50 - 25)^2 + \dfrac{1}{2} (0 - 25)^2 = 625 \Longrightarrow \sigma = \sqrt{625} = 25\) 
+\(\Var[X] = \mathbb{E}[(X - 25)^2] = \dfrac{1}{2}(50 - 25)^2 + \dfrac{1}{2} (0 - 25)^2 = 625 \Longrightarrow \sigma = \sqrt{625} = 25\) 
 
-\(\Var(Y) = \mathbb{E}[(Y - 25)^2] = 1 \times (25 - 25)^2 = 0 \Longrightarrow \sigma = \sqrt{0} = 0\) 
+\(\Var[Y] = \mathbb{E}[(Y - 25)^2] = 1 \times (25 - 25)^2 = 0 \Longrightarrow \sigma = \sqrt{0} = 0\) 
 
-\(\Var(Z) = 2^2 \times 25 \times \dfrac{1}{2} \times (1 - \dfrac{1}{2}) = 25 \Longrightarrow \sigma = \sqrt{25} = 5\) 
+\(\Var[Z] = 2^2 \times 25 \times \dfrac{1}{2} \times (1 - \dfrac{1}{2}) = 25 \Longrightarrow \sigma = \sqrt{25} = 5\) 
 
 We can see that scenario 1 has the highest risk. 
 
 We have another formula for variance: 
 \[
-    \Var(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2
+    \Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X]^2
 \]
 \begin{proof}
     \[
         \begin{aligned}
-            \Var(X) &= \mathbb{E}\left[(X - \mu)^2 \right] \\
+            \Var[X] &= \mathbb{E}\left[(X - \mu)^2 \right] \\
             &= \mathbb{E}\left[X^2 -2 X \mu + \mu^2 \right] \\
             &= \mathbb{E}[X^2] -2\mu\mathbb{E}[X] + \mu^2 \\
             &= \mathbb{E}[X^2] - 2\mathbb{E}[X] \times \mathbb{E}[X] + \mathbb{E}[X]^2 \\
@@ -219,7 +219,7 @@ We have another formula for variance:
 
 Using this formula, we can find the variance from the previous example.
 \[
-\Var(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{2} \times 0^2 + \dfrac{1}{2} \times 50^2 - (25^2) = 625
+\Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{2} \times 0^2 + \dfrac{1}{2} \times 50^2 - (25^2) = 625
 \] 
 
 \begin{eg}
@@ -229,7 +229,7 @@ Using this formula, we can find the variance from the previous example.
     
     \(\mathbb{E}[X] = \dfrac{1}{6}(1 + 2 + 3 + 4 + 5 + 6) = \dfrac{7}{2}\)
 
-    \(\Var(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{6}(1 + 4 + 9 + 16 + 25 + 36) - (\dfrac{7}{2})^2 = \dfrac{35}{12}\)
+    \(\Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{6}(1 + 4 + 9 + 16 + 25 + 36) - (\dfrac{7}{2})^2 = \dfrac{35}{12}\)
 \end{eg}
 
 \newpage
@@ -379,7 +379,7 @@ Now we can prove the \hyperlink{page.27}{expected value of Geometric(\(p\)) rand
 
 Consider a Geometric(\(p\)) random variable \(X\). Then,
 \[
-    \Var(X) = \dfrac{1 - p}{p^{2}}
+    \Var[X] = \dfrac{1 - p}{p^{2}}
 \]
 
 \newpage
@@ -397,7 +397,7 @@ To find the variance of Geometric(\(p\)) random variable, we can use the above e
 
 Then, we have 
 \[
-    \Var(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{2 - p}{p^2} - \dfrac{1}{p^2} = \dfrac{1 - p}{p^{2}}
+    \Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{2 - p}{p^2} - \dfrac{1}{p^2} = \dfrac{1 - p}{p^{2}}
 \]
 
 \section{Independent Random Variable}
@@ -500,7 +500,7 @@ To show this, we proceed as follows:
     \end{aligned}
 \]
 
-If \(X = Y\), we see that \(\Cov[X, X] \coloneqq \mathbb{E}[(X - \mu_X)(X - \mu_X)] = \mathbb{E}[(X - \mu_X)^2] = \Var(X)\).
+If \(X = Y\), we see that \(\Cov[X, X] \coloneqq \mathbb{E}[(X - \mu_X)(X - \mu_X)] = \mathbb{E}[(X - \mu_X)^2] = \Var[X]\).
 
 \begin{eg}
     There is a bag with 3 cards, with face values 1, 2, and 3.

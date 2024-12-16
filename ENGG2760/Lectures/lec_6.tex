@@ -160,7 +160,8 @@ For example,
         \addplot [
           ybar=0pt,
           bar width=7pt,
-          fill=blue,
+          fill=cyan,
+          draw=cyan,
           mark=none,
       ] {(\p*(1-\p)^(x-1))};
       % Add "discrete CDF" label
@@ -310,7 +311,7 @@ To summarize, we have
     \begin{aligned}
         \mathbb{E}(x) &= \int_{-\infty} ^{\infty} xf(x)dx = \int_{0}^{1} x \cdot 1 dx = \dfrac{x^2}{2} \Big|_0^1 = \frac{1}{2} \\
         \mathbb{E}(x^2) &= \int_{-\infty} ^{\infty} x^2f(x)dx = \int_{0}^{1} x^2 \cdot 1 dx = \dfrac{x^3}{3} \Big|_0^1 = \frac{1}{3} \\
-        \Var(x) &= \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{3} - (\dfrac{1}{2})^2 = \dfrac{1}{12}
+        \Var[x] &= \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{3} - (\dfrac{1}{2})^2 = \dfrac{1}{12}
     \end{aligned}
     \]
 \end{eg}
@@ -339,7 +340,7 @@ Then,
     \]
 3. The variance of \(X\) is \(\Var[X] = \dfrac{(b - a)^2}{12}\)
     
-    Let \(Y\) be Uniform(\([0, 1]\)) \(\rightarrow \mathbb{E}[Y] = \frac{1}{2}, \Var(Y) = \frac{1}{12}\) 
+    Let \(Y\) be Uniform(\([0, 1]\)) \(\rightarrow \mathbb{E}[Y] = \frac{1}{2}, \Var[Y] = \frac{1}{12}\) 
 
     Let \(Z = (b - a)Y + a\), which gives Uniform(\([a, b]\)) 
     \[

@@ -1,3 +1,130 @@
-\chapter{}
+\chapter{Chebyshev's Inequality}
 
-\section{}
+\section{Chebyshev's Inequality}
+\begin{theorem}[Markov's Inequality]
+    Suppose that random variable \(X \leq 0\) only takes non-negative values. Then, for every \(t > 0\) 
+    \[
+        \mathbb{P}(X \geq t) \leq \dfrac{\mathbb{E}[X]}{t}
+    \]
+    \begin{proof}
+        \[
+            \begin{aligned}
+                \mathbb{E}[X] &= \mathbb{P}(X \geq t)\mathbb{E}[X \vert X \geq t] + \mathbb{P}(X < t)\mathbb{E}[X \vert X < t] \\
+                \mathbb{E}[X] &\geq \mathbb{P}(X \geq t)\mathbb{E}[X \vert X \geq t] \\
+                \mathbb{E}[X] &\geq t \times \mathbb{P}(X \geq t) \\
+                \mathbb{P}(X \geq t) &\leq \dfrac{\mathbb{E}[X]}{t}
+            \end{aligned}
+        \]
+    \end{proof}
+\end{theorem}
+
+However, what if we take negative values for the random variable we use? 
+\begin{theorem}[Chebyshev’s Inequality]
+    Suppose that random variable \(X\) has a mean \(\mathbb{E}[X] = \mu\) and variance \(\Var[X] = \sigma^2\). Then, for every \(t > 0\), 
+    \[
+        \mathbb{P}(\vert X - \mu \vert \geq t) \leq \dfrac{\sigma^2}{t^2}
+    \]
+    \begin{proof}
+        The proof follows from Markov's inequality. Let \(Z = (X - \mu)^2 \geq 0\) 
+        \[
+            \begin{aligned}
+                \mathbb{P}(Z \geq \varepsilon^2) &\leq \dfrac{\mathbb{E}[Z]}{\varepsilon^2} \\
+                &\leq \dfrac{\mathbb{E}[(X - \mu)^2]}{\varepsilon^2} \\
+                &\leq \dfrac{\Var[X]}{\varepsilon^2} \\
+                &\leq \dfrac{\sigma_x^2}{\varepsilon^2} \\
+                \Longrightarrow \mathbb{P}(\vert X - \mu \vert \geq \varepsilon) &\leq \dfrac{\sigma^2}{\varepsilon^2}
+            \end{aligned}
+        \]
+    \end{proof}
+\end{theorem}
+
+\begin{eg}~ 
+
+    (a) Find a bound on the probability of \(\leq 24\) heads in 64 coin flips?
+
+    \textbf{Solution:} 
+
+    Let \(X \sim\) Binomial(\(64, \frac{1}{2}\)) \(\rightarrow \mathbb{E}[X] = 64 \times \frac{1}{2} = 32\), \(\Var[X] = np(1 - p) = 64 \times \frac{1}{2} \times \frac{1}{2} = 16, \sigma_x = \sqrt{16} = 4 \) 
+    \[
+        \begin{aligned}
+            \mathbb{P}(X \leq 24) &= \mathbb{P}(X - \mu \leq 24 - 32) \\
+            &= \mathbb{P}(X - \mu \leq -2\sigma_x) \\
+            &\leq \mathbb{P}(\vert X - \mu \vert \geq 2\sigma_x) \\
+            &\leq \dfrac{\sigma_{x}^2}{(2\sigma_{x})^2} \\
+            &= \dfrac{1}{4}
+        \end{aligned}
+    \]
+
+    (b) Find a bound on the probability of \(\leq 24\) or \(\geq 40\) heads in 64 coin flips?
+
+    \textbf{Solution:} 
+    \[
+        \begin{aligned}
+            \mathbb{P}(\vert X - \mu \vert \geq 2\sigma_x) &= \mathbb{P}(\vert X - 32 \vert \geq 8) \\
+            &= \mathbb{P}(X \leq 24 \text{ or } X \geq 40) \\
+            &= \dfrac{\sigma_{x}^2}{(2\sigma_{x})^2} \\
+            &= \dfrac{1}{4}
+        \end{aligned}
+    \]
+\end{eg}
+
+\section{Law of Large Numbers}
+Imagine you observe Independent and Identically Distributed (IID)
+random variables \(X_1, X_2, \cdots, X_n\) distributed according to PMF \(p\) with expected value \(\mathbb{E}[X_i] = \mu\). The goal in the Law of Large Numbers is to show:
+\[
+    \dfrac{X_1 + X_2 + \cdots + X_n}{n} \longrightarrow \mu \quad (n \to \infty)
+\]
+
+\begin{proof}
+    \[
+        \begin{aligned}
+            \mathbb{E}[\dfrac{X_1 + X_2 + \cdots + X_n}{n}] &= \mathbb{E}[\dfrac{X_1}{n}] + \mathbb{E}[\dfrac{X_2}{n}] + \cdots + \mathbb{E}[\dfrac{X_n}{n}] \\
+            &= \dfrac{\mu}{n} + \dfrac{\mu}{n} + \cdots + \dfrac{\mu}{n} \\
+            &= \mu 
+        \end{aligned}
+    \]
+\end{proof}
+
+For variance, we have 
+\[
+        \begin{aligned}
+            \Var\left(\dfrac{X_1 + X_2 + \cdots + X_n}{n}\right) &= \Var\left(\dfrac{X_1}{n}\right) + \Var\left(\dfrac{X_2}{n}\right) + \cdots + \Var\left(\dfrac{X_n}{n}\right) \\
+            &= \dfrac{\sigma^2}{n^2} + \dfrac{\sigma^2}{n^2} + \cdots + \dfrac{\sigma^2}{n^2} \\
+            &= \dfrac{\sigma^2}{n}
+        \end{aligned}
+    \]
+
+
+Suppose \(X_1, X_2, \cdots, X_n\) are IID with mean \(\mathbb{E}[X_i] = \mu\) and variance \(\Var[X_i] = \sigma^2\). Then, Chebyshev's inequality shows 
+\[
+        \mathbb{P}\left(\vert \dfrac{X_1 + \cdots + X_n}{n} - \mu \vert \geq \epsilon \right) \leq \dfrac{\sigma^2}{n\epsilon^2}
+\]
+
+\newpage
+\begin{theorem}[Weak Law of Large Numbers (WLLN)]
+    Suppose \(X_1, X_2, \cdots\) is a sequence of IID random variables with expected value \(E[X_i] = \mu\) and finite variance\(\Var[X_i] < \infty\). Define \(\overline{X_n} = \frac{1}{n}(X_1 + \cdots + X_n)\). Then, for every \(\epsilon > 0\):
+    \[
+        \lim_{n \to \infty} \mathbb{P}(\vert \overline{X_n} - \mu \vert \geq \epsilon) = 0
+    \]
+\end{theorem}
+
+\section{Central Limit Theorem}
+Suppose a random variable \(X\) has expected value \(\mathbb{E}[X] = \mu\) and variance \(\Var[X] = \sigma^2\). Then, random variable \(Z = \dfrac{1}{\sigma} (X - \mu)\) has zero expected value and unit variance: \(\mathbb{E}[Z] = 0\), \(\Var[Z] = 1\). 
+
+Consider IID random variables \(X_1, X_2, \cdots, X_n\) has expected value \(\mathbb{E}[X_i] = \mu\) and variance \(\Var[X_i] = \sigma^2\) and define
+\[
+    \overline{X_n} = \dfrac{1}{n}(X_1 + \cdots + X_n) 
+\]
+Then, random variable \(Z_n = \frac{\overline{X_n} - \mu}{\frac{\sigma}{\sqrt{n}}}\) has zero expected value and unit variance. 
+
+\begin{theorem}[Central Limit Theorem (CLT)]
+    Consider IID random variables \(X_1, X_2, \cdots\) with expected value \(\mathbb{E}[X_i] = \mu\) and variance \(\Var[X_i] = \sigma^2\). Then, if we define
+    \[
+        Z_n = \dfrac{\dfrac{1}{n}(X_1 + \cdots + X_n) - \mu}{\dfrac{\sigma}{\sqrt{n}}}
+    \]
+    the CDF of random variable \(Z_n\) will converge to the CDF of a standard normal distribution \(\varPhi (z)\), i.e. for every \(z \in \mathbb{R}\)
+    \[
+        \lim_{n \to \infty} \mathbb{P}(Z_n \leq z) = \varPhi (z)
+    \]
+\end{theorem}
+Therefore, according to the central limit theorem, the sum of many independent random numbers will approximately have a normal distribution.

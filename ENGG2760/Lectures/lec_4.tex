@@ -114,7 +114,7 @@ The probability mass function (PMF) of a Binomial\((n, p)\) Random Variable is
     ]
     
     % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=1pt,fill=black] {binom(10,0.5)};
+    \addplot [ybar=0pt,bar width=8pt,fill=cyan,draw=cyan] {binom(10,0.5)};
     \end{axis}
     \end{tikzpicture}
 \end{minipage}
@@ -143,7 +143,7 @@ The probability mass function (PMF) of a Binomial\((n, p)\) Random Variable is
     ]
     
     % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=1pt,fill=black] {binom(50,0.5)};
+    \addplot [ybar=0pt,bar width=1pt,fill=cyan,draw=cyan] {binom(50,0.5)};
     \end{axis}
     \end{tikzpicture}
 \end{minipage}
@@ -175,7 +175,7 @@ From the chart above, we can observe that as the value of \(n\) increases, the g
     ]
     
     % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=1pt,fill=black] {binom(10,0.3)};
+    \addplot [ybar=0pt,bar width=8pt,fill=cyan,draw=cyan] {binom(10,0.3)};
     \end{axis}
     \end{tikzpicture}
 \end{minipage}
@@ -204,7 +204,7 @@ From the chart above, we can observe that as the value of \(n\) increases, the g
     ]
     
     % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=1pt,fill=black] {binom(50,0.3)};
+    \addplot [ybar=0pt,bar width=1pt,fill=cyan,draw=cyan] {binom(50,0.3)};
     \end{axis}
     \end{tikzpicture}
 \end{minipage}
@@ -257,7 +257,7 @@ Axioms of probability also holds for PMF of geometric random variable. Therefore
         ymin=0,
         ymax=0.6,
         xlabel = {Geometric(0.5)},
-        samples at={0,...,10},
+        samples at={1,...,10},
         xtick style={draw=none},
           yticklabel style={
               /pgf/number format/fixed,
@@ -273,8 +273,9 @@ Axioms of probability also holds for PMF of geometric random variable. Therefore
     % Plot the PMF of the geometric distribution
     \addplot [
       ybar=0pt,
-      bar width=3pt,
-      fill=black,
+      bar width=8pt,
+      fill=cyan,
+      draw=cyan,
       mark=none,
   ] {(\p*(1-\p)^(x-1))};
     \end{axis}
@@ -287,7 +288,7 @@ Axioms of probability also holds for PMF of geometric random variable. Therefore
         ymin=0,
         ymax=0.8,
         xlabel = {Geometric(0.7)},
-        samples at={0,...,10},
+        samples at={1,...,10},
         xtick style={draw=none},
           yticklabel style={
               /pgf/number format/fixed,
@@ -303,8 +304,9 @@ Axioms of probability also holds for PMF of geometric random variable. Therefore
     % Plot the PMF of the geometric distribution
     \addplot [
       ybar=0pt,
-      bar width=3pt,
-      fill=black,
+      bar width=8pt,
+      fill=cyan,
+      draw=cyan,
       mark=none,
   ] {(\p*(1-\p)^(x-1))};
     \end{axis}
@@ -316,10 +318,11 @@ Axioms of probability also holds for PMF of geometric random variable. Therefore
         title = {PMF of Geometric Distribution},
         ymin=0,
         ymax=0.06,
+        xmin=-2,
+        xmax=42,
         xlabel = {Geometric(0.05)},
         samples at={0,...,40},
-        xtick style={draw=none},
-        xtick distance=5,
+        xtick={0,5,...,40},
         height=8cm,
         width=16.5cm,
           yticklabel style={
@@ -336,8 +339,9 @@ Axioms of probability also holds for PMF of geometric random variable. Therefore
     % Plot the PMF of the geometric distribution
     \addplot [
       ybar=0pt,
-      bar width=3pt,
-      fill=black,
+      bar width=4pt,
+      fill=cyan,
+      draw=cyan,
       mark=none,
   ] {(\p*(1-\p)^(x-1))};
     \end{axis}
@@ -452,7 +456,7 @@ We now want to examine how the probability changes if we increase the values, fo
     ]
     
     % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=1pt,fill=black] {binom(25,0.2)};
+    \addplot [ybar=0pt,bar width=2pt,fill=cyan,draw=cyan] {binom(25,0.2)};
     \end{axis}
     \end{tikzpicture}
 \end{minipage}
@@ -480,7 +484,7 @@ We now want to examine how the probability changes if we increase the values, fo
     ]
     
     % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=1pt,fill=black] {binom(50,0.1)};
+    \addplot [ybar=0pt,bar width=1pt,fill=cyan,draw=cyan] {binom(50,0.1)};
     \end{axis}
     \end{tikzpicture}
 \end{minipage}
