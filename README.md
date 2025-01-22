@@ -42,10 +42,13 @@ This repository is not intended for teaching purposes.
 |  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](https://ryanc.wtf/files/ENGG2440.pdf)  |
 |  ENGG2760  |  Probability for Engineers  |  [Repo](ENGG2760)  |  [Notes](https://ryanc.wtf/files/ENGG2760.pdf)  |
 
-> MATERIALS WILL BE UPLOADED AFTER 20/10/2024.
 > Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
 
 ### 23-24 Spring
-...
+|  Code  |  Course  |  Repository  |  Notes  |
+|  :---:  |  :---:  |  :---:  |  :---:  |
+|  CSCI2100  |  Data Structure  |  X  |  X  |
+|  CENG3420  |  Computer Organization & Design  |  X  |  X  |
+|  ENGG2780  |  Statistic for Engineers  |  [Repo](ENGG2780)  |  [Notes](https://ryanc.wtf/files/ENGG2780.pdf)  |
 
 
