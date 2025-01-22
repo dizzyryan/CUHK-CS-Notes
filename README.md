@@ -38,7 +38,7 @@ This repository is not intended for teaching purposes.
 ### 23-24 Fall
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
-|  CSCI1130  |  Introduction to Computing Using Java  |  X  |  X  |
+|  CSCI1130  |  Introduction to Computing Using Java  |  [Repo](CSCI1130)  |  X  |
 |  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](https://ryanc.wtf/files/ENGG2440.pdf)  |
 |  ENGG2760  |  Probability for Engineers  |  [Repo](ENGG2760)  |  [Notes](https://ryanc.wtf/files/ENGG2760.pdf)  |
 
