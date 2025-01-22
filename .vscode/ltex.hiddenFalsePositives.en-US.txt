@@ -1,2 +1,0 @@
-{"rule":"NUMEROUS_DIFFERENT","sentence":"^\\QHow many different distributions of the presents are there?\\E$"}
-{"rule":"MASS_AGREEMENT","sentence":"^\\QThe Multiplication Rule.\\E$"}

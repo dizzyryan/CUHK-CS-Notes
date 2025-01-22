@@ -1,4 +1,0 @@
-Eulerian
-Eulerian
-subgraphs
-Kruskal
