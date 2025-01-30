@@ -363,6 +363,18 @@ For example, if \(A, B, C, D\) are independent events, then \(A \cup B\) and \(C
     \]
 \end{eg}
 
+\begin{remark}
+    One should also be aware that conditioning can affect independence. For example, consider two coins: coin \( A \) with bias \(\mathbb{P}(H \vert \text{coin } A) = 0.9\) and coin \( B \) with bias \(\mathbb{P}(H \vert \text{coin } B) = 0.1\). Suppose we randomly select one of the two coins with equal probability. Then, the probability of getting heads on the 11th toss is:
+    \[
+    \mathbb{P}(\text{toss 11} = H) = \mathbb{P}(A) \mathbb{P}(H_{11} \vert A) + \mathbb{P}(B) \mathbb{P}(H_{11} \vert B) = 0.5 \times 0.9 + 0.5 \times 0.1 = 0.5.
+    \]
+    However, if we condition on the event that the first 10 tosses resulted in heads, then it is highly likely that the chosen coin is coin \( A \). In fact, under this condition, we can be certain that we are using coin \( A \). Therefore, the probability of getting heads on the 11th toss given that the first 10 tosses were heads is:
+    \[
+    \mathbb{P}(\text{toss 11} = H \vert \text{first 10 tosses are heads}) = 0.9.
+    \]
+\end{remark}
+
+\newpage
 \subsection{Conditional Independence}
 \begin{definition}[Conditional Independence]
     Events \(A\) and \(B\) are independent conditioned on event \(F\) if
@@ -375,7 +387,6 @@ For example, if \(A, B, C, D\) are independent events, then \(A \cup B\) and \(C
     \]
 \end{definition}
 
-\newpage
 \begin{eg}~ 
     \begin{table}[H]
         \centering
@@ -399,6 +410,25 @@ For example, if \(A, B, C, D\) are independent events, then \(A \cup B\) and \(C
         &= 0.56
     \end{aligned}
     \]
+\end{eg}
+
+\begin{eg}[The King's Sibling]
+    The king comes from a family of two children. What is the probability that his sibling is female?  
+
+    \textbf{Solution:} Given that the conditions are vague, we need to further set up some conditions for this event.  
+
+    For example, we assume that only boys have precedence. By intuition, it seems the answer is \(\frac{1}{2}\). However, there are 4 possibilities for such an event, including (Boy, Boy), (Boy, Girl), (Girl, Boy), and (Girl, Girl), each with probability \(\frac{1}{4}\).  
+
+    We can ignore the (Girl, Girl) combination since it is stated that there is a king. Then, we have:  
+    \[
+        \mathbb{P}(\text{Sibling is female}) = \dfrac{\frac{1}{4} \times 2}{\frac{3}{4}} = \dfrac{2}{3}
+    \]  
+
+    However, one should note that the probability model we use depends on the conditions we set up or are given. For example, if royal families have different rules on having children, then the probability model would surely be different, leading to different results.  
+    
+    \begin{remark}
+        This example comes from \href{https://ocw.mit.edu/RES-6-012S18}{MIT RES.6-012 Introduction to Probability, Spring 2018}. 
+    \end{remark}
 \end{eg}
 
 % END OF DOCUMENT
