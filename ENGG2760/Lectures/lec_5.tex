@@ -72,7 +72,7 @@ In the previous example, we can see that:
 \]
 
 \begin{remark}
-    We use \(p_{XY}\) to represent Joint PMF, and use \(p_X\) or \(p_Y\) to represent marginal PMF. We can also convert from joint PMF to marginal PMF: 
+    We use \(p_{XY}\) to represent Joint PMF, and use \(p_X\) or \(p_Y\) to represent marginal PMF. We can also convert from joint PMF to marginal(individual) PMF: 
     \[
         p_X(x) = \sum_{y} p_{XY} (x, y) \quad\quad p_Y(y) = \sum_{x} p_{XY} (x, y)
     \]
@@ -96,10 +96,8 @@ The Expected Value of \(X + Y\), i.e. the sum of random variables \(X, Y\) satis
     \]
 \end{eg}
 
-\subsection{Bernoulli Random Variable}
-A Bernoulli(\(p\)) random variable \(X\)  shows the result of a trial where \(X = 1\) for the success outcome with probability \(p\) and \(X = 0\) for the failure outcome with probability \(1 - p\). 
-
-This is the special case of Binomial(\(n, p\)) when \(n = 1\). Then we know that 
+\subsection{Binomial Random Variable}
+For the expectation of Bernoulli random variable, we have:
 \[
     \mathbb{E}[X] = 0 \times (1 - p) + 1 \times p = p. 
 \]
@@ -153,8 +151,14 @@ The expected value of a Geometric(\(p\)) random variable \(X\) is
 \]
 We will prove this in the later part of this chapter.
 
-\section{Variance}
+\subsection{Uniform Random Variable}
+Suppose we have a uniform random variable on \(0, 1, \dots, n\). Then, by definition, the expected value is:
+\[
+    \mathbb{E}[X] = 0 \cdot \dfrac{1}{1 + n} + 1 \cdot \dfrac{1}{1 + n} + \cdots + n \cdot \dfrac{1}{1 + n} = \dfrac{1}{n + 1}(0 + 1 + \cdots + n) = \dfrac{n}{2}
+\] 
 
+\section{Variance}
+\subsection{Definition}
 In the stock market, for each stock one of the following outcomes will happen:
 \begin{itemize}
     \item Stock doubles in value with probability \(\frac{1}{2}\) 
@@ -185,9 +189,9 @@ Then we have \(\mathbb{E}[X] = 25, \mathbb{E}[Y] = 25, \mathbb{E}[Z] = 25 \). Th
     \]
     Furthermore, we define the standard deviation of \(X\) to be
     \[
-        \sigma \coloneqq \sqrt{\Var[X]} =  \sqrt{\mathbb{E}\left[(X - \mu)^2 \right]} 
+        \sigma_X \coloneqq \sqrt{\Var[X]} =  \sqrt{\mathbb{E}\left[(X - \mu)^2 \right]} 
     \]
-\end{definition}
+\end{definition} 
 
 Note that variance measures how close \(X\) and \(\mathbb{E}[X]\) are for a typical outcome of \(X\).
 
@@ -232,9 +236,71 @@ Using this formula, we can find the variance from the previous example.
     \(\Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{6}(1 + 4 + 9 + 16 + 25 + 36) - (\dfrac{7}{2})^2 = \dfrac{35}{12}\)
 \end{eg}
 
-\newpage
-\section{Conditional PMF}
+\subsection{Variance of Bernoulli Random Variable}
+From previous we have 
+\[
+    \mathbb{E}[X] = p
+\]
 
+By definition, we have 
+\[
+    \Var[X] = \sum_{x}(x - \mathbb{E}[X])^2 p_X (x) = (1 - p)^2 \cdot p + (0 - p)^2 \cdot (1 - p) = p (1 - p)
+\]
+
+\subsection{Variance of Binomial Random Variable}
+Suppose \(X\) is a Binomial(\(n, p\)) random variable. Then,
+\[
+    \Var[X] = np(1 - p)
+\]
+\begin{proof}
+    We know that \(X = X_1 + X_2 + \cdots + X_n\) is the sum of \(n\) independent Bernoulli(\(p\)) random variables. Therefore, 
+    \[
+    \begin{aligned}
+        \Var[X] &= \Var[X_1] + \Var[X_2] + \cdots + \Var[X_n] \\
+        &= n\Var[X_1] \\
+        &= n(p - p^2) \\
+        &= np(1 - p)
+    \end{aligned}
+    \]
+\end{proof}
+
+To summarize, if you know \(X \sim\) Binomial(\(n, p\)), you can find
+\[
+    \begin{aligned}
+        \mathbb{E}[X] &= np \\
+        \Var[X] &= np(1 - p) \\
+        p &= 1- \dfrac{\Var[X]}{\mathbb{E}[X]} \\
+        n &= \dfrac{\mathbb{E}[X]}{1- \frac{\Var[X]}{\mathbb{E}[X]}}
+    \end{aligned}
+\]
+
+\subsection{Variance of Uniform Random Variable}
+For the case where the uniform random variable takes values from 1 to \(n\), we can deduce the variance by:
+\[
+    \Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{1}{n + 1}(0^2 + 1^2 + \cdots + n^2) - \dfrac{n^2}{4} = \dfrac{1}{12}n(n + 2)
+\]
+
+However, for general cases where the random variable takes values from \(a\) to \(b\), we can take \(n = b - a\), then we have:
+\[
+    \Var[X] = \dfrac{1}{12}(b-a)(b - a + 2)
+\]
+
+\subsection{Variance of Poisson Random Variable}
+Suppose \(Y\) is a Poisson(\(\lambda\)) random variable. Then,
+\[
+    \Var[Y] = \lambda 
+\]
+Informal Proof: 
+\[
+    \begin{aligned}
+        \text{Poisson}(\lambda) &= \lim_{n \to \infty} \text{Binomial}(n, \dfrac{\lambda}{n}) \\
+        \Var[Y] &= \lim_{n \to \infty} n \cdot \dfrac{\lambda}{n} \cdot (1 - \dfrac{\lambda}{n}) \\
+        \Var[Y] &= \lambda
+    \end{aligned}
+\]
+
+\section{Conditional PMF}
+\subsection{Definition}
 \begin{definition}[Conditional PMF]
 The conditional PMF \(p_{X \vert Y} (\cdot\vert\cdot)\) of \(X\) given \(Y\) is defined as 
 \[
@@ -248,9 +314,7 @@ The conditional PMF \(p_{X \vert Y} (\cdot\vert\cdot)\) of \(X\) given \(Y\) is 
     1. What is the PMF of the sum given the first roll? 
 
     \textbf{Solution:} 
-    Let \(X, Y \in \{1, 2, 3\}\), \(S = X + Y \in \{2, 3, 4, 5, 6\}\). 
-
-    For the joint PMF of \(p_{X, S}(x, s)\), we have:
+    Let \(X, Y \in \{1, 2, 3\}\), \(S = X + Y \in \{2, 3, 4, 5, 6\}\). For the joint PMF of \(p_{X, S}(x, s)\), we have:
     \[
         \begin{tabular}{c|c c c c c}
                 \(X \backslash S\)  & 2 & 3 & 4 & 5 & 6  \\
@@ -269,7 +333,7 @@ The conditional PMF \(p_{X \vert Y} (\cdot\vert\cdot)\) of \(X\) given \(Y\) is 
 
     where we can use \(p_{X, S}(x, s) = \mathbb{P}(X = x, S = s) = \mathbb{P}(X = x, Y = y)\) to find the probability. 
     
-    For example, for \(p_{X, S}(1, 2) = \mathbb{P}(X = 1, S = 2) = \mathbb{P}(X = 1, Y = 1) = (\dfrac{1}{3})^2 = \dfrac{1}{9}\)
+    For example, for \(p_{X, S}(1, 2) = \mathbb{P}(X = 1, S = 2) = \mathbb{P}(X = 1, Y = 1) = (\frac{1}{3})^2 = \frac{1}{9}\)
     
     Then, for \(p_{S \vert X} (s \vert x)\), we have 
     \[
@@ -335,9 +399,9 @@ The conditional PMF \(p_{X \vert Y} (\cdot\vert\cdot)\) of \(X\) given \(Y\) is 
     \begin{proof}
         \[
             \begin{aligned}
-            \mathbb{E}[X] &= \sum_{x} x \cdot p(x) \\
+            \mathbb{E}[X] &= \sum_{x} x \cdot p_X (x) \\
             &= \sum_{x} x \cdot \mathbb{P}(X = x) \\
-            &= \sum_{x} x \cdot \left(\sum_{y} \mathbb{P}(Y = y)\mathbb{P}(X = x \vert Y = y)\right) \quad(\text{partition \(X\) to \(Y\)}) \\
+            &= \sum_{x} x \cdot \left(\sum_{y} \mathbb{P}(Y = y)\mathbb{P}(X = x \vert Y = y)\right) \quad(\text{partition \(X\) to  \(Y\)}) \\
             &= \sum_{y} \mathbb{P}(Y = y) \sum_{x} x \cdot p_{X \vert Y} (x \vert y). \\
             &= \sum_{y} \mathbb{P}(Y = y)\mathbb{E}[X \vert Y = y]
         \end{aligned}
@@ -365,6 +429,12 @@ Total expectation theorem can be equivalently shown for disjoint events \(A_1, A
     \]
 \end{eg}
 
+\subsection{Geometric Random Variable}
+In a geometric random variable, the number of failed trials before a success does not affect the number of future trials needed for success. This is called the memoryless property. With conditional probability, we say that the number of remaining coin tosses, conditioned on tails in the first \(n\) tosses, is geometric with parameter \(p\), i.e.
+\[
+    \mathbb{P}_{X-1 \vert X > 1} k = \mathbb{P}_X k = \mathbb{P}_{X-n \vert X>n} k
+\]
+
 Now we can prove the \hyperlink{page.27}{expected value of Geometric(\(p\)) random variable}. 
 \begin{proof}
     \[
@@ -377,20 +447,13 @@ Now we can prove the \hyperlink{page.27}{expected value of Geometric(\(p\)) rand
     \]
 \end{proof}
 
-Consider a Geometric(\(p\)) random variable \(X\). Then,
-\[
-    \Var[X] = \dfrac{1 - p}{p^{2}}
-\]
-
-\newpage
-To find the variance of Geometric(\(p\)) random variable, we can use the above example by letting \(A = \{X > 1\}, A^c = \{X = 1\}\):
+Consider a Geometric(\(p\)) random variable \(X\). To find the variance of Geometric(\(p\)) random variable, we can use the above example by letting \(A = \{X > 1\}, A^c = \{X = 1\}\):
 \[
 \begin{aligned}
     \mathbb{E}[X^2] &= p(A^c)\mathbb{E}[X^2 \vert A^c] + p(A)\mathbb{E}[X^2 \vert A] \\
     \mathbb{E}[X^2] &= p \times 1^2 + (1 - p) \times \mathbb{E}[X^2 \vert X > 1] \\
     \mathbb{E}[X^2] &= p \times 1^2 + (1 - p) \times \mathbb{E}[(X + 1)^2] \\
-    \mathbb{E}[X^2] &= p \times 1^2 + (1 - p) \times (\mathbb{E}[X^2] + \dfrac{2}{p} + 1) \\
-    \mathbb{E}[X^2] &= p \times 1^2 + (1 - p) \times (\mathbb{E}[X^2] + \dfrac{2}{p} + 1) \\
+    \mathbb{E}[X^2] &= p \times 1^2 + (1 - p) \times (\mathbb{E}[X^2] + \frac{2}{p} + 1) \\
     \mathbb{E}[X^2] &= \dfrac{2 - p}{p^2} \\
 \end{aligned}
 \]
@@ -405,15 +468,8 @@ Then, we have
 \begin{definition}[Independent Random Variable]
     \(X\) and \(Y\) are called independent random variables if every outcome pair \(X = x\) and \(Y = y\) are independent events for all \(x, y\) values: 
     \[
-        \mathbb{P}(X = x, Y = y) = \mathbb{P}(X = x)\mathbb{P}(Y = y)
+        \mathbb{P}(X = x, Y = y) = \mathbb{P}(X = x)\mathbb{P}(Y = y) \quad\text{or}\quad p_{X, Y}(x, y) = p_X(x)p_Y(y)
     \]
-
-    \begin{remark}
-        Note that the joint PMF \(p_{X, Y}\)  of independent random variables \(X, Y\) can be written as the product of their marginal PMF \(p_X, p_Y\): 
-        \[
-            p_{X, Y}(x, y) = p_X(x)p_Y(y)
-        \]
-    \end{remark}
 \end{definition}
 
 Random Variables \(X, Y\) are independent if and only if for every outcome \(y\)  the conditional PMF \(p_{X \vert Y} (\cdot \vert y)\) is the same as \(X\)’s PMF \(p_X (\cdot)\): 
@@ -525,19 +581,13 @@ If \(X = Y\), we see that \(\Cov[X, X] \coloneqq \mathbb{E}[(X - \mu_X)(X - \mu_
     \]
 \end{eg}
 
+\newpage
 \subsection{Variance of Sum of Independent Random Variables}
 \begin{theorem}[Variance of Sum of Independent Random Variables]
-    Suppose \(X, Y\) are independent. Then, 
+    If \(X, Y\) are independent. Then, 
     \[
         \Var[X + Y] = \Var[X] + \Var[Y]
     \]
-
-    \begin{remark}
-        \(X\) and \(Y\) are uncorrelated if and only if 
-        \[
-            \Var[X + Y] = \Var[X] + \Var[Y]
-        \]
-    \end{remark}
 \end{theorem}
 
 To show this, we proceed as follows: 
@@ -551,6 +601,12 @@ To show this, we proceed as follows:
     \end{aligned}
 \]
 Since \(X\) and \(Y\) are independent (thus uncorrelated), \(\Cov[X, Y] = 0 \Longrightarrow \Var[X + Y] = \Var[X] + \Var[Y]\). 
+\begin{remark}
+    \(X\) and \(Y\) are uncorrelated if and only if 
+    \[
+        \Var[X + Y] = \Var[X] + \Var[Y]
+    \]
+\end{remark}
 
 \begin{eg}
     There is a bag with 3 cards, with face values 1, 2, and 3.
@@ -563,7 +619,7 @@ Since \(X\) and \(Y\) are independent (thus uncorrelated), \(\Cov[X, Y] = 0 \Lon
         \Var[X + Y] &= \Var[X] + \Var[Y] \\
         &= 2 \times \Var[X] \\
         &= 2 \times (\mathbb{E}[X^2] - \mathbb{E}[X]^2) \\
-        &= 2 \times (\dfrac{1}{3}(1^2 + 2^2 + 3^2) - (\dfrac{1}{3}(1 + 2 + 3))^2) \\
+        &= 2 \times (\frac{1}{3}(1^2 + 2^2 + 3^2) - (\frac{1}{3}(1 + 2 + 3))^2) \\
         &= \dfrac{4}{3}
     \end{aligned}
     \]
@@ -574,8 +630,8 @@ Since \(X\) and \(Y\) are independent (thus uncorrelated), \(\Cov[X, Y] = 0 \Lon
     \[
         \begin{aligned}
             \Var[X + Y] &= \Var[X] + \Var[Y] + 2\Cov[X, Y] \\
-            &= \dfrac{4}{3} + 2(\mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]) \\
-            &= \dfrac{4}{3} + 2(\dfrac{11}{3} - 2 \times 2) \\
+            &= \frac{4}{3} + 2(\mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]) \\
+            &= \frac{4}{3} + 2(\frac{11}{3} - 2 \times 2) \\
             &= \dfrac{2}{3}
         \end{aligned}
     \]
@@ -590,53 +646,52 @@ Suppose \(X_1, X_2, \cdots, X_n\) are pairwise independent random variables, mea
     \Var[X_1 + X_2 + \cdots + X_n] = \Var[X_1] + \Var[X_2] + \cdots + \Var[X_n]
 \]
 
-Compared to the statement that for independent random variables, we require all of them to be independent from each other, i.e., \(\mathbb{P}(X_1 = x_1, X_2 = x_2, \cdots, X_n = x_n) = \mathbb{P}(X_1 = x_1)\mathbb{P}(X_2 = x_2) \cdots \mathbb{P}(X_n = x_n)\), pairwise independence is a weaker statement, which only requires pairs of random variables to be independent.
-
-Also, we have: 
+Compared to the statement that for independent random variables, we require all of them to be independent from each other, i.e., \(\mathbb{P}(X_1 = x_1, X_2 = x_2, \cdots, X_n = x_n) = \mathbb{P}(X_1 = x_1)\mathbb{P}(X_2 = x_2) \cdots \mathbb{P}(X_n = x_n)\), pairwise independence is a weaker statement, which only requires pairs of random variables to be independent. Also, we have: 
 \[
     \Var[X_1 + X_2 + \cdots + X_n] = \sum_{i = 1}^n \Var[X_i] + \sum_{\substack{i \neq j \\ 1 \leq  i - j \leq n}}\Cov[X_i, X_j] \quad (\text{if pairwise uncorrelated, the later part = 0})
 \]
 
-\subsection{Variance of Binomial Random Variables}
-Suppose \(X\) is a Binomial(\(n, p\)) random variable. Then,
-\[
-    \Var[X] = np(1 - p)
-\]
-\begin{proof}
-    We know that \(X = X_1 + X_2 + \cdots + X_n\) is the sum of \(n\) independent Bernoulli(\(p\)) random variables. Therefore, 
+\section{Appendix}
+\begin{eg}[The Hat Problem]
+    Three are \(n\) people throwing their hats in a box and then picking one at random. Suppose all permutations are equally likely, and everyone is equivalent to picking one hat at a time. Let \(X\) be the number of people who get their own hat. Find \(\mathbb{E}[X]\) and \(\Var[X]\). 
+
+    \textbf{Solution:}
+    Suppose all permutations are equally likely, we have \(X = X_1 + X_2 + \cdots + X_n\), where 
     \[
-    \begin{aligned}
-        \Var[X] &= \Var[X_1] + \Var[X_2] + \cdots + \Var[X_n] \\
-        &= n\Var[X_1] \\
-        &= n(\mathbb{E}[X^2] - \mathbb{E}[X]^2) \\
-        &= n(p - p^2) \\
-        &= np(1 - p)
-    \end{aligned}
+        X_i = \begin{dcases}
+            1, &\text{ if \(i\) selects own hat}  ,\\
+            0, &\text{ otherwise} .
+        \end{dcases}
     \]
-\end{proof}
+    Then we have 
+    \[
+        \mathbb{E}[X_i] = \mathbb{E}[X_1] = \mathbb{P}(X_1 = 1) = \frac{1}{n}
+    \]
+    Thus, \(\mathbb{E}[X] = \mathbb{E}[X_1] + \mathbb{E}[X_2] + \cdots + \mathbb{E}[X_n] = n \times \frac{1}{n} = 1\) 
+    
+    However, by intuition, the random variables \(X_1, X_2, \cdots, X_n\) are not independent. We thus cannot simply add up all the variances together. 
+    
+    From previous, we have \(\Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X]^2\). For \(X = X_1 + X_2 + \cdots + X_n\),
+    \[
+        X^2 = \underbrace{\sum_{i} X_i ^2}_{n\ \text{terms}} + \underbrace{\sum_{i,j:i \neq j} X_i X_j}_{n(n - 1)\ \text{terms}}
+    \]
+    \[
+        \begin{aligned}
+            \Var[X] &= \mathbb{E}[X^2] - \mathbb{E}[X]^2 \\
+            &= \mathbb{E} \left(\sum_{i} X_i ^2 + \sum_{i,j:i \neq j} X_i X_j\right) - 1^2 \\
+            &= \sum_{i} \mathbb{E}[X_1 ^2] + \sum_{i,j:i \neq j} \mathbb{E}[X_i X_j] - 1 \\
+            &= n \cdot \frac{1}{n} + n \cdot (n-1) \cdot \mathbb{E}[X_1 X_1] - 1 \\
+            &= 1 + n \cdot (n-1) \cdot \frac{1}{n} \cdot \frac{1}{n-1} - 1 \quad(*)\\
+            &= 1
+        \end{aligned}
+    \]
+    \[
+        (*) = \mathbb{E}[X_1 X_1] = \mathbb{P}(X_1 X_2 = 1) = \mathbb{P}(X_1 = 1, X_2 = 1) = \mathbb{P}(X_1 = 1)\mathbb{P}(X_2 = 1 \vert X_1 = 1) = \frac{1}{n} \cdot \frac{1}{n-1}
+    \]
 
-To summarize, if you know \(X \sim\) Binomial(\(n, p\)), you can find
-\[
-    \begin{aligned}
-        \mathbb{E}[X] &= np \\
-        \Var[X] &= np(1 - p) \\
-        p &= 1- \dfrac{\Var[X]}{\mathbb{E}[X]} \\
-        n &= \dfrac{\mathbb{E}[X]}{1- \frac{\Var[X]}{\mathbb{E}[X]}}
-    \end{aligned}
-\]
-
-\subsection{Variance of Poisson Random Variable}
-Suppose \(Y\) is a Poisson(\(\lambda\)) random variable. Then,
-\[
-    \Var[Y] = \lambda 
-\]
-Informal Proof: 
-\[
-    \begin{aligned}
-        \text{Poisson}(\lambda) &= \lim_{n \to \infty} \text{Binomial}(n, \dfrac{\lambda}{n}) \\
-        \Var[Y] &= \lim_{n \to \infty} n \cdot \dfrac{\lambda}{n} \cdot (1 - \dfrac{\lambda}{n}) \\
-        \Var[Y] &= \lambda
-    \end{aligned}
-\]
+    \begin{remark}
+        This example comes from \href{https://ocw.mit.edu/RES-6-012S18}{MIT RES.6-012 Introduction to Probability, Spring 2018}. 
+    \end{remark}
+\end{eg}
 
 % END OF DOCUMENT

@@ -14,7 +14,7 @@ For example, we can assign the number of heads in tossing 3 coins to the random 
 \begin{definition}[Probability Mass Function]
   The Probability Mass Function (PMF) \(p: \mathbb{R} \to [0, 1]\) of a discrete random variable \(X\) is the function 
   \[
-    p(x) = \mathbb{P}(X = x)
+    p_X(x) = \mathbb{P}(X = x)
   \]
 \end{definition}
 
@@ -24,7 +24,7 @@ We can describe the PMF by a table:
     \begin{tabular}{c|c|c|c|c}
         \(x\)  & 0 & 1 & 2 & 3  \\
       \midrule
-        \(p(x)\)  & \(\frac{1}{8}\) & \(\frac{3}{8}\) & \(\frac{3}{8}\) & \(\frac{1}{8}\)  \\
+        \(p_X(x)\)  & \(\frac{1}{8}\) & \(\frac{3}{8}\) & \(\frac{3}{8}\) & \(\frac{1}{8}\)  \\
     \end{tabular}
 \end{table}
 
@@ -34,7 +34,7 @@ For every random variable \(X\), its probability mass function satisfies the fol
 
 2. If \(\mathcal{X}\) is the set of all possible values of \(X\), then the PMF values on \(\mathcal{X}\) will add up to 1:
 \[
-  \sum_{x \in \mathcal{X}} p(x) = 1. 
+  \sum_{x \in X} p_X(x) = 1. 
 \]
 
 \begin{eg}
@@ -53,15 +53,51 @@ For PMF, we have:
   \begin{tabular}{c|c|c|c|c|c}
       \(x\)  & \(-2\) & \(-1\) & \(0\) & \(1\) & \(2\)  \\
     \midrule
-      \(p(x)\)  & \(\frac{1}{9}\) & \(\frac{2}{9}\) & \(\frac{3}{9}\) & \(\frac{2}{9}\) & \(\frac{1}{9}\)
+      \(p_X (x)\)  & \(\frac{1}{9}\) & \(\frac{2}{9}\) & \(\frac{3}{9}\) & \(\frac{2}{9}\) & \(\frac{1}{9}\)
   \end{tabular}
 \end{table}
 
 Then, for the probability that \(D \geq 1\), we have 
 \[
-  \mathbb{P}(D \geq 1) = p(1) + p(2) = \dfrac{2}{9} + \dfrac{1}{9} = \dfrac{3}{9}
+  \mathbb{P}(D \geq 1) = p_X (1) + p_X (2) = \dfrac{2}{9} + \dfrac{1}{9} = \dfrac{3}{9}
 \]
 \end{eg}
+
+\section{Bernoulli Random Variable}
+\subsection{Definition}
+A Bernoulli(\(p\)) random variable \(X\) shows the result of a trial where \(X = 1\) for the success outcome with probability \(p\) and \(X = 0\) for the failure outcome with probability \(1 - p\). 
+\[
+    X_i = \begin{dcases}
+        1, &\text{ if Experiment \(i\) is succeeded }  ;\\
+        0, &\text{ otherwise}  ;
+    \end{dcases}
+\]
+with 
+\[
+  \begin{dcases}
+    p_X (0) = 1 - p \\
+    p_X (1) = p 
+  \end{dcases}
+\]
+
+\subsection{PMF of Bernoulli Random Variable}
+The probability mass function of a Bernoulli random variable can be easily found and comes in handy for some complicated calculations.  
+
+For a Bernoulli random variable, we have an indicator random variable of an event \(A\), where \(I_A = 1\) if and only if \(A\) occurs.  
+
+The PMF of a Bernoulli random variable is as follows:  
+\[
+  p_{I_A}(1) = \mathbb{P} (I_A = 1) = \mathbb{P} (A)
+\]
+
+\section{Discrete Uniform Random Variable}
+A discrete uniform random variable takes values in a certain range, and each one of the values in that range has the same probability.  
+
+Such a variable is determined by two parameters \(a, b\ (a \leq b)\), which define the beginning and the end of the range.  
+
+Then, for every value of the random variable, the probability is \(\frac{1}{b - a + 1}\).  
+
+We also need to consider one special case where \(a = b\). In this case, the random variable is deterministic, i.e., a constant value.
 
 \section{Binomial Random Variable}
 \subsection{Definition}
@@ -86,7 +122,7 @@ We have a total of 9 trials, with the possible outcomes being HH, HT, TH, and TT
 \subsection{PMF of Binomial Random Variable}
 The probability mass function (PMF) of a Binomial\((n, p)\) Random Variable is 
 \[
-  p(k) = \mathbb{P}(X = k) = \binom{n}{k}p^k(1 - p)^{n-k}
+  p_X (k) = \mathbb{P}(X = k) = \binom{n}{k}p^k(1 - p)^{n-k}
 \]
 
 \begin{minipage}{0.5\textwidth}
@@ -148,7 +184,7 @@ The probability mass function (PMF) of a Binomial\((n, p)\) Random Variable is
     \end{tikzpicture}
 \end{minipage}
 
-From the chart above, we can observe that as the value of \(n\) increases, the graph is symmetric around the central point. For  Binomial\((10, 0.5)\), the probability reaches its maximum at \(x = 5\), which can also be calculated as \(10 \times 0.5\). The same pattern holds for the graph on the right-hand side. This also makes sense because the probability of the event occurring is 0.5. Therefore, we can estimate that half of the events will occur, resulting in the maximum probability at \(x = 5\).
+From the figures above, we can observe that as the value of \(n\) increases, the graph is symmetric around the central point. For  Binomial\((10, 0.5)\), the probability reaches its maximum at \(x = 5\), which can also be calculated as \(10 \times 0.5\). The same pattern holds for the graph on the right-hand side. This also makes sense because the probability of the event occurring is 0.5. Therefore, we can estimate that half of the events will occur, resulting in the maximum probability at \(x = 5\).
 
 \begin{minipage}{0.5\textwidth}
   \centering
@@ -242,7 +278,7 @@ For example, we toss a coin until we see the first heads. The number of coin tos
 \subsection{PMF of Geometric Random Variable}
 The probability mass function (PMF) of a Geometric\((p)\) Random Variable is 
 \[
-  p(k) = \mathbb{P}(X = k) = p(1 - p)^{k-1} 
+  p_X (k) = \mathbb{P}(X = k) = p(1 - p)^{k-1} 
 \]
 
 Axioms of probability also holds for PMF of geometric random variable. Therefore, 
@@ -505,14 +541,12 @@ From the above, we see that when we double the value, the PMF remains quite simi
 \end{table}
 
 From the values above, we can see that the probability converges to a certain value. This is what we call a Poisson Random Variable. The values we obtain by using \(25 \times 0.2, 50 \times 0.1\) represent the rate of Poisson random variable.
-\newpage
 
 \begin{definition}[Poisson Random Variable]
   A Poisson(\(\lambda\)) random variable \(X\) has the PMF:
   \[
-    p(k) = e^{-\lambda}\dfrac{\lambda^k}{k!}, \quad k = 0, 1, 2, 3, \cdots
+    p(k) = e^{-\lambda}\dfrac{\lambda^k}{k!}, \quad k = 0, 1, 2, 3, \cdots, \text{where \(\lambda\) is called the rate parameter.}
   \]
-  where \(\lambda\) is called the rate parameter.
 \end{definition}
 
 \begin{theorem}
@@ -555,7 +589,7 @@ Poisson random variable can be used when we have a large number of independent t
 \begin{definition}[Expected Value]
   The expected value (expectation) of a random variable \(X\) with PMF \(p(x)\) is 
   \[
-    \mathbb{E}[X] = \sum_{x} xp(x)
+    \mathbb{E}[X] = \sum_{x} xp_X (x)
   \]
 \end{definition}
 
@@ -584,11 +618,8 @@ The expectation is the average value the random variable takes when the experime
 \end{eg}
 
 \begin{eg}
-  We play this game that we roll three dice and 
-  \begin{itemize}
-    \item You win \(k\) dollars if we see \(k \geq 1\) "Two" outcomes.
-    \item You lose 1 dollar if we see no "Two" outcomes.
-  \end{itemize}
+  We play this game that we roll three dice, and you win \(k\) dollars if we see \(k \geq 1\) "Two" outcomes. You lose 1 dollar if we see no "Two" outcomes.
+
   Should you play this game?
 
   \textbf{Solution:}
@@ -612,7 +643,7 @@ If \(X\) is a random variable with PMF \(p_X\), then \(Y = f(X)\) will also be a
 
 The expected value of \(f(X)\) for a function \(f\) and random variable \(X\) is 
 \[
-  \mathbb{E}[f(X)] = \sum_{x} f(x)p(x) 
+  \mathbb{E}[f(X)] = \sum_{x} f(x)p_X(x) 
 \]
 
 \begin{eg}
