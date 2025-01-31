@@ -1,69 +1,22 @@
 \chapter{Continuous Random Variables}
-
 The probability models we used earlier were discrete. Starting from this chapter, we will discuss some non-discrete probability models.
-
-Suppose a postal package is to be delivered to you between noon and 1:00 pm. You have to leave home between 12:30 to 12:45 pm.
-
-What is the probability you miss the delivery?
-
-\section{Uniform Random Variable}
-This question is quite simple, and we can immediately see that the answer is \(\frac{15}{60}\). However, how can we define a probability model here?
-
-\begin{definition}[Uniform Random Variable]
-    A uniform random variable \(T\) over interval \([0, 1]\) satisfies 
-    \[
-        \mathbb{P}(T \leq t) = \begin{dcases}
-            0, &\text{ if } t \leq 0 ,\\
-            t, &\text{ if } 0 < t \leq 1 ,\\
-            1, &\text{ if } 1 < t.
-        \end{dcases}
-    \]
-\end{definition}
-
-Based on the above definition, we can calculate the following: 
-
-\(
-\begin{aligned}
-    \mathbb{P}(T > \dfrac{1}{2}) &= 1 - \mathbb{P}(T \leq \dfrac{1}{2}) = 1 - \dfrac{1}{2} = \dfrac{1}{2} \\
-    \mathbb{P}(T > \dfrac{3}{4}) &= 1 - \mathbb{P}(T \leq \dfrac{3}{4}) = 1 - \dfrac{3}{4} = \dfrac{1}{4} \\
-    \mathbb{P}(\dfrac{1}{2} < T \leq \dfrac{3}{4}) &= \mathbb{P}(T > \dfrac{1}{2}) - \mathbb{P}(T > \dfrac{3}{4}) = \dfrac{1}{2} - \dfrac{1}{4} = \dfrac{1}{4}
-\end{aligned}
-\) 
-
-\begin{eg}[Continuous Random Variables and Zero Probability for Points]~ 
-    Consider a Uniform(\([0, 1]\)) random variable \(T\). 
-
-    1. \(\mathbb{P}(T \leq 0.3) = 0.3\) 
-
-    2. \(\mathbb{P}(T = 0.3) = 0\)
-        
-    Assume that \(\mathbb{P}(T = 0.3) = \varepsilon > 0\), \(\mathbb{P}(T \leq 0.3 - \frac{\varepsilon}{4}) = 0.3 - \frac{\varepsilon}{4}\), \(\mathbb{P}(T \leq 0.3 + \frac{\varepsilon}{4}) = 0.3 + \frac{\varepsilon}{4}\)
-
-    Above gives \(\mathbb{P}(0.3 - \frac{\varepsilon}{4} < T < 0.3 + \frac{\varepsilon}{4}) = \mathbb{P}(T \leq 0.3 + \frac{\varepsilon}{4}) - \mathbb{P}(T \leq 0.3 - \frac{\varepsilon}{4}) = \frac{\varepsilon}{2}\) 
-
-    However, for \(\mathbb{P}(T = 0.3) \subseteq \mathbb{P}(0.3 - \frac{\varepsilon}{4} < T < 0.3 + \frac{\varepsilon}{4})\), we have \(\varepsilon < \frac{\varepsilon}{2}\), which by contradiction shows that \(\mathbb{P}(T = 0.3) = 0\)
-
-    3. \(\mathbb{P}(T < 0.3) = \mathbb{P}(T \leq 0.3) - \mathbb{P}(T = 0.3) = 0.3\)
-\end{eg}
-
-Above shows that the probability mass function (PMF) does not make much sense because \(\mathbb{P}(T = t) = 0\) for every \(t\).
 
 \section{Cumulative Distribution Function (CDF)}
 The Cumulative Distribution Function works for both discrete and continuous probabilities.
 \begin{definition}[Cumulative Distribution Function (CDF)]
   The cumulative distribution function (CDF) \(F\) of a random variable \(X\) is:
   \[
-    F(x) = \mathbb{P}(X \leq x)
+    F_X(x) = \mathbb{P}(X \leq x) = \int_{-\infty}^x f_X(t) dt = \sum_{k \leq x} p_X(k) 
   \]
 \end{definition}
 
 Every CDF \(F:\mathbb{R} \to [0, 1]\) must satisfy the following properties:
 
-1. \(F\) is monotonically increasing: \(x \leq y \Longrightarrow F(x) \leq F(y)\)
+1. \(F\) is monotonically increasing: \(x \leq y \Longrightarrow F_X(x) \leq F(y)\)
 
-2. \(\lim_{n \to -\infty} F(x) = 0\) 
+2. \(\lim\limits_{x \to -\infty} F_X(x) = 0\) 
 
-3. \(\lim_{n \to +\infty} F(x) = 1\) 
+3. \(\lim\limits_{x \to +\infty} F_X(x) = 1\) 
 
 \begin{eg}
     Find the CDF of a Geometric(\(p = \frac{1}{2}\)) random variable.
@@ -74,40 +27,27 @@ Every CDF \(F:\mathbb{R} \to [0, 1]\) must satisfy the following properties:
     \]
 \end{eg}
 
-By observation, we see that the CDF of a Uniform random variable over interval \([0, 1]\) is 
-\[
-    F(x) = \mathbb{P}(X \leq x) = \begin{dcases}
-        0, &\text{ if } x \leq 0 ,\\
-        x, &\text{ if } 0 < x \leq 1 ,\\
-        1, &\text{ if } 1 < x.
-    \end{dcases}
-\]
-
 \subsection{Probability Density Function (PDF)}
 \begin{definition}[Probability Density Function (PDF)]
     For a continuous random variable \(X\), we define its probability density function (PDF) \(f\) as the derivative of its CDF:
     \[
-        f(X) \coloneqq \lim_{\delta \to 0} \dfrac{\mathbb{P}(x \leq X \leq x + \delta)}{\delta}= \lim_{\delta \to 0} \dfrac{F(x + \delta) - F(x)}{\delta} = \frac{\mathrm{d}F(x)}{\mathrm{d}x}  
+        f_X(x) \coloneqq \lim_{\delta \to 0} \dfrac{\mathbb{P}(x \leq X \leq x + \delta)}{\delta}= \lim_{\delta \to 0} \dfrac{F_X(x + \delta) - F_X(x)}{\delta} = \frac{\mathrm{d}F_X(x)}{\mathrm{d}x}  
     \]
 
     \begin{remark}
-        PDF is not probability, it is the rate of probability. 
+        PDF is not probability, it is the density of probability. 
     \end{remark}
 \end{definition}
 
-For a small \(\delta > 0\), we know \(F(x + \delta) - F(x) \approx f(x)\delta\) and so for small \(\delta \), 
-\[
-    \mathbb{P}(x \leq X \leq x + \delta) \approx f(x)\delta
-\]
 For example, 
 \[
-    F(x) = \begin{dcases}
+    F_X(x) = \begin{dcases}
         0, &\text{ if } x < 0 ,\\
         x, &\text{ if } 0 \leq  x \leq 1 ,\\
         1, &\text{ if } 1 < x.
     \end{dcases}
     \quad\Longrightarrow\quad 
-    f(x) = \begin{dcases}
+    f_X(x) = \begin{dcases}
         0, &\text{ if } x < 0 ,\\
         1, &\text{ if } 0 \leq x \leq 1 ,\\
         0, &\text{ if } 1 < x.
@@ -115,7 +55,7 @@ For example,
 \]
 
 \begin{eg}
-    The CDF of random variable \(X\) is \(F(x) = \begin{dcases}
+    The CDF of random variable \(X\) is \(F_X(x) = \begin{dcases}
         1 - \frac{1}{x^2}, &\text{ if } x > 1 \\
         0, &\text{ if } x \leq 1 
     \end{dcases}\). 
@@ -125,15 +65,24 @@ For example,
     \textbf{Solution:} 
     First, we need to verify whether it is a valid CDF. Since it satisfies the three properties, we can then determine the PDF of \(X\).
     \[
-        f(x) = \frac{\mathrm{d}F(x)}{\mathrm{d}x} = \begin{dcases}
+        f_X(x) = \frac{\mathrm{d}F_X(x)}{\mathrm{d}x} = \begin{dcases}
             \dfrac{2}{x^3}, &\text{ if } x > 1 \\
             0 , &\text{ if } x \leq 1 
         \end{dcases}
     \] 
 \end{eg}
 \begin{remark}
-    A PDF can take any non-negative value \(f(x) \geq 0\) and its value can be greater than 1.
+    A PDF can take any non-negative value \(f_X(x) \geq 0\) and its value can be greater than 1.
 \end{remark}
+
+For a small \(\delta > 0\), we know \(F(x + \delta) - F_X(x) \approx f_X (x)\delta\) and so for small \(\delta \), 
+\[
+    \mathbb{P}(x \leq X \leq x + \delta) \approx f_X(x)\delta. 
+\]
+However, when \(\sigma = 0\), \(\mathbb{P}(x \leq X \leq x + \delta) = 0\), which shows that in a continuous distribution, the probability for any specific point in the PDF is 0, i.e. 
+\[
+    \mathbb{P}(X = x) = 0
+\]
 
 \begin{minipage}{0.5\textwidth}
     \centering
@@ -272,12 +221,13 @@ For example,
     \end{tikzpicture}
 \end{minipage}
 
+\newpage
 \subsection{Integral of PDF and Probability Calculation}
-For a continuous random variable \(X\) , the probability of an event \(E\) can be calculated using the integral of PDF \(f\). Therefore,
+For a continuous random variable \(X\), the probability of an event \(E\) can be calculated using the integral of PDF \(f\). Therefore,
 \begin{itemize}
-    \item \(\mathbb{P}(E) = \int_E f(x)dx\) 
-    \item \(\mathbb{P}(X \leq t) = \int_{-\infty}^t f(x)dx\) 
-    \item \(\int_{-\infty}^{\infty} f(x)dx = 1\) 
+    \item \(\mathbb{P}(E) = \int_E f_X (x)dx\) (i.e. \(\mathbb{P}(a \leq X \leq b) = \int_a^b f_X(x)dx\))
+    \item \(\mathbb{P}(X \leq t) = \int_{-\infty}^t f_X (x)dx\) 
+    \item \(\int_{-\infty}^{\infty} f_X (x)dx = 1\) 
 \end{itemize}
 
 To summarize, we have 
@@ -285,23 +235,64 @@ To summarize, we have
     \centering
     \begin{tabular}{c c c}
         \toprule
-             & PMF \(f(x)\)  & PDF \(f(x)\)  \\
+             & PMF \(p_X(x)\)  & PDF \(f_X(x)\)  \\
         \midrule
-            \(\mathbb{P}(X \leq a)\)  & \(\sum_{x \leq a} f(x)\)  & \(\int_{-\infty}^a f(x)dx \)   \\[5pt]
-            \(\mathbb{E}[X]\) & \(\sum_{x} xf(x)\) & \(\int_{-\infty}^{\infty} xf(x)dx \)  \\[5pt]
-            \(\mathbb{E}[X^2]\) & \(\sum_{x} x^2f(x)\) & \(\int_{-\infty}^{\infty} x^2f(x)dx \)  \\[5pt]
-            \(\Var[X]\) & \(\mathbb{E}[X^2] - \mathbb{E}[X]^2\)  & \(\mathbb{E}[X^2] - \mathbb{E}[X]^2\)  \\[5pt]
-            \(\Var[X]\) & \(\sum_{x} (x - \mu)^2 f(x)\)  & \(\int_{-\infty}^{\infty} (x - \mu)^2 f(x)dx \)  \\[5pt]
+            \(\mathbb{P}(X \leq a)\)  & \(\sum_{x \leq a} p_X(x)\)  & \(\int_{-\infty}^a f_X(x)dx \)   \\[5pt]
+            \(\mathbb{E}[X]\) & \(\sum_{x} xp_X(x)\) & \(\int_{-\infty}^{\infty} xf_X(x)dx \)  \\[5pt]
+            \(\mathbb{E}[X^2]\) & \(\sum_{x} x^2p_X(x)\) & \(\int_{-\infty}^{\infty} x^2f_X(x)dx \)  \\[5pt]
+            \(\Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X]^2\) & \(\sum_{x} (x - \mu)^2 p_X(x)\)  & \(\int_{-\infty}^{\infty} (x - \mu)^2 f_X(x)dx \)  \\[5pt]
         \bottomrule
     \end{tabular}
 \end{table} 
+
+\section{Uniform Random Variable}
+Suppose a postal package is to be delivered to you between noon and 1:00 pm. You have to leave home between 12:30 to 12:45 pm. What is the probability you miss the delivery?
+
+This question is quite simple, and we can immediately see that the answer is \(\frac{15}{60}\). However, how can we define a probability model here?
+
+\begin{definition}[Uniform Random Variable]
+    A uniform random variable \(X\) over interval \([0, 1]\) satisfies 
+    \[
+        \mathbb{P}(X \leq x) = \begin{dcases}
+            0, &\text{ if } x \leq 0 ,\\
+            x, &\text{ if } 0 < x \leq 1 ,\\
+            1, &\text{ if } 1 < x.
+        \end{dcases}
+    \]
+\end{definition}
+
+Based on the above definition, we can calculate the following: 
+
+\(
+\begin{aligned}
+    \mathbb{P}(T > \dfrac{1}{2}) &= 1 - \mathbb{P}(T \leq \dfrac{1}{2}) = 1 - \dfrac{1}{2} = \dfrac{1}{2} \\
+    \mathbb{P}(T > \dfrac{3}{4}) &= 1 - \mathbb{P}(T \leq \dfrac{3}{4}) = 1 - \dfrac{3}{4} = \dfrac{1}{4} \\
+    \mathbb{P}(\dfrac{1}{2} < T \leq \dfrac{3}{4}) &= \mathbb{P}(T > \dfrac{1}{2}) - \mathbb{P}(T > \dfrac{3}{4}) = \dfrac{1}{2} - \dfrac{1}{4} = \dfrac{1}{4}
+\end{aligned}
+\) 
+
+\begin{eg}[Continuous Random Variables and Zero Probability for Points]~ 
+    Consider a Uniform(\([0, 1]\)) random variable \(T\). 
+
+    1. \(\mathbb{P}(T \leq 0.3) = 0.3\) 
+
+    2. \(\mathbb{P}(T = 0.3) = 0\)
+        
+    Assume that \(\mathbb{P}(T = 0.3) = \varepsilon > 0\), \(\mathbb{P}(T \leq 0.3 - \frac{\varepsilon}{4}) = 0.3 - \frac{\varepsilon}{4}\), \(\mathbb{P}(T \leq 0.3 + \frac{\varepsilon}{4}) = 0.3 + \frac{\varepsilon}{4}\)
+
+    Above gives \(\mathbb{P}(0.3 - \frac{\varepsilon}{4} < T < 0.3 + \frac{\varepsilon}{4}) = \mathbb{P}(T \leq 0.3 + \frac{\varepsilon}{4}) - \mathbb{P}(T \leq 0.3 - \frac{\varepsilon}{4}) = \frac{\varepsilon}{2}\) 
+
+    However, for \(\mathbb{P}(T = 0.3) \subseteq \mathbb{P}(0.3 - \frac{\varepsilon}{4} < T < 0.3 + \frac{\varepsilon}{4})\), we have \(\varepsilon < \frac{\varepsilon}{2}\), which by contradiction shows that \(\mathbb{P}(T = 0.3) = 0\)
+
+    3. \(\mathbb{P}(T < 0.3) = \mathbb{P}(T \leq 0.3) - \mathbb{P}(T = 0.3) = 0.3\)
+\end{eg}
 
 \begin{eg}
     Find the expected value and variance of a Uniform(\([0, 1]\)) random variable.
 
     \textbf{Solution:} 
     \[
-        f(x) = \begin{dcases}
+        f_X(x) = \begin{dcases}
             0, &\text{ if } x < 0 ,\\
             1, &\text{ if } 0 \leq x \leq 1 ,\\
             0, &\text{ if } 1 < x.
@@ -316,9 +307,9 @@ To summarize, we have
     \]
 \end{eg}
 
-Consider a Uniform random variable X over interval \([a, b]\), i.e., 
+Consider the general case where a uniform random variable \(X\) is defined over the interval \([a, b]\), i.e.,
 \[
-    F(x) = \begin{dcases}
+    F_X(x) = \begin{dcases}
         0, &\text{ if } x < a \\
         \frac{x - a}{b - a}, &\text{ if } a \leq x \leq b \\
         1 , &\text{ if } b < x
@@ -326,27 +317,27 @@ Consider a Uniform random variable X over interval \([a, b]\), i.e.,
 \]
 Then,
 
-1. The PDF of \(X\) is \(f(x) = \begin{dcases}
+1. The PDF of \(X\) is \(f_X(x) = \begin{dcases}
         0, &\text{ if } x < a \\
         \frac{1}{b - a}, &\text{ if } a \leq x \leq b \\
         0 , &\text{ if } b < x
-    \end{dcases}\) 
-    \[
-        \text{If}\ f(x) = c\ \text{for}\ a \leq x \leq b,\ \text{since}\ \int_{-\infty} ^{\infty} f(x)dx = 1 \Rightarrow c(b - a) = 1 \Rightarrow c = \frac{1}{b - a}
-    \]
+    \end{dcases}\). 
+    
+    If \(f_X(x) = c\) for \(a \leq x \leq b\), since \(\displaystyle\int_{-\infty} ^{\infty} f_X(x)dx = 1 \Rightarrow c(b - a) = 1 \Rightarrow c = \frac{1}{b - a}\)
+
 2. The expected value of \(X\) is \(\mathbb{E}[X] = \dfrac{a + b}{2}\)
     \[
         \mathbb{E}[X] = \int_{-\infty} ^{\infty} xf(x)dx = \int_{a} ^{b} \dfrac{x}{b - a}dx = \dfrac{1}{b - a}\int_{a} ^{b} xdx = \dfrac{x^2}{2(b - a)} \Big|_a^b = \dfrac{a + b}{2}
     \]
-3. The variance of \(X\) is \(\Var[X] = \dfrac{(b - a)^2}{12}\)
+3. The variance of \(X\) is \(\Var[X] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 = \dfrac{b^3 - a^3}{3(b - a)} - (\dfrac{a + b}{2})^2 = \dfrac{(b - a)^2}{12}\)
     
-    Let \(Y\) be Uniform(\([0, 1]\)) \(\rightarrow \mathbb{E}[Y] = \frac{1}{2}, \Var[Y] = \frac{1}{12}\) 
+    Let \(Y\) be Uniform(0, 1) \(\rightarrow \mathbb{E}[Y] = \frac{1}{2}, \Var[Y] = \frac{1}{12}\) 
 
-    Let \(Z = (b - a)Y + a\), which gives Uniform(\([a, b]\)) 
+    Let \(Z = (b - a)Y + a\), which gives Uniform(\(a, b\)) 
     \[
     \begin{aligned}
-        \mathbb{E}[Z] &= (b - a)\mathbb{E}[Y] + a = \dfrac{b + a}{2} \\
-        \Var[Z] &= (b - a)^2 \Var[Y] = \dfrac{(b - a)^2}{12}
+        \mathbb{E}[Z] &= (b - a)\mathbb{E}[Y] + a = \frac{b + a}{2} \\
+        \Var[Z] &= (b - a)^2 \Var[Y] = \frac{(b - a)^2}{12}
     \end{aligned}
     \]
 
@@ -367,7 +358,7 @@ Then we have
 \begin{definition}[Exponential Random Variable]
     An Exponential(\(\lambda\)) random variable has the following PDF: 
     \[
-        f(x) = \begin{dcases}
+        f_X(x) = \begin{dcases}
             \lambda e^{-\lambda x} , &\text{ if }  x \geq 0\\
             0 , &\text{ if } x < 0
         \end{dcases}
@@ -376,16 +367,16 @@ Then we have
 
 To check the validity of the above, we proceed as follows:
 \[
-    \int_{-\infty}^{\infty} f(x)dx = \int_0^{\infty} \lambda e^{-\lambda x} dx = -e^{-\lambda x} \Big|_0^{\infty} = 1
+    \int_{-\infty}^{\infty} f_X(x)dx = \int_0^{\infty} \lambda e^{-\lambda x} dx = -e^{-\lambda x} \Big|_0^{\infty} = 1
 \]
 
 The Exponential(\(\lambda\)) random variable \(X\) satisfies:
 
-1. The CDF of \(X\) is \(F(x) = 1 - e^{-\lambda x}\) (\(x \geq 0\))
+1. The CDF of \(X\) is \(F_X(x) = 1 - e^{-\lambda x}\) (\(x \geq 0\))
 \[
-    F(x) = \int_{-\infty}^x f(x) dx = \int_{0}^x \lambda e^{-\lambda x} dx = -e^{-\lambda x} \Big|_0^x = 1 - e^{- \lambda x}
+    F_X(x) = \int_{-\infty}^x f_X(x) dx = \int_{0}^x \lambda e^{-\lambda x} dx = -e^{-\lambda x} \Big|_0^x = 1 - e^{- \lambda x}
 \]
-2. The expected value of \(X\) is \(\mathbb{E}[X] = \frac{1}{\lambda}\)
+2. The expected value of \(X\) is \(\mathbb{E}[X] = \dfrac{1}{\lambda}\)
 \[
 \mathbb{E}[X] = \int_{-\infty }^{\infty} xf(x) dx = \int_{0}^{\infty} \lambda x e^{-\lambda x} dx = \left[-xe^{-\lambda x} - \dfrac{1}{\lambda }e^{-\lambda x}\right]_0^{\infty} = 0 - (0 -\dfrac{1}{\lambda }) = \dfrac{1}{\lambda}
 \]
@@ -430,7 +421,6 @@ constants \(s, t \geq 0\):
     \]
 \end{proof}
 
-\newpage
 \section{Normal Distribution (Gaussian Random Variable)}
 \subsection{Normal Random Variable}
 We see from the following that as \(n\) increases, the shape converges to a bell shape curve.
@@ -495,9 +485,9 @@ We see from the following that as \(n\) increases, the shape converges to a bell
 \end{minipage}
 
 \begin{definition}[Normal Distribution]
-    We define normal (Gaussian) probability density function (PDF) with the parameters \(\mu\) and \(\sigma^2\) as 
+    We define normal (Gaussian) probability density function (PDF) \(\mathcal{N}(\mu, \sigma^2)\) with the parameters (mean) \(\mu\) and (variance) \(\sigma^2\) as 
     \[
-        f(x) \coloneqq \dfrac{1}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
+        f_X(x) \coloneqq \dfrac{1}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
     \]
 \end{definition}
 \begin{remark}
@@ -520,7 +510,7 @@ Note that the parameters \(\mu\) and \(\sigma^2\) in the above definition are eq
     \begin{aligned}
         \mathbb{E}[X] &= \int_{-\infty}^{\infty} xf(x) dx \\
         &= \int_{-\infty}^{\infty} \dfrac{x}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}} dx \\
-        &= \underbrace{\int_{-\infty}^{\infty} \dfrac{x - \mu}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}} dx}_{\text{let}\ \tilde{x} = x - \mu} + \underbrace{\mu\int_{-\infty}^{\infty} \dfrac{1}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}} dx}_{\mu\int_{-\infty}^{\infty} f(x) = \mu \times 1} \\
+        &= \underbrace{\int_{-\infty}^{\infty} \dfrac{x - \mu}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}} dx}_{\text{let}\ \tilde{x} = x - \mu} + \underbrace{\mu\int_{-\infty}^{\infty} \dfrac{1}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}} dx}_{\mu\int_{-\infty}^{\infty} f_X(x) = \mu \times 1} \\
         &= \underbrace{\int_{-\infty}^{\infty} \dfrac{\tilde{x}}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(\tilde{x})^2}{2\sigma^2}} dx}_{\text{odd function gives}\ 0} + \mu \\
         &= \mu 
     \end{aligned}
@@ -528,14 +518,14 @@ Note that the parameters \(\mu\) and \(\sigma^2\) in the above definition are eq
 \end{proof}
 
 \subsection{Standard Normal Distribution}
-Standard normal is the distribution of a normal random variable \(Z\) with parameters \(\mu = 0\) and \(\sigma^2 = 1\), i.e. with zero mean and unit variance, as 
+Standard normal \(\mathcal{N}(0, 1)\)is the distribution of a normal random variable \(Z\) with parameters (mean) \(\mu = 0\) and (variance) \(\sigma^2 = 1\), i.e. with zero mean and unit variance, as 
 \[
-    f(x) \coloneqq \dfrac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
+    f_X(x) \coloneqq \dfrac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
 \]
 
 We don't have an easy-to-use CDF for a normal random variable. Therefore, every time we try to find the CDF, we have to use
 \[
-    F(x) = (2\pi)^{-\frac{1}{2}} \int_{t \leq x} e^{-\frac{t^2}{2}}dt. 
+    F_X(x) = \dfrac{1}{\sqrt{2\pi}} \int_{t \leq x} e^{-\frac{t^2}{2}}dt. 
 \]
 However, if we know the CDF for the standard normal distribution, we don't need to derive the CDF for other normal distributions.
 
@@ -545,15 +535,11 @@ Suppose a random variable \(X\) has expected value \(\mathbb{E}[X] = \mu\) and v
 \]
 
 To show this, we proceed as follows: 
+\[
+    \mathbb{E}[Z] = \mathbb{E}[\dfrac{X - \mu}{\sigma}] = \dfrac{\mathbb{E}[X] - \mu}{\sigma} = 0 ;\quad \Var[Z] = \mathbb{E}[(Z - 0)^2] = \mathbb{E}\left[(\dfrac{X - \mu}{\sigma})^2\right] = \dfrac{\mathbb{E}[(X - \mu)^2]}{\sigma^2} = 1
+\]
 
-\(
-\begin{aligned}
-    \mathbb{E}[Z] &= \mathbb{E}[\dfrac{X - \mu}{\sigma}] = \dfrac{\mathbb{E}[X] - \mu}{\sigma} = 0 \\
-    \Var[Z] &= \mathbb{E}[(Z - 0)^2] = \mathbb{E}\left[(\dfrac{X - \mu}{\sigma})^2\right] = \mathbb{E}\left[\dfrac{(X - \mu)^2}{\sigma^2}\right] = \dfrac{\mathbb{E}[(X - \mu)^2]}{\sigma^2} = 1
-\end{aligned}
-\) 
-
-If random variable \(X\) has a normal distribution with parameters \(\mu\) and \(\sigma^2\), then random variable \(Z = \frac{X - \mu}{\sigma}\) has a standard normal distribution.
+If random variable \(X\) has a normal distribution with parameters \(\mu\) and \(\sigma^2\), then random variable \(Z = \frac{X - \mu}{\sigma}\) has a standard normal distribution. We can then find \(X = \mu + \sigma Z\). 
 
 It simply means that if we shift and scale any normal random variable using \(Z = \frac{X - \mu}{\sigma}\), the calculation becomes simpler.
 
@@ -561,7 +547,7 @@ It simply means that if we shift and scale any normal random variable using \(Z 
     Suppose \(X\) is a normal random variable with parameters \(\mu = 3\) and \(\sigma^2 = 9\). Find \(\mathbb{P}(\vert X - 3 \vert < 6)\).
 
     \textbf{Solution:} 
-    Since \(Z = \frac{X - \mu}{\sigma} = \frac{X - 3}{3} \sim N(0, 1)\) 
+    Since \(Z = \frac{X - \mu}{\sigma} = \frac{X - 3}{3} \sim \mathcal{N}(0, 1)\) 
     \[
         \begin{aligned}
             \mathbb{P}(\vert X - 3 \vert < 6) &= \mathbb{P}(-6 <  X - 3 < 6) \\
@@ -582,13 +568,20 @@ It simply means that if we shift and scale any normal random variable using \(Z 
 \]
 \end{remark}
 
+\subsection{Linear Function of a Normal Random Variable}
+Suppose we have \(Y = aX + b\), where \(X \sim \mathcal{N}(\mu, \sigma^2)\). Then we have \(\mathbb{E}[Y] = a\mu + b\) and \(\Var[Y] = a^2\sigma^2\), where \(Y \sim \mathcal{N}(a\mu + b, a^2\sigma^2)\). 
+
+Since \(Y\) is a function of a normal random variable, it is evident that \(Y\) is also a normal random variable.
+
+However, consider a special case where \(a = 0\). In this case, \(Y = b\). Although it is a constant (discrete) random variable, we can represent it as \(Y \sim \mathcal{N}(b, 0)\), where the variance is 0. This shows that it is always true that a linear function of a normal random variable results in a normal random variable.
+
 \subsection{Normal Approximation of Binomial Distribution}
 \begin{theorem}
     If \(S_n\) is a Binomial(\(n, p\)) random variable with mean \(np\) and variance \(np(1 - p)\), then for every \(a < b\): 
     \[
         \lim_{n \to \infty} \mathbb{P}\left(a \leq  \dfrac{S_n - np}{\sqrt{np(1 - p)}} \leq  b\right) = \varPhi (b) - \varPhi (a)
     \]
-    where \(\varPhi\) is the CDF of standard normal distribution. 
+    where \(\varPhi\) is the CDF of standard normal distribution. One may use the \href{page=51}{Z-Table} to look up the value. 
     \begin{remark}
         Note that \(Z_n = \frac{S_n - np}{\sqrt{np(1 - p)}}\) has zero mean and unit variance for every \(n\), and the above theorem shows the CDF of \(Z_n\) converges to the CDF of standard normal. 
     \end{remark}
@@ -637,26 +630,31 @@ Suppose \(F_{XY}\) is the joint CDF of \(X, Y\). Then, the marginal CDFs \(F_X, 
 \]
 Suppose \(f_{XY}\) is the joint PDF of \(X, Y\). Then, the marginal PDFs \(f_X, f_Y\) can be found by the integration of joint PDF
 \[
-    f_X(x) = \int_{y = -\infty}^{+\infty} f_{XY}(x, y) dy 
+    \int_{-\infty}^{+\infty} \int_{-\infty}^{+\infty} f_{XY}(x, y) dy dx = 1
 \]
 \[
-    f_Y(y) = \int_{x = -\infty}^{+\infty} f_{XY}(x, y) dx 
+    f_X(x) = \int_{y = -\infty}^{+\infty} f_{XY}(x, y) dy ,\quad f_Y(y) = \int_{x = -\infty}^{+\infty} f_{XY}(x, y) dx 
+\]
+For probability of an event \(A\), we have 
+\[
+    \mathbb{P}(A) = \int \int_A f_{XY} (x, y) dx dy
+\]
+For expected value, we have 
+\[
+    \mathbb{E}[g(X, Y)] = \int \int g(x, y) f_{XY} (x, y) dx dy
 \]
 
 \begin{eg}
     Rain drops at a rate of 1 drop/sec. Let \(X\) and \(Y\) be the arrival times of the first and second raindrops. Find \(F_{XY}\) and \(f_{XY}\). 
 
     \textbf{Solution:} 
-    Since rate = 1 drop/sec, \(X \sim\) Exponential(1). 
-
-    For Joint CDF \(F_{XY}\), 
+    Since rate = 1 drop/sec, \(X \sim\) Exponential(1). For Joint CDF \(F_{XY}\), 
     \[
     \begin{aligned}
         F_{XY}(x, y) &= \mathbb{P}(X \leq x, Y \leq y) \\
         &= \int_{z = -\infty}^{x} f_X(z) \mathbb{P}(Y \leq y \vert X = z) dz \quad (\mathbb{P}(Y - X \leq y - z \vert X = z),\ \text{independent})\\
         &= \int_{z = 0}^{x} (e^{-z}) \mathbb{P}(Y - X \leq y - z) dz \\
         &= \int_{z = 0}^{x} (e^{-z}) (1 - e^{-1 \cdot (y - z)}) dz \\
-        &= \int_{z = 0}^{x} e^{-z}(1 - e^{-(y - z)}) dz \\
         &= \int_{z = 0}^{x} (e^{-z} - e^{-y}) dz \\
         &= - e^{-z} - ze^{-y} \Big|_0^x \\
         &= 1 - e^{-x} - xe^{-y}
@@ -706,6 +704,7 @@ The Joint PDF of independent normal random variables \(X, Y\) with mean \(\mu\) 
     f_{XY}(x, y) = f_X(x) f_Y(y) = \left(\dfrac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}\right)\left(\dfrac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(y - \mu)^2}{2\sigma^2}}\right) = \dfrac{1}{2\pi \sigma^2}e^{-\frac{(x - \mu)^2 + (y - \mu)^2}{2\sigma^2}}
 \] 
 
+\newpage
 \begin{eg}
     Suppose \(X, Y\) are independent uniform random variables over \([0, 1]\). Then,
     \[
@@ -714,7 +713,7 @@ The Joint PDF of independent normal random variables \(X, Y\) with mean \(\mu\) 
             0 , &\text{ otherwise }
         \end{dcases}
     \]
-    For \(A \subseteq [0, 1]^2\), we can calculate \(A\)'s area \(\mathbb{P}(A) = \int_A f_{XY}(x, y)dx dy =\) area(\(A\)). 
+    For \(A \subseteq [0, 1]^2\), we can calculate \(A\)'s area \(\mathbb{P}(A) = \displaystyle\int_A f_{XY}(x, y)dx dy =\) area(\(A\)). 
 \end{eg}
 
 \begin{definition}[Uncorrelated Continuous Random Variables]
@@ -773,6 +772,28 @@ The Joint PDF of independent normal random variables \(X, Y\) with mean \(\mu\) 
     Since \(\mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y] = 0\), they are uncorrelated. 
 \end{eg}
 
+\newpage
+Same as for a discrete random variable, given an event, we can condition on the probability density function.  
+
+Suppose we have a continuous random variable \(X\), given that \(X \in A\),
+\[
+\begin{aligned}
+    \mathbb{P}(x \leq X \leq x + \sigma \vert X \in A) &\approx f_{X \vert X \in A} (x) \cdot \sigma \\
+    \dfrac{\mathbb{P}(x \leq X \leq x + \sigma, X \in A)}{\mathbb{P}(A)} &\approx f_{X \vert X \in A} (x) \cdot \sigma \\
+    \dfrac{\mathbb{P}(x \leq X \leq x + \sigma)}{\mathbb{P}(A)} &\approx f_{X \vert X \in A} (x) \cdot \sigma \\
+    \dfrac{f_X(x) \sigma}{\mathbb{P}(A)} &\approx f_{X \vert X \in A} (x) \cdot \sigma \\
+    \dfrac{f_X(x)}{\mathbb{P}(A)} &\approx f_{X \vert X \in A} (x)
+\end{aligned} 
+\] 
+
+Thus, we have 
+\[
+    f_{X \vert X \in A} (x) = \begin{dcases}
+       0 , &\text{ if } x \notin A \\[5pt]
+       \dfrac{f_X(x)}{\mathbb{P}(A)} , &\text{ if } x \in A 
+    \end{dcases}
+\]
+
 \begin{definition}
     For random variables \(X, Y\) , we define the conditional PDF \(f_{X \vert Y}\) as 
     \[
@@ -784,14 +805,14 @@ Then we have the following properties:
 
 1. Independent Random Variable: \(f_{X \vert Y}(x \vert y) \forall x, y \in \mathbb{R}\). 
 
-2. Total Probability Theorem: \(f_X(x) = \int f_{X \vert Y}(x \vert y) f_Y(y) dy\). 
+2. Total Probability Theorem: \(f_X(x) = \displaystyle\int_{-\infty}^{+\infty} f_{X \vert Y}(x \vert y) f_Y(y) dy\). 
 
-3. Total Expectation Theorem: \(\mathbb{E}[X] = \underbrace{\int \mathbb{E}[X \vert Y = y] f_Y(y) dy}_{\mathbb{E}[\mathbb{E}[X \vert Y]]}\) 
+3. Total Expectation Theorem: \(\mathbb{E}[X] = \underbrace{\int_{-\infty}^{+\infty} \mathbb{E}[X \vert Y = y] f_Y(y) dy}_{\mathbb{E}[\mathbb{E}[X \vert Y]]}\), \(\mathbb{E}[X \vert Y = y] = \int_{-\infty}^{+\infty} x f_{X\vert Y} (x \vert y) dx\). 
 
 \begin{theorem}[Continuous Bayes Rule]
     For random variables \(X, Y\), the conditional PDF \(f_{X \vert Y}\) and \(f_{Y \vert X}\) satisfy 
     \[
-        f_{X \vert Y} (x \vert y) = \dfrac{f_{Y \vert X}(y \vert x) f_X(x)}{f_Y(y)} = \dfrac{f_{Y \vert X}(y \vert x) f_X(x)}{\int_{x = -\infty}^{\infty} f_{Y \vert X}(y \vert x) f_X(x) dx}
+        f_{X \vert Y} (x \vert y) = \dfrac{f_{Y \vert X}(y \vert x) f_X(x)}{f_Y(y)} = \dfrac{f_{Y \vert X}(y \vert x) f_X(x)}{\displaystyle\int_{x = -\infty}^{\infty} f_{Y \vert X}(y \vert x) f_X(x) dx}
     \]
 \end{theorem}
 
