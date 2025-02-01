@@ -2,7 +2,7 @@
 
 \section{Chebyshev's Inequality}
 \begin{theorem}[Markov's Inequality]
-    Suppose that random variable \(X \leq 0\) only takes non-negative values. Then, for every \(t > 0\) 
+    Suppose that random variable \(X \geq 0\) only takes non-negative values. Then, for every \(t > 0\) 
     \[
         \mathbb{P}(X \geq t) \leq \dfrac{\mathbb{E}[X]}{t}
     \]
@@ -17,6 +17,8 @@
         \]
     \end{proof}
 \end{theorem}
+
+Above could be understood as: if \(X \geq 0\) and \(\mathbb{E}[X]\) is small, then \(X\) is unlikely to be very large.
 
 However, what if we take negative values for the random variable we use? 
 \begin{theorem}[Chebyshev’s Inequality]
@@ -37,6 +39,8 @@ However, what if we take negative values for the random variable we use?
         \]
     \end{proof}
 \end{theorem}
+
+Again, by intuition, the above says that if the variance is small, then \(X\) is unlikely to be too far from the mean. 
 
 \begin{eg}~ 
 
@@ -70,18 +74,21 @@ However, what if we take negative values for the random variable we use?
 
 \section{Law of Large Numbers}
 Imagine you observe Independent and Identically Distributed (IID)
-random variables \(X_1, X_2, \cdots, X_n\) distributed according to PMF \(p\) with expected value \(\mathbb{E}[X_i] = \mu\). The goal in the Law of Large Numbers is to show:
+random variables \(X_1, X_2, \cdots, X_n\) distributed according to PMF \(p\) with expected value \(\mathbb{E}[X_i] = \mu\). We have the sample mean \(M_n\), where 
 \[
-    \dfrac{X_1 + X_2 + \cdots + X_n}{n} \longrightarrow \mu \quad (n \to \infty)
+    M_n = \dfrac{X_1 + X_2 + \cdots + X_n}{n}.
+\] 
+
+Notice that \(M_n\) is a random variable since it is a function of random variables. It is, therefore, different from \(\mu\). 
+
+The goal of the Law of Large Numbers is to show:
+\[
+    M_n = \dfrac{X_1 + X_2 + \cdots + X_n}{n} \longrightarrow \mu \quad (n \to \infty)
 \]
 
 \begin{proof}
     \[
-        \begin{aligned}
-            \mathbb{E}[\dfrac{X_1 + X_2 + \cdots + X_n}{n}] &= \mathbb{E}[\dfrac{X_1}{n}] + \mathbb{E}[\dfrac{X_2}{n}] + \cdots + \mathbb{E}[\dfrac{X_n}{n}] \\
-            &= \dfrac{\mu}{n} + \dfrac{\mu}{n} + \cdots + \dfrac{\mu}{n} \\
-            &= \mu 
-        \end{aligned}
+        \mathbb{E}[\dfrac{X_1 + X_2 + \cdots + X_n}{n}] = \mathbb{E}[\dfrac{X_1}{n}] + \mathbb{E}[\dfrac{X_2}{n}] + \cdots + \mathbb{E}[\dfrac{X_n}{n}] = \dfrac{\mu}{n} + \dfrac{\mu}{n} + \cdots + \dfrac{\mu}{n} = \mu 
     \]
 \end{proof}
 
@@ -97,7 +104,7 @@ For variance, we have
 
 Suppose \(X_1, X_2, \cdots, X_n\) are IID with mean \(\mathbb{E}[X_i] = \mu\) and variance \(\Var[X_i] = \sigma^2\). Then, Chebyshev's inequality shows 
 \[
-        \mathbb{P}\left(\vert \dfrac{X_1 + \cdots + X_n}{n} - \mu \vert \geq \epsilon \right) \leq \dfrac{\sigma^2}{n\epsilon^2}
+        \mathbb{P}\left(\vert M_n - \mu \vert \geq \epsilon \right) \leq \dfrac{\Var[M_n]}{\epsilon^2} = \dfrac{\sigma^2}{n\epsilon^2}
 \]
 
 \newpage
@@ -106,25 +113,113 @@ Suppose \(X_1, X_2, \cdots, X_n\) are IID with mean \(\mathbb{E}[X_i] = \mu\) an
     \[
         \lim_{n \to \infty} \mathbb{P}(\vert \overline{X_n} - \mu \vert \geq \epsilon) = 0
     \]
+
+    \begin{explanation}
+        As the number of samples increases, i.e., \(n \rightarrow \infty\), the probability of the sample mean being greater than the actual mean will decrease and converge to 0 for a sufficiently large number of samples.
+    \end{explanation}
 \end{theorem}
+
+\begin{eg}[The Pollster's Problem]
+    Suppose in a referendum we want to determine the fraction of the population that will vote "yes," and we use \( p \) to describe this fraction. Now you take \( n \) samples of people to know their poll, and then you want to come up with an \( M_n \) that approximates the true \( p \) since you would not be able to know the actual \( p \). Then, what is the \( n \) that you should take to minimize the error?
+
+    \textbf{Solution:} 
+    Suppose the \(i\)-th randomly selected person polled \(X_i\), where  
+    \[  
+        X_i = \begin{dcases}  
+            1, & \text{if yes} \\  
+            0, & \text{if no}  
+        \end{dcases} \quad,  
+    \]  
+    and we have the fraction of "yes" in our sample described as \(M_n\), where  
+    \[  
+        M_n = \dfrac{X_1 + X_2 + \cdots + X_n}{n}.  
+    \]
+    
+    We would like a "small error," e.g., \(\vert M_n - p \vert < 0.01\). However, since we have no prior knowledge of \(p\), we can only ensure a small error by bounding it with a small probability, i.e., the probability of the error exceeding a certain value should not exceed a specified percentage. Then, we can try \(n = 10,000\). By Chebyshev's inequality, we have
+    \[
+        \mathbb{P}(\vert M_{10,000} - p \vert \geq 0.01) \leq \dfrac{\sigma^2}{n\epsilon^2} = \dfrac{p(1 - p)}{10^4 \cdot 10^{-4}} = p(1 - p)
+    \] 
+    Also, \(p\) remains unknown. Since it is uniformly distributed from 0 to 1, we see that \(p(1 - p)\) forms a parabola, with the maximum value at \(\frac{1}{4}\). Then we have
+    \[
+        \mathbb{P}(\vert M_{10,000} - p \vert \geq 0.01) \leq \dfrac{1}{4} = 25\%
+    \]
+
+    The above bound is, however, too large, and we want a smaller percentage, for example, \(5\%\). We can then determine the \(n\) we need by
+    \[
+        \dfrac{\frac{1}{4}}{n \cdot 10^{-4}} \leq \dfrac{5}{10^2} \Longleftrightarrow n \geq \dfrac{10^6}{20} = 50,000,
+    \]
+    which gives 
+    \[
+        \mathbb{P}(\vert M_{50,000} - p \vert \geq 0.01) \leq 0.05
+    \]
+\end{eg}
 
 \section{Central Limit Theorem}
 Suppose a random variable \(X\) has expected value \(\mathbb{E}[X] = \mu\) and variance \(\Var[X] = \sigma^2\). Then, random variable \(Z = \dfrac{1}{\sigma} (X - \mu)\) has zero expected value and unit variance: \(\mathbb{E}[Z] = 0\), \(\Var[Z] = 1\). 
 
 Consider IID random variables \(X_1, X_2, \cdots, X_n\) has expected value \(\mathbb{E}[X_i] = \mu\) and variance \(\Var[X_i] = \sigma^2\) and define
 \[
-    \overline{X_n} = \dfrac{1}{n}(X_1 + \cdots + X_n) 
+    S_n = X_1 + \cdots + X_n
 \]
-Then, random variable \(Z_n = \frac{\overline{X_n} - \mu}{\frac{\sigma}{\sqrt{n}}}\) has zero expected value and unit variance. 
+Then, random variable \(Z_n = \dfrac{S_n - n\mu}{\sigma\sqrt{n}}\) has zero expected value and unit variance. 
 
 \begin{theorem}[Central Limit Theorem (CLT)]
     Consider IID random variables \(X_1, X_2, \cdots\) with expected value \(\mathbb{E}[X_i] = \mu\) and variance \(\Var[X_i] = \sigma^2\). Then, if we define
     \[
-        Z_n = \dfrac{\dfrac{1}{n}(X_1 + \cdots + X_n) - \mu}{\dfrac{\sigma}{\sqrt{n}}}
+        Z_n = \dfrac{(X_1 + \cdots + X_n) - n\mu}{\sigma\sqrt{n}},
     \]
-    the CDF of random variable \(Z_n\) will converge to the CDF of a standard normal distribution \(\varPhi (z)\), i.e. for every \(z \in \mathbb{R}\)
+    we have 
+    \[
+        \mathbb{E}[Z_n] = \mathbb{E}\left[\dfrac{(X_1 + \cdots + X_n) - n\mu}{\sigma\sqrt{n}}\right] = \dfrac{n\mu - n\mu}{\sigma\sqrt{n}} = 0, \quad \Var[X_i] = \dfrac{\sigma\sqrt{n}}{\sigma\sqrt{n}} = 1.
+    \]
+    The CDF of random variable \(Z_n\) will converge to the CDF of a standard normal distribution \(\varPhi (z)\), i.e. for every \(z \in \mathbb{R}\)
     \[
         \lim_{n \to \infty} \mathbb{P}(Z_n \leq z) = \varPhi (z)
     \]
 \end{theorem}
 Therefore, according to the central limit theorem, the sum of many independent random numbers will approximately have a normal distribution.
+
+\begin{eg}
+    Suppose a package weighs \(X_i\), i.i.d. with \(X_i \sim \text{Exponential}\left(\frac{1}{2}\right)\). We now load the container with \(n = 100\) packages. Find 
+    
+    (1) \(\mathbb{P}(S_n \geq 210)\);
+    
+    (2) \(a\) such that \(\mathbb{P}(S_n \geq a) \approx 0.05\); 
+
+    (3) largest \(n\) such that \(\mathbb{P}(S_n \geq 210) \approx 0.05\); 
+
+    (4) \(\mathbb{P}(N \geq 100)\), where \(N\) is the number of packages loaded. We can load the container until weight exceed 210. 
+
+    \textbf{Solution:} 
+
+    (1)
+    \[
+        Z_n = \dfrac{S_n - n\mu}{\sigma\sqrt{n}}, \mu = \sigma = 2
+    \]
+    \[
+        \mathbb{P}(S_n \geq 210) = \mathbb{P}(\dfrac{S_n - 200}{20} \geq \dfrac{210 - 200}{20}) = \mathbb{P}(Z \geq 0.5) = 1 - \mathbb{P}(Z < 0.5) = 1 - \varPhi (0.5) = 0.3085
+    \]
+
+    (2) 
+    \[
+        0.05 \approx \mathbb{P}(\dfrac{S_n - 200}{20} \geq \dfrac{a - 200}{20}) = \mathbb{P}(Z \geq \dfrac{a - 200}{20}) = 1 - \underbrace{\varPhi(\dfrac{a - 200}{20})}_{0.95}
+    \]
+    \[
+        \dfrac{a - 200}{20} = 1.645 \Longrightarrow a = 232.9
+    \]
+
+    (3)
+    \[
+        \begin{aligned}
+            \mathbb{P}(\dfrac{S_n - 2n}{2\sqrt{n}} \geq \dfrac{210 - 2n}{2\sqrt{n}}) &\approx 1 - \varPhi(\dfrac{210 - 2n}{2\sqrt{n}}) \approx 0.05 \\
+            \dfrac{210 - 2n}{2\sqrt{n}} &= 1.645 \\
+            n &= 89
+        \end{aligned}
+    \]
+
+    (4)
+    \[
+        \mathbb{P}(N \geq 100) = \mathbb{P}\left(\sum_{i = 1}^{100} X_i \leq 210\right) \approx \varPhi\left(\dfrac{210 - 200}{20}\right) = \varPhi(0.5) = 0.6915
+    \]
+
+\end{eg}
