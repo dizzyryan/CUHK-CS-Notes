@@ -86,139 +86,20 @@ However, when \(\sigma = 0\), \(\mathbb{P}(x \leq X \leq x + \delta) = 0\), whic
 
 \begin{minipage}{0.5\textwidth}
     \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-            ymin=0,
-            ymax=0.55,
-            xtick={0,2,...,10},
-            ytick={0,0.1,...,0.5},
-            samples at={1,...,10},
-            xtick style={draw=none},
-              yticklabel style={
-                  /pgf/number format/fixed,
-                  /pgf/number format/fixed zerofill,
-                  /pgf/number format/precision=2,
-            },   
-            domain=1:10,
-            samples=10,
-        ]
-        % Define p, probability of success
-        \pgfmathsetmacro{\p}{0.5}
-        
-        % Plot the PMF of the geometric distribution
-        \addplot [
-          ybar=0pt,
-          bar width=7pt,
-          fill=cyan,
-          draw=cyan,
-          mark=none,
-      ] {(\p*(1-\p)^(x-1))};
-      % Add "discrete CDF" label
-      \node[anchor=south west] at (axis cs:9,0.05) {PMF};
-        \end{axis}
-    \end{tikzpicture}
+    \input{Figures/PMF-visual.tex}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
     \centering
-    \begin{tikzpicture}
-    \begin{axis}[
-        axis lines=box,
-        xtick={0,1,...,10},
-        ytick={0,0.2,...,1},
-        ymin=-0.1, ymax=1.1,
-        xmin=-0.5, xmax=10.5,
-        every axis x label/.style={at={(ticklabel* cs:1)}, anchor=north},
-        every axis y label/.style={at={(ticklabel* cs:1)}, anchor=east},
-    ]
-        % Plot the stepwise CDF
-        \addplot[
-            thick,
-            cyan,
-            const plot
-        ] coordinates {
-            (0, 0)
-            (1, 0.5)
-            (2, 0.75)
-            (3, 0.875)
-            (4, 0.9375)
-            (5, 0.96875)
-            (6, 0.984375)
-            (7, 0.9921875)
-            (8, 0.99609375)
-            (9, 0.998046875)
-            (10, 0.999023437)
-        };
-
-        % Add "discrete CDF" label
-        \node[anchor=south west] at (axis cs:5.5,0) {discrete CDF};
-    \end{axis}
-\end{tikzpicture}
+    \input{Figures/discrete-CDF-visual.tex}
 \end{minipage}
 
 \begin{minipage}{0.5\textwidth}
     \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-            axis lines=box,
-            xtick={0,0.1,...,1.0},
-            ytick={0,0.2,...,1.0},
-            xmin=-0.1, xmax=1.1,
-            ymin=0.0, ymax=1.1,
-            xtick={0,0.2,...,1.0},
-            ytick={0,0.2,...,1.0},
-            samples at={0.0,...,1.0},
-        ]
-            % Plot the stepwise CDF
-            \addplot[
-                thick,
-                cyan,
-                const plot
-            ] coordinates {
-                (0.0, 0.0)
-                (0.0, 1.0)
-                (0.1, 1.0)
-                (0.2, 1.0)
-                (0.3, 1.0)
-                (0.4, 1.0)
-                (0.5, 1.0)
-                (0.6, 1.0)
-                (0.7, 1.0)
-                (0.8, 1.0)
-                (0.9, 1.0)
-                (1.0, 0.0)
-            };
-            % Add "discrete CDF" label
-            \node[anchor=south west] at (axis cs:0.8,0.1) {PDF};
-        \end{axis}
-    \end{tikzpicture}
+    \input{Figures/PDF-visual.tex}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
     \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-            axis lines=box,
-            xtick={0,0.1,...,1.0},
-            ytick={0,0.2,...,1.0},
-            xmin=-0.1, xmax=1.1,
-            ymin=0.0, ymax=1.1,
-            xtick={0,0.2,...,1.0},
-            ytick={0,0.2,...,1.0},
-            samples at={0.0,...,1.0},
-        ]
-            % Plot the stepwise CDF
-            \addplot[
-                thick,
-                cyan,
-            ] coordinates {
-                (-0.1, 0.0)
-                (0.0, 0.0)
-                (1.0, 1.0)
-                (1.1, 1.0)
-            };
-            % Add "discrete CDF" label
-            \node[anchor=south west] at (axis cs:0.5,0.1) {continuous CDF};
-        \end{axis}
-    \end{tikzpicture}
+    \input{Figures/continuous-CDF-visual.tex}
 \end{minipage}
 
 \newpage
@@ -426,62 +307,10 @@ constants \(s, t \geq 0\):
 We see from the following that as \(n\) increases, the shape converges to a bell shape curve.
 
 \begin{minipage}{0.5\textwidth}
-    \begin{tikzpicture}
-    \begin{axis}
-    [
-        % Define probability distribution functions
-        declare function={
-            binom(\n,\p) = \n!/(x!*(\n-x)!)*\p^x*(1-\p)^(\n-x);
-            normal(\m,\s) = 1/(\s*sqrt(2*pi))*exp(-((x-\m)^2)/(2*\s^2));
-        },
-        % Plotting options
-        xmin=34, xmax=66,
-        ymin=0.0, ymax=0.09,
-        samples at={35,...,65},
-        xtick={35,40,...,65},
-        ytick={0,0.01,...,0.08},
-        yticklabel style={
-            /pgf/number format/fixed,
-            /pgf/number format/fixed zerofill,
-            /pgf/number format/precision=2,
-        },   
-    ]
-    
-    % Plot Binomial Distribution
-    \addplot [draw=cyan,ybar=0pt,bar width=3pt,fill=cyan] {binom(100,0.5)};
-    % Add "discrete CDF" label
-    \node[anchor=south west] at (axis cs:52,0.07) {Binomial(\(100, \frac{1}{2}\))};
-    \end{axis}
-\end{tikzpicture}
+    \input{Figures/normal-random-1.tex}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-    \begin{tikzpicture}
-    \begin{axis}
-    [
-        % Define probability distribution functions
-        declare function={
-            binom(\n,\p) = \n!/(x!*(\n-x)!)*\p^x*(1-\p)^(\n-x);
-            normal(\m,\s) = 1/(\s*sqrt(2*pi))*exp(-((x-\m)^2)/(2*\s^2));
-        },
-        % Plotting options
-        xmin=440, xmax=560,
-        ymin=0.0, ymax=0.0275,
-        samples at={450,...,550},
-        xtick={460,480,...,540},
-        ytick={0,0.005,...,0.025},
-        yticklabel style={
-            /pgf/number format/fixed,
-            /pgf/number format/fixed zerofill,
-            /pgf/number format/precision=2,
-        },   
-    ]
-    
-    % Plot Binomial Distribution
-    \addplot [draw=cyan,ybar=0pt,bar width=0.5pt,fill=cyan] {binom(1000,0.5)};
-    % Add "discrete CDF" label
-    \node[anchor=south west] at (axis cs:505,0.021) {Binomial(\(1000, \frac{1}{2}\))};
-    \end{axis}
-\end{tikzpicture}
+    \input{Figures/normal-random-2.tex}
 \end{minipage}
 
 \begin{definition}[Normal Distribution]
@@ -581,7 +410,7 @@ However, consider a special case where \(a = 0\). In this case, \(Y = b\). Altho
     \[
         \lim_{n \to \infty} \mathbb{P}\left(a \leq  \dfrac{S_n - np}{\sqrt{np(1 - p)}} \leq  b\right) = \varPhi (b) - \varPhi (a)
     \]
-    where \(\varPhi\) is the CDF of standard normal distribution. One may use the \href{page=51}{Z-Table} to look up the value. 
+    where \(\varPhi\) is the CDF of standard normal distribution. One may use the \href{page=52}{Z-Table} to look up the value. 
     \begin{remark}
         Note that \(Z_n = \frac{S_n - np}{\sqrt{np(1 - p)}}\) has zero mean and unit variance for every \(n\), and the above theorem shows the CDF of \(Z_n\) converges to the CDF of standard normal. 
     \end{remark}
@@ -795,7 +624,7 @@ Thus, we have
 \]
 
 \begin{definition}
-    For random variables \(X, Y\) , we define the conditional PDF \(f_{X \vert Y}\) as 
+    For random variables \(X, Y\), we define the conditional PDF \(f_{X \vert Y}\) as 
     \[
         f_{X \vert Y}(x \vert y) = \dfrac{f_{XY}(x, y)}{f_Y(y)}
     \]
