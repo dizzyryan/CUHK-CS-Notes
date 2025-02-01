@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+  \begin{axis}[
+      axis lines=box,
+      xtick={0,0.1,...,1.0},
+      ytick={0,0.2,...,1.0},
+      xmin=-0.1, xmax=1.1,
+      ymin=0.0, ymax=1.1,
+      xtick={0,0.2,...,1.0},
+      ytick={0,0.2,...,1.0},
+      samples at={0.0,...,1.0},
+  ]
+      % Plot the stepwise CDF
+      \addplot[
+          thick,
+          cyan,
+      ] coordinates {
+          (-0.1, 0.0)
+          (0.0, 0.0)
+          (1.0, 1.0)
+          (1.1, 1.0)
+      };
+      % Add "discrete CDF" label
+      \node[anchor=south west] at (axis cs:0.5,0.1) {continuous CDF};
+  \end{axis}
+\end{tikzpicture}
