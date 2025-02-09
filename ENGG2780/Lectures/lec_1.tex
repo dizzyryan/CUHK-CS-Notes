@@ -1,16 +1,131 @@
 \chapter{Bayesian Statistic}
 
 \section{Statistic v.s. Probability}
-
 Statistics focuses on real-life applications where the underlying distribution is often unknown. To address this, we use \textbf{statistical inference} to analyze observed data and estimate the unknown distribution. Rather than finding the exact distribution, we approximate it using models such as parametric (e.g., normal, exponential) or non-parametric approaches. Once a suitable model is chosen, probability laws help us make predictions and draw conclusions, though these approximations involve assumptions and uncertainties.  
 
-Statistics and probability are closely related but serve different purposes. \textbf{Probability} predicts outcomes based on known models, while \textbf{statistics} analyzes past data to infer unknown distributions. Probability starts with assumptions and calculates outcomes, whereas statistics starts with data to estimate models.  
-
-Despite their differences, the two fields are interdependent. Probability provides the foundation for statistical inference, while statistics helps validate probability models using real-world data. In short, probability predicts based on models, while statistics builds models from data.  
-
 Now, let's move on to our first topic in statistics: 
-
 
 \section{Bayesian Statistics}
 In the probability course, we learned Bayes' Rule \href{https://ryanc.wtf/files/ENGG2760.pdf#page=14}{ENGG2760: Theorem 3.2.1}, which helps us calculate conditional probabilities and, at times, update our beliefs based on new evidence.
 
+And it turns out that one of the statistical inferences we use is based on Bayes' rule, namely Bayesian statistical inference. In Bayesian statistical inference, we: (1) assign prior probabilities to parameters; (2) observe data; and (3) update probabilities via Bayes' rule:
+\[
+  \underbrace{f_{\Theta \vert X} (\theta \vert x)}_{\text{Posterior}} = \dfrac{\overbrace{f_{\Theta} (\theta)}^{\text{Prior}} \overbrace{f_{X \vert \Theta} (x \vert \theta)}^{\text{Observation}}}{f_X (x)}
+\]
+Here we have both the posterior and prior probabilities of the parameters \(\theta\)  and observations \(x\).  
+
+We have four variations of the Bayes' rule shown above.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c}
+      \toprule
+      Condition & Bayes' rule  \\
+    \midrule
+      \(\Theta\) discrete, \(X\) discrete & \(p_{\Theta \vert X} (\theta \vert x) = \dfrac{p_{\Theta} (\theta) p_{X \vert \Theta} (x \vert \theta)}{\sum_{\theta^{\prime}} p_{\Theta} (\theta^{\prime}) p_{X \vert \Theta} (x \vert \theta^{\prime})}\)  \\
+      \(\Theta\) discrete, \(X\) continuous & \(p_{\Theta \vert X} (\theta \vert x) = \dfrac{p_{\Theta} (\theta) f_{X \vert \Theta} (x \vert \theta)}{\sum_{\theta^{\prime}} p_{\Theta} (\theta^{\prime}) f_{X \vert \Theta} (x \vert \theta^{\prime})}\)  \\
+      \(\Theta\) continuous, \(X\) discrete & \(f_{\Theta \vert X} (\theta \vert x) = \dfrac{f_{\Theta} (\theta) p_{X \vert \Theta} (x \vert \theta)}{\int f_{\Theta} (\theta^{\prime}) p_{X \vert \Theta} (x \vert \theta^{\prime})}\)  \\
+      \(\Theta\) continuous, \(X\) continuous & \(f_{\Theta \vert X} (\theta \vert x) = \dfrac{f_{\Theta} (\theta) f_{X \vert \Theta} (x \vert \theta)}{\int f_{\Theta} (\theta^{\prime}) f_{X \vert \Theta} (x \vert \theta^{\prime})}\)  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+We can use \(Z(x)\) to denote the denominator for both discrete and continuous cases. It depends only on the observed data \(x\).
+
+\begin{eg}[Probability Review]
+  We flip a coin. How likely is it to get 2 heads in 3 coin flips if the probability of heads is \(p\), where \(p\) could be 0.5, 0.7, and 1? 
+  
+  Also, use the Central Limit Theorem to estimate the probability of at least 200 heads in 300 coin flips.
+
+  \textbf{Solution:} 
+  \[
+    \mathbb{P}(H = 2) = \binom{3}{2} p^2(1 - p)
+  \]
+  \(p = 0.5: \mathbb{P}(H = 2) = \binom{3}{2} \times 0.5^2 \times 0.5 = 0.375\)
+
+  \(p = 0.7: \mathbb{P}(H = 2) = \binom{3}{2} \times 0.7^2 \times 0.3 = 0.441\)
+
+  \(p = 1: \mathbb{P}(H = 2) = \binom{3}{2} \times 1^2 \times 0 = 0\)
+
+  For the probability of at least 200 heads in 300 coin-flips, 
+  \[
+    \text{H} \sim \text{Binomial}(300, p),\quad \mu = 300p,\quad \sigma = \sqrt{300p(1 - p)}
+  \]
+  \(p = 0.5: \mu = 150, \sigma = 8.66\)
+
+  \(
+  \begin{aligned}
+    \mathbb{P}(H \geq 200) &= \mathbb{P}(\dfrac{H - 150}{8.66} \geq \dfrac{200 - 150}{8.66}) \\
+    &= \mathbb{P}(z \geq 5.77) \\
+    &\approx 0
+  \end{aligned}
+  \) 
+
+  \(p = 0.7: \mu = 210, \sigma = 7.94\)
+
+  \(
+  \begin{aligned}
+    \mathbb{P}(H \geq 200) &= \mathbb{P}(\dfrac{H - 210}{7.94} \geq \dfrac{200 - 210}{7.94}) \\
+    &= \mathbb{P}(z \geq -1.26) \\
+    &= \varPhi (1.26) \\
+    &= 0.896
+  \end{aligned}
+  \) 
+  
+\end{eg}
+
+Again, we flip a coin three times and get two heads. You are told that there are three types of coins with different priors, but you don’t know which coin you are flipping. It is obvious that the first coin flip will affect your belief (prior) about which coin you have. For example, if you see 100 heads out of 100 flips, you might strongly believe that both sides of the coin are heads. But to what extent does each flip influence your belief? This brings us to the problem of statistics.
+
+\begin{eg}
+  A coin can be one of three types:
+
+  1. A fair coin \(\theta = 1\) with one head and one tail – 90\%
+
+  2. A coin \(\theta = 2\) with both sides as heads – 5\%
+  
+  3. A coin \(\theta = 3\) with both sides as tails – 5\%
+
+  Now, you flip a head without knowing which coin you have. How should you update your belief (priors)?
+
+  \textbf{Solution:} 
+
+  \(
+  \begin{aligned}
+    \mathbb{P}(\theta = 1 \vert H_1) &= \dfrac{\mathbb{P}(H_1 \vert \theta = 1)\mathbb{P}(\theta = 1)}{Z(H_1)} = \dfrac{0.5 \times 0.9}{Z(H_1)} = \dfrac{0.45}{Z(H_1)} \\
+    \mathbb{P}(\theta = 2 \vert H_1) &= \dfrac{\mathbb{P}(H_1 \vert \theta = 2)\mathbb{P}(\theta = 2)}{Z(H_1)} = \dfrac{1 \times 0.05}{Z(H_1)} = \dfrac{0.05}{Z(H_1)} \\
+    \mathbb{P}(\theta = 3 \vert H_1) &= 0 \\
+  \end{aligned}
+  \) 
+
+  Then we have \(\mathbb{P}(H_1) = Z(H_1) = 0.45 + 0.05 + 0 = 0.5\) 
+  \[
+    \mathbb{P}(\theta = 1 \vert H_1) = \dfrac{0.45}{Z(H_1)} = 0.9 \quad \mathbb{P}(\theta = 1 \vert H_1) = \dfrac{0.05}{Z(H_1)} = 0.1 \quad \mathbb{P}(\theta = 1 \vert H_1) = 0
+  \]
+
+  From this, we can update our belief, which we can then use to further readjust our belief if the second flip also results in a head. 
+
+  \(
+  \begin{aligned}
+    \mathbb{P}(\theta = 1 \vert H_2 H_1) &= \dfrac{\mathbb{P}(H_2 \vert \theta = 1, H_1)\mathbb{P}(\theta = 1 \vert H_1)}{Z(H_2, H_1)} = \dfrac{0.5 \times 0.9}{Z(H_2, H_1)} = \dfrac{0.45}{Z(H_2, H_1)} \\
+    \mathbb{P}(\theta = 2 \vert H_2 H_1) &= \dfrac{\mathbb{P}(H_2 \vert \theta = 2, H_1)\mathbb{P}(\theta = 2 \vert H_1)}{Z(H_2, H_1)} = \dfrac{1 \times 0.1}{Z(H_2, H_1)} = \dfrac{0.1}{Z(H_2, H_1)} \\
+    \mathbb{P}(\theta = 3 \vert H_2 H_1) &= 0 \\
+  \end{aligned}
+  \) 
+
+  Then we have \(\mathbb{P}(H_2 H_1) = Z(H_2 H_1) = 0.45 + 0.01 + 0 = 0.55\) 
+  \[
+    \mathbb{P}(\theta = 1 \vert H_2 H_1) = \dfrac{0.45}{Z(H_2 H_1)} = 0.82 \quad \mathbb{P}(\theta = 1 \vert H_2 H_1) = \dfrac{0.1}{Z(H_2 H_1)} = 0.18 \quad \mathbb{P}(\theta = 1 \vert H_2 H_1) = 0
+  \]
+\end{eg}
+
+We also have Bayes's rule for multiple random variables:
+\[
+  \begin{aligned}
+    f_{\Theta \vert X_1, \cdots, X_n} (\theta \vert x_1, \cdots, x_n) &= \dfrac{f_{X_1, \cdots, X_n \vert \Theta} (x_1, \cdots, x_n \vert \theta) f_{\Theta} (\theta)}{Z(x_1, \cdots, x_n)} \\
+    &= f_{X_1, \cdots, X_n \vert \Theta} (x_1, \cdots, x_n \vert \theta) f_{\Theta} (\theta) \\ 
+    &= \underbrace{f_{X_1 \vert \Theta} (x_1 \vert \theta) \cdots f_{X_n  \vert \Theta(x_n \vert \theta)}}_{\text{product of likelihood}} \underbrace{f_{\Theta} (\theta)}_{\text{prior}}
+  \end{aligned}
+\]
+if \(X_1, \cdots, X_n\) are independent given \(\Theta\).  
+
+% L01 finished
