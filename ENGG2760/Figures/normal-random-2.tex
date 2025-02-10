@@ -1,3 +1,17 @@
+\documentclass[preview]{standalone}
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{intersections, angles, quotes, positioning}
+\usetikzlibrary{arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
+\tikzset{
+	force/.style={thick, {Circle[length=2pt]}-stealth, shorten <=-1pt}
+}
+
+\begin{document}
+
 \begin{tikzpicture}
     \begin{axis}
     [
@@ -25,3 +39,4 @@
     \node[anchor=south west] at (axis cs:505,0.021) {Binomial(\(1000, \frac{1}{2}\))};
     \end{axis}
     \end{tikzpicture}
+\end{document}
