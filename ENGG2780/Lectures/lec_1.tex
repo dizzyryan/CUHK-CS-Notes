@@ -120,16 +120,6 @@ Again, we flip a coin three times and get two heads. You are told that there are
   \]
 \end{eg}
 
-We also have Bayes's rule for multiple random variables:
-\[
-  \begin{aligned}
-    f_{\Theta \vert X_1, \cdots, X_n} (\theta \vert x_1, \cdots, x_n) &= \dfrac{f_{X_1, \cdots, X_n \vert \Theta} (x_1, \cdots, x_n \vert \theta) f_{\Theta} (\theta)}{Z(x_1, \cdots, x_n)} \\
-    &\propto f_{X_1, \cdots, X_n \vert \Theta} (x_1, \cdots, x_n \vert \theta) f_{\Theta} (\theta) \\ 
-    &= \underbrace{f_{X_1 \vert \Theta} (x_1 \vert \theta) \cdots f_{X_n  \vert \Theta(x_n \vert \theta)}}_{\text{product of likelihood}} \underbrace{f_{\Theta} (\theta)}_{\text{prior}}
-  \end{aligned}
-\]
-if \(X_1, \cdots, X_n\) are independent given \(\Theta\).  
-
 % L01 finished
 \subsection{Bayesian Statistical Inference}
 For Bayesian statistics, we have only one formula: Bayes’s rule: 
@@ -217,3 +207,30 @@ We have some prior knowledge, and after observing something, we can use the prio
     f_{\Theta \vert X_1, X_2} \left(\theta \Big| \dfrac{1}{2}, \dfrac{1}{4}\right) \propto f_{X_2 \vert \Theta, X_1} \left(\dfrac{1}{4} \Big| \theta, \dfrac{1}{2}\right) f_{\Theta \vert X_1}\left(\theta \Big| \dfrac{1}{2}\right)
   \]
 \end{proof}
+
+Now it's a bit tedious since we need to perform calculations and adjust our prior each time we obtain new data or observations. However, we also have Bayes's rule for multiple random variables, which simplifies the process. 
+\[
+  \begin{aligned}
+    f_{\Theta \vert X_1, \cdots, X_n} (\theta \vert x_1, \cdots, x_n) &= \dfrac{f_{X_1, \cdots, X_n \vert \Theta} (x_1, \cdots, x_n \vert \theta) f_{\Theta} (\theta)}{Z(x_1, \cdots, x_n)} \\
+    &\propto f_{X_1, \cdots, X_n \vert \Theta} (x_1, \cdots, x_n \vert \theta) f_{\Theta} (\theta) \\ 
+    &= \underbrace{f_{X_1 \vert \Theta} (x_1 \vert \theta) \cdots f_{X_n  \vert \Theta(x_n \vert \theta)}}_{\text{product of likelihood}} \underbrace{f_{\Theta} (\theta)}_{\text{prior}}
+  \end{aligned}
+\]
+if \(X_1, \cdots, X_n\) are independent given \(\Theta\).  
+
+\begin{eg}[Cont'd]
+  Given that Juliet is late by \(\frac{1}{4}\) hours on their third date, how do we find the posterior? 
+
+  \textbf{Solution:} 
+
+  \[
+    f_{\Theta \vert X_1, X_2, X_3} \left(\theta \Big| \dfrac{1}{2}, \dfrac{1}{4}, \dfrac{1}{4}\right) \propto f_{X_1 \vert \Theta} \left(\dfrac{1}{2} \Big| \theta\right) f_{X_2 \vert \Theta} \left(\dfrac{1}{4} \Big| \theta\right) f_{X_3 \vert \Theta} \left(\dfrac{1}{4} \Big| \theta\right) f_{\Theta} (\theta) = \dfrac{1}{\theta^3}
+  \]
+
+  For \(f_{X_1 \vert \Theta}, f_{X_2 \vert \Theta}, f_{X_3 \vert \Theta}\), they are all equal to \(\frac{1}{\theta}\) for \(\theta \geq \frac{1}{2}\) and \(\theta \geq \frac{1}{4}\) for the same reason shown before. We also have \(f_{\Theta} (\theta) = 1\) if \(0 \leq \theta \leq 1\). Taking the intersection, we obtain \(\frac{1}{\theta^3}\) for \(\frac{1}{2} \leq \theta \leq 1\). For the integral to be equal to 1, we need to determine the constant term, which can be found using calculus.
+  \[
+    \int_\frac{1}{2} ^1 \dfrac{1}{\theta^2} d \theta = \dfrac{3}{2} \Longrightarrow f_{\Theta \vert X_1, X_2, X_3} \left(\theta \Big| \dfrac{1}{2}, \dfrac{1}{4}, \dfrac{1}{4}\right) = \dfrac{2}{3\theta^3}
+  \]  
+\end{eg}
+
+\section{Conjugate Priors}
