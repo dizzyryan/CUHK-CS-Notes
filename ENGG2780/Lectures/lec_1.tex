@@ -233,4 +233,31 @@ if \(X_1, \cdots, X_n\) are independent given \(\Theta\).
   \]  
 \end{eg}
 
+\newpage
+\begin{eg}[Biased Coin]
+  A coin of unknown bias flips HTT. What is the bias?
+
+  \textbf{Solution:} 
+  Let \(X \sim \text{Bernoulli}(\Theta)\), where \(\Theta = \mathbb{P}(X = H)\). We have a prior \(\Theta \sim \text{Uniform}(0, 1)\). To find the posterior (bias), we have:
+  \[
+    \begin{aligned}
+      f_{\Theta \vert X_1, X_2, X_3} (\theta \vert H,H,T) &\propto p_{X_1 \vert \Theta} (H \vert \theta) p_{X_2 \vert \Theta} (T \vert \theta) p_{X_3 \vert \Theta} (T \vert \theta) f_{\Theta} (\theta) \\
+      &= \theta (1 - \theta) (1 - \theta) \times 1 \\
+      &= \theta (1 - \theta)^2 \\
+      \Longrightarrow f_{\Theta \vert X_1, X_2, X_3} (\theta \vert H,H,T) &= \dfrac{\theta (1 - \theta)^2}{\int_0 ^1 \theta  (1 - \theta)^2} = 12\theta (1 - \theta)^2
+    \end{aligned}
+  \]
+\end{eg}
+
+To find the posterior, we often need to find the denominator \(Z(x)\), which requires some calculus techniques and can sometimes be difficult to solve. However, there are some techniques that come in handy.
+
 \section{Conjugate Priors}
+
+\begin{definition}[Conjugate Priors]
+  The posterior distribution \(f_{\Theta \vert X} (\theta \vert x)\) is in the same probability distribution family as the prior distribution \(f_{\Theta} (\theta)\), the prior and posterior are then called conjugate distributions, and the prior is called a conjugate prior for
+  the likelihood function\(f_{X \vert \Theta} (x \vert \theta)\).
+\end{definition}
+
+% L02 finished
+
+% END OF DOCUMENT
