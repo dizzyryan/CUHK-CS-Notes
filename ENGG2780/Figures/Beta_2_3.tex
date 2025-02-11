@@ -1,0 +1,23 @@
+\documentclass[preview]{standalone}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}[
+        domain=0:1,
+        samples=200,
+        thick,
+        legend pos=north east,
+        xlabel={$\theta$},
+        grid=major,
+        xmin=0, xmax=1,
+        xtick={0,0.1,...,1},
+    ]
+        % Beta(2,3) -> B(2,3) = 1/12 -> 12 * x^(2-1) * (1-x)^(3-1)
+        \addplot[red] {12 * x^(2-1) * (1-x)^(3-1)};
+        \addlegendentry{$\text{Beta}(2,3)$}
+    \end{axis}
+\end{tikzpicture}
+\end{document}

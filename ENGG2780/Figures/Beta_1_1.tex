@@ -1,0 +1,23 @@
+\documentclass[preview]{standalone}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+
+\begin{document}
+\begin{tikzpicture}
+    \begin{axis}[
+        domain=0:1,
+        samples=200,
+        no markers,
+        thick,
+        legend pos=north east,
+        xlabel={$\theta$},
+        grid=major,
+        xmin=0, xmax=1,
+        xtick={0,0.1,...,1},
+    ]
+        % Beta(1,1) = Uniform(0,1)
+        \addplot[red] {1}; 
+        \addlegendentry{$\text{Beta}(1,1)$}
+    \end{axis}
+\end{tikzpicture}
+\end{document}

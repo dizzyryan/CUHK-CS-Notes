@@ -1,0 +1,22 @@
+\documentclass[preview]{standalone}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+
+\begin{document}
+\begin{tikzpicture}
+    \begin{axis}[
+        domain=0:1,
+        samples=200,
+        thick,
+        legend pos=north east,
+        xlabel={$\theta$},
+        grid=major,
+        xmin=0, xmax=1,
+        xtick={0,0.1,...,1},
+    ]
+        % Beta(51,101) -> Approximate with large numbers
+        \addplot[red] {1.86e+28 * x^(51-1) * (1-x)^(101-1)};
+        \addlegendentry{$\text{Beta}(51,101)$}
+    \end{axis}
+\end{tikzpicture}
+\end{document}
