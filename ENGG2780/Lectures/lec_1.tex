@@ -282,7 +282,7 @@ or equivalently,
 \]
 The reason why \(B(\alpha, \beta)\) appears in the denominator of the PDF is that it serves as the normalization constant, ensuring that the integral equals 1 so that it is a valid PDF.
 
-The Beta random variable is widely used to model the prior distribution of a random variable which range is \([0, 1]\), where \(\alpha\) and \(\beta\) are hyper-parameters. 
+The Beta random variable is widely used to model the prior distribution of a random variable which range is \([0, 1]\), where \(\alpha\) and \(\beta\) are hyperparameter. 
 
 Recalling the coin flip example above, with the prior \(\Theta\) and observation \(X\) remaining unchanged, we can use the Beta distribution to perform the calculation. We have \(\Theta \sim \text{Uniform}(0, 1) = \text{Beta}(1, 1)\), and for \(h = 1, t = 2\), we have:
 \[
@@ -313,7 +313,7 @@ However, they share a common feature: the value at which the PDF or PMF reaches 
 
 Also, we can treat the different parameters as a change in belief. For example, if Beta(2, 3) is our prior, and we readjust our belief based on observations, we then obtain Beta(21, 11). This shows that the area below the original mode \(\frac{1}{3}\) decreases, making it less probable. 
 
-The last thing to note is that hyper-parameters, in the coin flip case, \(h, t\), don’t matter if we observe a large number of data samples, meaning the posterior mainly depends on the observed data. However, if the prior contains a large dataset or the size of the observed data is small, then the prior plays an important role in the posterior. 
+The last thing to note is that hyperparameter, in the coin flip case, \(h, t\), don’t matter if we observe a large number of data samples, meaning the posterior mainly depends on the observed data. However, if the prior contains a large dataset or the size of the observed data is small, then the prior plays an important role in the posterior. 
 
 \subsection{Conjugate Prior for Poisson}
 \begin{definition}
@@ -501,10 +501,208 @@ In this section, we will study the use of Bayesian Statistics.
 To begin with, think about the coin flips event. Assume that you have observed some data, i.e., the first 10 coin flips give the sequence \verb|H T T H T T H T T T|. You now have the model; then, what can it be used for? It turns out that we can use it to make predictions, which tell the probability of the next flip being a head. We can also use it to do estimation, such as determining the probability of heads for this coin. Additionally, we can perform something called hypothesis testing, which helps us find the best guess for the estimation.
 
 \subsection{Prediction} 
+Let's revisit the previous dating scenario. 
+\begin{eg}
+  On her first date, Juliet arrives \(\frac{1}{2}\) hour late. How likely is she to arrive more than \(\frac{3}{4}\) hour late next time? 
 
-\subsection{Estimation}
+  \textbf{Solution:} 
+  Let \(X_1, X_2 \sim \text{Uniform}(0, \Theta)\), where \(\Theta = \text{Uniform}(0, 1)\). 
+  From the posterior that we calculated before, we have 
+  \[
+    f_{\Theta \vert X} (\theta \vert \dfrac{1}{2}) = \begin{dcases}
+      \dfrac{1}{\theta \ln 2} &\text{ if } \dfrac{1}{2} \leq \theta \leq 1 \\
+      0 &\text{ otherwise} 
+    \end{dcases}
+  \]
+  We can then use this posterior to make predictions. 
+  \[
+    \begin{aligned}
+      \mathbb{P}(X_2 \geq \dfrac{3}{4} \vert X_1 = \dfrac{1}{2}) &= \int_{-\infty}^{+\infty} \underbrace{\mathbb{P}\left(X_2 \geq \dfrac{3}{4} \vert X_1 = \dfrac{1}{2}, \Theta = \theta\right) \mathbb{P} \left(\theta \vert X_1 = \dfrac{1}{2}\right)}_{\text{Total Probability Theorems}} d \theta \\
+      (*) &= \int_{\frac{1}{2}}^{1} \mathbb{P}\left(X_2 \geq \dfrac{3}{4} \vert X_1 = \dfrac{1}{2}, \Theta = \theta\right) f_{\Theta \vert X} (\theta \vert \dfrac{1}{2}) d \theta \\
+      (**) &= \int_{\frac{3}{4}}^{1} \mathbb{P}\left(X_2 \geq \dfrac{3}{4} \vert \Theta = \theta\right) f_{\Theta \vert X} (\theta \vert \dfrac{1}{2}) d \theta \\
+      (***) &= \int_{\frac{3}{4}}^{1} (\theta - \dfrac{3}{4}) \dfrac{1}{\theta} \dfrac{1}{\theta \ln 2} d \theta \\
+      &= \int_{\frac{3}{4}}^{1} \dfrac{1}{\theta \ln{(2)}} d \theta - \int_{\frac{3}{4}}^{1} \dfrac{3}{4\theta^{2} \ln{(2)}} d \theta \\
+      &= \dfrac{\ln \frac{4}{3} - \frac{1}{4}}{\ln 2} \\
+      &= 0.054
+    \end{aligned}
+  \]
+
+  In (*), we change the lower boundary from \(-\infty\) to \(\dfrac{1}{2}\) and the upper boundary from \(+\infty\) to 1 because \(f_{\Theta \vert X} (\theta \vert \dfrac{1}{2})\) would be 0 outside \([\dfrac{1}{2}, 1]\). Then, in (**), we again update the lower boundary to \(\dfrac{3}{4}\) because for \(\dfrac{1}{2} \leq \theta \leq \dfrac{3}{4}\), \(\mathbb{P}(X_2 \geq \dfrac{3}{4} \vert \Theta = \theta)\) would be equal to 0. In (***), we can directly find the left-hand side by \((\theta - \dfrac{3}{4}) \dfrac{1}{\theta}\) because \(X_2 \sim \text{Uniform}(0, \theta)\). The PDF can be directly computed by finding the area.
+\end{eg}
+\begin{remark}
+  One may start with 
+  \[
+    \int_{-\infty}^{+\infty} \mathbb{P}\left(X_2 \geq \dfrac{3}{4}, \Theta = \theta \vert X_1 = \dfrac{1}{2}\right) d \theta
+  \]
+  where 
+  \[
+    \begin{aligned}
+      \mathbb{P}\left(X_2 \geq \dfrac{3}{4}, \Theta = \theta \vert X_1 = \dfrac{1}{2}\right) &= \dfrac{\mathbb{P}\left(X_2 \geq \dfrac{3}{4}, \Theta = \theta, X_1 = \dfrac{1}{2}\right)}{\mathbb{P}\left(X_1 = \dfrac{1}{2}\right)} \\
+      &= \dfrac{\mathbb{P}\left(X_2 \geq \dfrac{3}{4} \vert X_1 = \dfrac{1}{2}, \Theta = \theta\right)\mathbb{P}\left(X_1 = \dfrac{1}{2}, \Theta = \theta\right)}{\mathbb{P}\left(X_1 = \dfrac{1}{2}\right)} \\
+      &= \mathbb{P}\left(X_2 \geq \dfrac{3}{4} \vert X_1 = \dfrac{1}{2}, \Theta = \theta\right) \mathbb{P} \left(\theta \vert X_1 = \dfrac{1}{2}\right)
+    \end{aligned}
+  \]
+\end{remark}
+
+If we have past data and a prior distribution, we can often make predictions.
+\begin{eg}
+  Assume that we have observed \(n\) heads in coin flips. What is the probability that the next coin flip will also be a head? 
+  
+  \textbf{Solution:}
+  For coin flips, we can use \(X \sim \text{Bernoulli}(\Theta)\), where \(\Theta = \mathbb{P}(X = H)\). So for the prior, we have \(\Theta \sim \text{Uniform}(0, 1) = \text{Beta}(1,1)\). Since the prior follows a beta distribution, the posterior also follows a beta distribution. Therefore, the posterior is given by:
+  \[
+    \Theta \vert n\ \text{Heads} \sim \text{Beta}(n + 1, 1)
+  \]
+  \[
+    f_{\Theta \vert X_1, \cdots, X_n} (\theta \vert nH) = \dfrac{(n + 1)!}{n!1!}\theta^n = (n + 1)\theta^n
+  \]
+  We then use this posterior to update our belief, making it the prior for predicting whether the next coin flip will be heads.
+  \[
+  \begin{aligned}
+    \mathbb{P} (H^* \vert nH) &= \int_0^1 \mathbb{P} (H^* \vert \theta) f_{\Theta \vert X_1, \cdots, X_n} (\theta \vert nH) d \Theta \\
+    &= \int_0^1 \theta (n + 1)\theta^n d \theta \\\
+    &= \dfrac{n + 1}{n + 2}
+  \end{aligned}
+  \]
+  For example, if we have previously flipped \(n = 100\) heads, the probability of the next coin flip being heads is \(\frac{101}{102}\). 
+\end{eg}
+
+To summary, in Bayesian prediction, for observation \(X = x\) (past data), if \(X\) is continuous, to predict \(x^* \in [a, b]\) 
+\[
+  \mathbb{P}(x^* \in [a, b] \vert X = x) = \int_{-\infty}^{+\infty} \mathbb{P}(x^* \in [a, b] \vert \theta) \underbrace{f_{\Theta \vert X} (\theta \vert x)}_{\text{prior}} d \theta
+\]
+where 
+\[
+  \mathbb{P}(x^* \in [a, b] \vert \theta) = \int_a^b f_{X \vert \Theta} (x^* \vert \theta) dx^*.
+\]
+If \(X\) is discrete, then to predict \(x^*\)
+\[
+  \mathbb{P}(x^* \vert X = x) = \int_{-\infty}^{+\infty} \mathbb{P}(x^* \vert \theta) f_{\Theta \vert X} (\theta \vert x) d \theta 
+\] 
+
+\subsection{Point Estimation}
+The question then arises: how do we turn the conditional PDF or PMF \(f_{\Theta \vert X} (\theta \vert x)\) estimate into a single number? It turns out we have two methods, namely the Maximum a Posterior (MAP) estimator and the Conditional Expectation (CE) estimator. 
+
+For MAP, we find the most likely value: 
+\[
+  \theta_{\text{MAP}} = \arg \max_{\theta} f_{\Theta \vert X} (\theta \vert x).
+\]
+
+For CE, we find the average among all possible \(\theta\), and the expectation \(\mu = \mathbb{E}[\Theta]\) will minimize the mean square error \(\mathbb{E}[(\Theta - \theta)^2]\): 
+\[
+  \mathbb{E}[\Theta \vert X = x]. 
+\] 
+
+To illustrate, let's return to the dating problem again. 
+\begin{eg}
+  In Romeo's model, on their first date, Juliet arrived \(\frac{1}{2}\) hour late. What would be his estimate for the probability of Juliet being late?
+
+  \textbf{Solution:} 
+
+  \textbf{MAP (optimistic method)}
+  \[
+      \text{Posterior } f_{\Theta \vert X} (\theta \vert \frac{1}{2}) = \dfrac{1}{\theta \ln 2}\quad \text{when } \frac{1}{2} \leq \theta \leq 1 \Longrightarrow \arg \max_\theta \dfrac{1}{\theta \ln 2} = \arg \max_\theta \frac{1}{\theta}
+  \]
+    which gives 
+  \[
+      \theta_{\text{MAP}} = \frac{1}{2} \quad\quad \text{refers to the \href{page=7}{graph}}
+  \]
+
+  \textbf{CE (conservative method)} 
+  \[
+    \mathbb{E}[\Theta \vert X_1 = \dfrac{1}{2}] = \int_{\frac{1}{2}}^1 \theta \dfrac{1}{\theta \ln 2} d \theta = \dfrac{1}{2\ln 2} \approx0.72
+  \]
+\end{eg}
+\begin{remark}
+  Note that prediction refers to forecasting the future value, while estimation involves calculating the likely value of a parameter based on samples.
+\end{remark}
+
+Here we have two special cases: 
+
+1. Point estimation for a Beta random variable.
+
+Given that the prior is \(\Theta \sim \text{Beta}(1, 1)\), and the posterior is \(\Theta \vert h \text{ Heads}, t \text{ Tails} \sim \text{Beta}(1 + h, 1 + t)\), where \(\alpha = h + 1, \beta = t + 1\), we have: 
+\[
+  \text{mode}[\text{Beta}(\alpha, \beta)]: \theta = \dfrac{\alpha - 1}{\alpha - 1 + \beta - 1} \text{ when } \alpha, \beta >1.  
+\]
+\[
+  \theta_{MAP} = \dfrac{\alpha - 1}{\alpha - 1 + \beta - 1} = \dfrac{h}{h + t}
+\]
+\[
+  \text{CE} = \dfrac{\alpha}{\alpha + \beta}
+\]
+As the number of data points increases, the difference between MAP and CE will become smaller, and we will obtain a closer value. 
+
+2. Point estimation for Normal random variable. 
+
+Given that the prior is \(\Theta \sim \mathcal{N}(\mu_0, 1)\), and the posterior is \(\Theta \vert X_1, \cdots, X_n \sim \mathcal{N} (\frac{\mu_0 + x_1 + \cdots + x_n }{n + 1}, \frac{1}{n + 1})\), we have 
+\[
+  \text{mode}[\mathcal{N} (\mu, \sigma^2)]: \theta = \mu 
+\]
+\[
+  \theta_{MAP} = \dfrac{\mu_0 + x_1 + \cdots + x_n }{n + 1}
+\]
+\[
+  \text{CE} = \mathbb{E}[\mathcal{N} (\mu, \sigma^2)] = x
+\]
 
 \subsection{Hypothesis Testing}
+Suppose that in a hypothesis testing problem, \(\Theta\) takes \(m\) values \(\theta_1, \cdots, \theta_m\). Recall that in hypothesis testing, we want to find the best guess for the decision or classification. Then, how do we choose the one for which \(f_{\Theta \vert X} (\theta_i \vert x)\) is the largest (best guess)?
 
-% L0e finished
+\begin{eg}[Binary hypothesis testing - \(\Theta\) takes two values]~
+
+  Now, you receive an email. It could be spam or legitimate, with \(\Theta = 1\) indicating spam with a 20\% chance, and \(\Theta = 0\) indicating legit with an 80\% chance. Suppose there are two patterns, \(X_1\) and \(X_2\), which are independent given a specific email, to classify whether the email is spam or legit.
+
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+        \toprule
+        \(\Theta\) & \(\mathbb{P}(X_1 = 1 \vert \theta)\) & \(\mathbb{P}(X_2 = 1 \vert \theta)\)  \\
+      \midrule
+        \(\Theta = 0\) legit & \(0.03\) & \(0.0001\)  \\
+        \(\Theta = 1\) spam & \(0.1\) & \(0.01\)  \\
+        \bottomrule
+    \end{tabular}
+  \end{table}
+  Then, in a specific email \(x\), observe that \(X_1 = 1\) and \(X_2 = 0\). Is it spam or legitimate?
+
+  \textbf{Solution:} 
+  \[
+    \mathbb{P}(\Theta = 1 \vert X_1 = 1, X_2 = 0) \propto \mathbb{P}(X_1 = 1, X_2 = 0 \vert \Theta = 1)\mathbb{P}(\Theta = 1) = 0.1 \times 0.99 \times 0.2 \approx 0.0198
+  \]
+  \[
+    \mathbb{P}(\Theta = 0 \vert X_1 = 1, X_2 = 0) \propto \mathbb{P}(X_1 = 1, X_2 = 0 \vert \Theta = 0)\mathbb{P}(\Theta = 0) = 0.03 \times 0.9900 \times 0.8 \approx 0.0240
+  \]
+  Thus, MAP \(\Theta = 0\), shows that the email is legitimate. 
+\end{eg}
+
+\begin{eg}
+  We have two coins, A and B. Coin A has a \(\frac{2}{3}\) probability of landing heads, and coin B has a \(\frac{2}{3}\) probability of landing tails. You flip a random coin and observe the sequence "H H T". Which coin did you flip? What is the probability that you are wrong based on MAP, given the outcome is "H H T"? 
+
+  \textbf{Solution:} 
+
+  Since we have equally likely prior \(\mathbb{P}(\Theta = A) = \mathbb{P}(\Theta = B) = 50\%\), 
+  \[
+    \begin{aligned}
+      \mathbb{P}(\Theta = A \vert HHT) &\propto \mathbb{P}(HHT \vert \Theta = A)\mathbb{P}(\Theta = A) \\
+      &= \dfrac{2}{3} \times \dfrac{2}{3} \times \dfrac{1}{3} \times \dfrac{1}{2} = \dfrac{2}{27} \\
+      \mathbb{P}(\Theta = B \vert HHT) &\propto \mathbb{P}(HHT \vert \Theta = B)\mathbb{P}(\Theta = B) \\
+      &= \dfrac{1}{3} \times \dfrac{1}{3} \times \dfrac{2}{3} \times \dfrac{1}{2} = \dfrac{1}{27} \\
+    \end{aligned}
+  \]
+  Thus, MAP \(\Theta = A\). 
+  \[
+    \begin{aligned}
+      \text{error} &= \mathbb{P}(B \vert HHT) \\
+      &= \dfrac{\mathbb{P}(HHT \vert \Theta = B) \mathbb{P}(\Theta = B)}{\mathbb{P}(HHT)} \\
+      &= \dfrac{\frac{1}{27}}{\frac{1}{27} + \frac{2}{27}} \\
+      &= \dfrac{1}{3}
+    \end{aligned}
+  \]
+  This shows that the event would be wrong at \(\frac{1}{3}\) of the time. 
+\end{eg}
+
+We find the probability that, even if the calculation is correct, it is still possible for us to make a wrong guess from time to time. But then, what is the probability of being wrong on average? 
+
+% L03 finished
 % END OF DOCUMENT
