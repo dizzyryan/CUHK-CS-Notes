@@ -1,0 +1,47 @@
+\documentclass[preview]{standalone}
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{intersections, angles, quotes, positioning}
+\usetikzlibrary{arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
+\tikzset{
+	force/.style={thick, {Circle[length=2pt]}-stealth, shorten <=-1pt}
+}
+
+\begin{document}
+\begin{tikzpicture}
+  \begin{axis}[
+      title = {PMF of Geometric Distribution},
+      ymin=0,
+      ymax=0.06,
+      xmin=-2,
+      xmax=42,
+      xlabel = {Geometric(0.05)},
+      samples at={0,...,40},
+      xtick={0,5,...,40},
+      height=8cm,
+      width=16.5cm,
+        yticklabel style={
+            /pgf/number format/fixed,
+            /pgf/number format/fixed zerofill,
+            /pgf/number format/precision=2,
+      },   
+      domain=1:40,
+      samples=40,
+  ]
+  % Define p, probability of success
+  \pgfmathsetmacro{\p}{0.05}
+  
+  % Plot the PMF of the geometric distribution
+  \addplot [
+    ybar=0pt,
+    bar width=4pt,
+    fill=cyan,
+    draw=cyan,
+    mark=none,
+] {(\p*(1-\p)^(x-1))};
+  \end{axis}
+\end{tikzpicture}
+\end{document}

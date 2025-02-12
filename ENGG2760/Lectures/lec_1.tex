@@ -175,38 +175,7 @@ For example, when finding all possible outcomes for rolling two dice with differ
 \end{eg}
 Birthday paradox could be visualized as below:
 \begin{figure}[H]
-\begin{tikzpicture}
-    \begin{axis}[
-        width=15cm, height=8cm,     % size of the image
-        grid = major,
-        grid style={dashed, gray!30},
-        %xmode=log,log basis x=10,
-        %ymode=log,log basis y=10,
-        xmin=0,     % start the diagram at this x-coordinate
-        xmax=62,    % end   the diagram at this x-coordinate
-        ymin=0,     % start the diagram at this y-coordinate
-        ymax=1.1,   % end   the diagram at this y-coordinate
-        /pgfplots/xtick={0,5,...,60}, % make steps of length 5
-        extra x ticks={23},
-        extra y ticks={0.507297},
-        axis background/.style={fill=white},
-        ylabel=probability of at least one birthday-collision,
-        xlabel=number of people,
-        tick align=outside]
-
-      % import the correct data from a CSV file
-      \addplot table [id=exp]{./Figures/data.csv};
-
-      % mark x=23
-      \coordinate (a) at (axis cs:23,0.507297);
-      \draw[blue, dashed, thick](a -| current plot begin) -- (a);
-      \draw[blue, dashed, thick](a |- current plot begin) -- (a);
-
-      % plot the stirling-formulae
-      \addplot[domain=0:60, red, thick]
-        {1-(365/(365-x))^(365.5-x)*e^(-x)};
-    \end{axis}
-\end{tikzpicture}
+\includegraphics{Figures/Birthday_paradox.pdf}
 \caption*{Adapted from \href{https://github.com/MartinThoma/LaTeX-examples/tree/2286e6e3833904b2c058b2a855db9b7f81776c59/tikz/birthday-paradox}{MartinThoma}}
 \end{figure}
 

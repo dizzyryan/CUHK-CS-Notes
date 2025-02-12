@@ -1,0 +1,46 @@
+\documentclass[preview]{standalone}
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{intersections, angles, quotes, positioning}
+\usetikzlibrary{arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
+\tikzset{
+	force/.style={thick, {Circle[length=2pt]}-stealth, shorten <=-1pt}
+}
+
+\begin{document}
+\begin{tikzpicture}
+    \begin{axis}[
+        width=15cm, height=8cm,     % size of the image
+        grid = major,
+        grid style={dashed, gray!30},
+        %xmode=log,log basis x=10,
+        %ymode=log,log basis y=10,
+        xmin=0,     % start the diagram at this x-coordinate
+        xmax=62,    % end   the diagram at this x-coordinate
+        ymin=0,     % start the diagram at this y-coordinate
+        ymax=1.1,   % end   the diagram at this y-coordinate
+        /pgfplots/xtick={0,5,...,60}, % make steps of length 5
+        extra x ticks={23},
+        extra y ticks={0.507297},
+        axis background/.style={fill=white},
+        ylabel=probability of at least one birthday-collision,
+        xlabel=number of people,
+        tick align=outside]
+
+      % import the correct data from a CSV file
+      \addplot table [id=exp]{data.csv};
+
+      % mark x=23
+      \coordinate (a) at (axis cs:23,0.507297);
+      \draw[blue, dashed, thick](a -| current plot begin) -- (a);
+      \draw[blue, dashed, thick](a |- current plot begin) -- (a);
+
+      % plot the stirling-formulae
+      \addplot[domain=0:60, red, thick]
+        {1-(365/(365-x))^(365.5-x)*e^(-x)};
+    \end{axis}
+\end{tikzpicture}
+\end{document}

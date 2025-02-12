@@ -126,123 +126,19 @@ The probability mass function (PMF) of a Binomial\((n, p)\) Random Variable is
 \]
 
 \begin{minipage}{0.5\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}
-    [
-        % Define probability distribution functions
-        declare function={
-            binom(\n,\p) = \n!/(x!*(\n-x)!)*\p^x*(1-\p)^(\n-x);
-            normal(\m,\s) = 1/(\s*sqrt(2*pi))*exp(-((x-\m)^2)/(2*\s^2));
-        },
-        % Plotting options
-        title=PMF of Binomial Random Variable,
-        ymin=0,
-        ymax=0.25,
-        xlabel={Binomial(10, 0.5)},
-        samples at={0,...,10},
-        xtick style={draw=none},
-        yticklabel style={
-            /pgf/number format/fixed,
-            /pgf/number format/fixed zerofill,
-            /pgf/number format/precision=2,
-        },   
-    ]
-    
-    % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=8pt,fill=cyan,draw=cyan] {binom(10,0.5)};
-    \end{axis}
-    \end{tikzpicture}
+  \includegraphics{Figures/PMF_Binominal_10_05.pdf}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}
-    [
-        % Define probability distribution functions
-        declare function={
-            binom(\n,\p) = \n!/(x!*(\n-x)!)*\p^x*(1-\p)^(\n-x);
-            normal(\m,\s) = 1/(\s*sqrt(2*pi))*exp(-((x-\m)^2)/(2*\s^2));
-        },
-        % Plotting options
-        title=PMF of Binomial Random Variable,
-        ymin=0,
-        ymax=0.12,
-        xlabel={Binomial(50, 0.5)},
-        samples at={0,...,50},
-        xtick style={draw=none},
-        yticklabel style={
-            /pgf/number format/fixed,
-            /pgf/number format/fixed zerofill,
-            /pgf/number format/precision=2,
-        },   
-    ]
-    
-    % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=1pt,fill=cyan,draw=cyan] {binom(50,0.5)};
-    \end{axis}
-    \end{tikzpicture}
+  \includegraphics{Figures/PMF_Binominal_50_05.pdf}
 \end{minipage}
 
 From the figures above, we can observe that as the value of \(n\) increases, the graph is symmetric around the central point. For  Binomial\((10, 0.5)\), the probability reaches its maximum at \(x = 5\), which can also be calculated as \(10 \times 0.5\). The same pattern holds for the graph on the right-hand side. This also makes sense because the probability of the event occurring is 0.5. Therefore, we can estimate that half of the events will occur, resulting in the maximum probability at \(x = 5\).
 
 \begin{minipage}{0.5\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}
-    [
-        % Define probability distribution functions
-        declare function={
-            binom(\n,\p) = \n!/(x!*(\n-x)!)*\p^x*(1-\p)^(\n-x);
-            normal(\m,\s) = 1/(\s*sqrt(2*pi))*exp(-((x-\m)^2)/(2*\s^2));
-        },
-        % Plotting options
-        title=PMF of Binomial Random Variable,
-        ymin=0,
-        ymax=0.3,
-        xlabel={Binomial(10, 0.3)},
-        samples at={0,...,10},
-        xtick style={draw=none},
-        yticklabel style={
-            /pgf/number format/fixed,
-            /pgf/number format/fixed zerofill,
-            /pgf/number format/precision=2,
-        },   
-    ]
-    
-    % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=8pt,fill=cyan,draw=cyan] {binom(10,0.3)};
-    \end{axis}
-    \end{tikzpicture}
+  \includegraphics{Figures/PMF_Binominal_10_03.pdf}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}
-    [
-        % Define probability distribution functions
-        declare function={
-            binom(\n,\p) = \n!/(x!*(\n-x)!)*\p^x*(1-\p)^(\n-x);
-            normal(\m,\s) = 1/(\s*sqrt(2*pi))*exp(-((x-\m)^2)/(2*\s^2));
-        },
-        % Plotting options
-        title=PMF of Binomial Random Variable,
-        ymin=0,
-        ymax=0.15,
-        xlabel={Binomial(50, 0.3)},
-        samples at={0,...,50},
-        xtick style={draw=none},
-        yticklabel style={
-            /pgf/number format/fixed,
-            /pgf/number format/fixed zerofill,
-            /pgf/number format/precision=2,
-        },   
-    ]
-    
-    % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=1pt,fill=cyan,draw=cyan] {binom(50,0.3)};
-    \end{axis}
-    \end{tikzpicture}
+  \includegraphics{Figures/PMF_Binominal_50_03.pdf}
 \end{minipage}
 
 For the two graphs above, it also holds true that the maximum value is reached at \(10 \times 0.3 = 3\) or \(50 \times 0.3 = 15\), due to the same reasoning. However, in this case, the graph is no longer symmetric around the central point.
@@ -287,101 +183,13 @@ Axioms of probability also holds for PMF of geometric random variable. Therefore
 \]
 
 \begin{minipage}{0.5\textwidth}
-  \begin{tikzpicture}
-    \begin{axis}[
-        title = {PMF of Geometric Distribution},
-        ymin=0,
-        ymax=0.6,
-        xlabel = {Geometric(0.5)},
-        samples at={1,...,10},
-        xtick style={draw=none},
-          yticklabel style={
-              /pgf/number format/fixed,
-              /pgf/number format/fixed zerofill,
-              /pgf/number format/precision=2,
-        },   
-        domain=1:10,
-        samples=10,
-    ]
-    % Define p, probability of success
-    \pgfmathsetmacro{\p}{0.5}
-    
-    % Plot the PMF of the geometric distribution
-    \addplot [
-      ybar=0pt,
-      bar width=8pt,
-      fill=cyan,
-      draw=cyan,
-      mark=none,
-  ] {(\p*(1-\p)^(x-1))};
-    \end{axis}
-    \end{tikzpicture}
+  \includegraphics{Figures/PMF_Geometric_05.pdf}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-  \begin{tikzpicture}
-    \begin{axis}[
-        title = {PMF of Geometric Distribution},
-        ymin=0,
-        ymax=0.8,
-        xlabel = {Geometric(0.7)},
-        samples at={1,...,10},
-        xtick style={draw=none},
-          yticklabel style={
-              /pgf/number format/fixed,
-              /pgf/number format/fixed zerofill,
-              /pgf/number format/precision=2,
-        },   
-        domain=1:10,
-        samples=10,
-    ]
-    % Define p, probability of success
-    \pgfmathsetmacro{\p}{0.7}
-    
-    % Plot the PMF of the geometric distribution
-    \addplot [
-      ybar=0pt,
-      bar width=8pt,
-      fill=cyan,
-      draw=cyan,
-      mark=none,
-  ] {(\p*(1-\p)^(x-1))};
-    \end{axis}
-    \end{tikzpicture}
+  \includegraphics{Figures/PMF_Geometric_07.pdf}
 \end{minipage}
 
-\begin{tikzpicture}
-    \begin{axis}[
-        title = {PMF of Geometric Distribution},
-        ymin=0,
-        ymax=0.06,
-        xmin=-2,
-        xmax=42,
-        xlabel = {Geometric(0.05)},
-        samples at={0,...,40},
-        xtick={0,5,...,40},
-        height=8cm,
-        width=16.5cm,
-          yticklabel style={
-              /pgf/number format/fixed,
-              /pgf/number format/fixed zerofill,
-              /pgf/number format/precision=2,
-        },   
-        domain=1:40,
-        samples=40,
-    ]
-    % Define p, probability of success
-    \pgfmathsetmacro{\p}{0.05}
-    
-    % Plot the PMF of the geometric distribution
-    \addplot [
-      ybar=0pt,
-      bar width=4pt,
-      fill=cyan,
-      draw=cyan,
-      mark=none,
-  ] {(\p*(1-\p)^(x-1))};
-    \end{axis}
-\end{tikzpicture}
+\includegraphics{Figures/PMF_Geometric_005.pdf}
 
 \begin{eg}
 You keep rolling dice until you roll a 6. What is the probability that you rolled more than 10 times? 
@@ -469,60 +277,10 @@ For example, we can define \(B = \{X = 1\ \text{or}\ X = 2\}\). Since \(A\) and 
 We now want to examine how the probability changes if we increase the values, for example, by having 250 chocolate chips and 50 cookies instead. Intuitively, the probability should not change significantly, and through calculation, the results are indeed similar to those obtained in the previous example. 
 
 \begin{minipage}{0.5\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}
-    [
-        % Define probability distribution functions
-        declare function={
-            binom(\n,\p) = \n!/(x!*(\n-x)!)*\p^x*(1-\p)^(\n-x);
-            normal(\m,\s) = 1/(\s*sqrt(2*pi))*exp(-((x-\m)^2)/(2*\s^2));
-        },
-        % Plotting options
-        ymin=0,
-        ymax=0.2,
-        xlabel={Binomial(25, 0.2)},
-        samples at={0,...,25},
-        xtick style={draw=none},
-        yticklabel style={
-            /pgf/number format/fixed,
-            /pgf/number format/fixed zerofill,
-            /pgf/number format/precision=2,
-        },   
-    ]
-    
-    % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=2pt,fill=cyan,draw=cyan] {binom(25,0.2)};
-    \end{axis}
-    \end{tikzpicture}
+  \includegraphics{Figures/PMF_Binomial_25_02.pdf}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}
-    [
-        % Define probability distribution functions
-        declare function={
-            binom(\n,\p) = \n!/(x!*(\n-x)!)*\p^x*(1-\p)^(\n-x);
-            normal(\m,\s) = 1/(\s*sqrt(2*pi))*exp(-((x-\m)^2)/(2*\s^2));
-        },
-        % Plotting options
-        ymin=0,
-        ymax=0.2,
-        xlabel={Binomial(50, 0.1)},
-        samples at={0,...,50},
-        xtick style={draw=none},
-        yticklabel style={
-            /pgf/number format/fixed,
-            /pgf/number format/fixed zerofill,
-            /pgf/number format/precision=2,
-        },   
-    ]
-    
-    % Plot Binomial Distribution
-    \addplot [ybar=0pt,bar width=1pt,fill=cyan,draw=cyan] {binom(50,0.1)};
-    \end{axis}
-    \end{tikzpicture}
+  \includegraphics{Figures/PMF_Binomial_50_01.pdf}
 \end{minipage}
 
 From the above, we see that when we double the value, the PMF remains quite similar to the previous one. Additionally, the average rate of chocolate chips per cookie is also the same, i.e., \(25 \times 0.2 = 50 \times 0.1 = 5\). 
