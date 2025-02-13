@@ -21,19 +21,11 @@ This repository is not intended for teaching purposes.
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
 |  ENGG1110  |  Problem Solving By Programming  |  [Repo](ENGG1110)  |  X  |
-|  IERG1000  |  Introduction to Information Engineering  |  X  |  X  |
-
-> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
 
 ### 23-24 Spring
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
-|  IERG1810  |  Electronic Circuit Design Laboratory  |  X  |  X  |
-|  IERG2060  |  Basic Analog and Digital Circuits  |  X  |  X  |
-|  IERG2080  |  Introduction to System Programming   |  X  |  X  |
-|  ENGG1120  |  Linear Algebra for Engineers  |  X  |  X  |
-
-> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
+|  IERG2080  |  Introduction to System Programming   |  [Repo](IERG2080)  |  X  |
 
 ### 23-24 Fall
 |  Code  |  Course  |  Repository  |  Notes  |
@@ -42,13 +34,13 @@ This repository is not intended for teaching purposes.
 |  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](https://ryanc.wtf/files/ENGG2440.pdf)  |
 |  ENGG2760  |  Probability for Engineers  |  [Repo](ENGG2760)  |  [Notes](https://ryanc.wtf/files/ENGG2760.pdf)  |
 
-> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
-
 ### 23-24 Spring
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
 |  CSCI2100  |  Data Structure  |  X  |  X  |
 |  CENG3420  |  Computer Organization & Design  |  X  |  X  |
 |  ENGG2780  |  Statistic for Engineers  |  [Repo](ENGG2780)  |  [Notes](https://ryanc.wtf/files/ENGG2780.pdf)  |
+
+> Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
 
 
