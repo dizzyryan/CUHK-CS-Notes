@@ -76,6 +76,8 @@ We can use \(Z(x)\) to denote the denominator for both discrete and continuous c
   
 \end{eg}
 
+Above shows that we have a lower probability for \(p = 0.5\), which means \(p = 0.7\) is a better assumption. This is also quite intuitive, since with 200 heads in 300 coin flips, there is a certain probability that the coin is biased.
+
 Again, we flip a coin three times and get two heads. You are told that there are three types of coins with different priors, but you don’t know which coin you are flipping. It is obvious that the first coin flip will affect your belief (prior) about which coin you have. For example, if you see 100 heads out of 100 flips, you might strongly believe that both sides of the coin are heads. But to what extent does each flip influence your belief? This brings us to the problem of statistics.
 
 \begin{eg}
@@ -103,9 +105,8 @@ Again, we flip a coin three times and get two heads. You are told that there are
   \[
     \mathbb{P}(\theta = 1 \vert H_1) = \dfrac{0.45}{Z(H_1)} = 0.9 \quad \mathbb{P}(\theta = 1 \vert H_1) = \dfrac{0.05}{Z(H_1)} = 0.1 \quad \mathbb{P}(\theta = 1 \vert H_1) = 0
   \]
-
   From this, we can update our belief, which we can then use to further readjust our belief if the second flip also results in a head. 
-
+  
   \(
   \begin{aligned}
     \mathbb{P}(\theta = 1 \vert H_2 H_1) &= \dfrac{\mathbb{P}(H_2 \vert \theta = 1, H_1)\mathbb{P}(\theta = 1 \vert H_1)}{Z(H_2, H_1)} = \dfrac{0.5 \times 0.9}{Z(H_2, H_1)} = \dfrac{0.45}{Z(H_2, H_1)} \\
