@@ -4,7 +4,7 @@ For Bayesian statistics, we have only one formula: Bayes’s rule:
   \underbrace{f_{\Theta \vert X} (\theta \vert x)}_{\text{posterior}} \propto \underbrace{f_{X \vert \Theta} (x \vert \theta)}_{\text{likelihood}} \underbrace{f_{\Theta} (\theta)}_{\text{prior}}
 \]
 
-We have some prior knowledge, and after observing something, we can use the prior and likelihood to update our belief, which gives us the posterior. This posterior can later serve as the prior for another observation, allowing us to continuously update our belief throughout the observation process.
+We have some prior knowledge, and after observing something, we can use the prior (assumption) and likelihood to update our belief, which gives us the posterior. This posterior can later serve as the prior for another observation, allowing us to continuously update our belief throughout the observation process.
 
 \begin{eg}
   Romeo is waiting for Juliet on their first date. He wants to estimate how long he will have to wait for her. Given that Romeo has some prior dating experience, he already has some prior knowledge about how late girls tend to be.
@@ -18,7 +18,7 @@ We have some prior knowledge, and after observing something, we can use the prio
   where the uniform random variable shows the range of lateness. For example, for girl A, she will be late between the dating time and the dating time plus 0.3 hours. Then, how could you use Bayesian statistics to estimate the waiting time for Romeo's new girlfriend? 
 
   \textbf{Solution:} 
-  Here we can set up the uniform random variable \(\text{Uniform}(0, \Theta)\), where \(\Theta\) depends on the girls' decision. Then what we need to find is the \(\theta\) for Juliet. We can then have 
+  Here we can set up the uniform random variable \(\text{Uniform}(0, \Theta)\), where \(\Theta\) depends on the girls. Then what we need to find is the \(\theta\) for Juliet. We can then have 
   \[
     f_{X \vert \Theta}(x \vert \theta) = \begin{dcases}
       \frac{1}{\theta}, &\text{ if } 0 \leq x \leq \theta ;\\
@@ -26,11 +26,11 @@ We have some prior knowledge, and after observing something, we can use the prio
     \end{dcases}
   \]
 
-  In Romeo's model, \(\theta\) is also a uniform random variable \(\theta \sim \text{Uniform}(0, 1)\), where \(X \sim \text{Uniform}(0, \Theta)\). Given that on their first date, Juliet arrived \(\frac{1}{2}\) hours late, we have 
+  In Romeo's model, \(\theta\) is also a uniform random variable \(\theta \sim \text{Uniform}(0, 1)\), where \(X \sim \text{Uniform}(0, \Theta)\). It means that Romeo has a prior belief that all the girls would be late for at most 1 hour, and the likelihood of Juliet being late is described by \(X\), which states that she could be \(\theta\) hour late. Given that on their first date, Juliet arrived \(\frac{1}{2}\) hours late, we have 
   \[
     f_{\Theta \vert X} (\theta \vert \dfrac{1}{2}) \propto f_\Theta (\theta) f_{X \vert \Theta}(\dfrac{1}{2} \vert \theta) = \dfrac{1}{\theta}
   \]
-  Here we have the prior \(f_\Theta(\theta) = 1\) if \(0 \leq \theta \leq 1\), and the likelihood \(f_{X \vert \Theta} (\frac{1}{2} \vert \theta) = \frac{1}{\theta}\) if \(\frac{1}{2} \leq \theta \leq 1\). Keep in mind that the prior comes from Romeo's model, where he has never dated a girl who is late for more than 1 hour, and it may not be valid if \(\theta > 1\), which shows the limitation of Bayesian statistics. Also, the observation (likelihood) shows the probability of Juliet arriving precisely at (or within a very small interval around) time plus 0.5. Therefore, we have \(\theta \geq \frac{1}{2}\). 
+  Here we have the prior \(f_\Theta(\theta) = 1\) if \(0 \leq \theta \leq 1\), and the likelihood \(f_{X \vert \Theta} (\frac{1}{2} \vert \theta) = \frac{1}{\theta}\) if \(\frac{1}{2} \leq \theta \leq 1\). Keep in mind that the prior comes from Romeo's model, where he has never dated a girl who is late for more than 1 hour, and it may not be valid if \(\theta > 1\), which shows the limitation of Bayesian statistics. Also, the observation (likelihood) shows the probability of Juliet arriving precisely at (or within a very small interval around) time plus 0.5. Therefore, we have \(\theta \geq \frac{1}{2}\). Otherwise, if \(\theta < \frac{1}{2}\), it is not possible for Juliet to arrive \(\frac{1}{2}\) hour late, since it is not included in Romeo's belief. 
 
   For the integral to be equal to 1, we need to find the constant term. This can be found using calculus: 
   \[
@@ -53,7 +53,7 @@ We have some prior knowledge, and after observing something, we can use the prio
   \[
     f_{\Theta \vert X_1, X_2} \left(\theta \Big| \dfrac{1}{2}, \dfrac{1}{4}\right) \propto f_{\Theta \vert X_1} \left(\theta \Big| \dfrac{1}{2}\right) f_{X_2 \vert \Theta}\left(\dfrac{1}{4} \Big| \theta\right) = \dfrac{1}{\theta \ln 2} \times \dfrac{1}{\theta} = \dfrac{1}{\theta^{2} \ln{(2)}} \propto \dfrac{1}{\theta^2}
   \]
-  The same as above, we have \(f_{X_2 \vert \Theta} (\frac{1}{4} \vert \theta) = \frac{1}{\theta}\) since it is not possible for the lateness to be less than \(\frac{1}{4}\) hours. Also, given the prior as calculated in the first part, we have \(f_{\Theta \vert X_1} (\theta \vert \frac{1}{2}) = \frac{1}{\theta \ln 2}\) if \(\frac{1}{2} \leq \theta \leq 1\).
+  The same as above, we have \(f_{X_2 \vert \Theta} (\frac{1}{4} \vert \theta) = \frac{1}{\theta}\) for \(\theta \geq \frac{1}{4}\) since it is not possible for the lateness to be less than \(\frac{1}{4}\) hours. Also, given the prior as calculated in the first part, we have \(f_{\Theta \vert X_1} (\theta \vert \frac{1}{2}) = \frac{1}{\theta \ln 2}\) if \(\frac{1}{2} \leq \theta \leq 1\).
 
   For the integral to be equal to 1, we need to find the constant term. This can be found using calculus: 
   \[
@@ -175,22 +175,25 @@ In general, for a coin of unknown bias flips \(n\) times and gets \(h\) heads an
   \includegraphics{Figures/Beta_2_3.pdf}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-  \includegraphics{Figures/Beta_21_11.pdf}
+  \includegraphics{Figures/Beta_11_21.pdf}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
   \includegraphics{Figures/Beta_51_101.pdf}
 \end{minipage}
 
-The above shows that we can perform estimation based on the number of experiments, which will result in a different PDF.
-
-However, they share a common feature: the value at which the PDF or PMF reaches its maximum is 
+The above shows that we can perform estimation based on the number of experiments, which will result in a different PDF. With more data in hand, the accuracy of the data is higher. However, they share a common feature: the value at which the PDF or PMF reaches its maximum is 
 \[
   \text{mode}[\theta] = \dfrac{\alpha - 1}{\alpha - 1 + \beta - 1} \quad \text{when}\ \alpha, \beta > 1
 \] 
 
-Also, we can treat the different parameters as a change in belief. For example, if Beta(2, 3) is our prior, and we readjust our belief based on observations, we then obtain Beta(21, 11). This shows that the area below the original mode \(\frac{1}{3}\) decreases, making it less probable. 
+\begin{minipage}{0.5\textwidth}
+  Also, we can treat the different parameters as a change in belief. For example, if Beta(2, 3) is our prior, and we readjust our belief based on observations, we then obtain Beta(21, 11). This shows that the area below the original mode \(\frac{1}{3}\) decreases, making it less probable. 
 
-The last thing to note is that hyperparameter, in the coin flip case, \(h, t\), don’t matter if we observe a large number of data samples, meaning the posterior mainly depends on the observed data. However, if the prior contains a large dataset or the size of the observed data is small, then the prior plays an important role in the posterior. 
+  The last thing to note is that hyperparameter, in the coin flip case, \(h, t\), don’t matter if we observe a large number of data samples, meaning the posterior mainly depends on the observed data. However, if the prior contains a large dataset or the size of the observed data is small, then the prior plays an important role in the posterior. 
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+  \includegraphics{Figures/Beta_21_11.pdf}
+\end{minipage}
 
 \subsection{Conjugate Prior for Poisson}
 \begin{definition}
@@ -294,7 +297,7 @@ In the case of Exponential prior, we have \(\alpha =\) no. of trials + 1, \(\bet
   \]
 \end{eg}
 
-Above is the same as taking \(\alpha = 1, \beta = 2, n = 3, x_1 = 1.5, x_2 = 2 \text{ and } x_3 = 2.5\), then we have \(\alpha + n = \text{no. of trials} + 1 = 3 + 1= 4\), \(\beta + n = \text{sum of trials} + \text{prior} = 2 + 6 = 8\). This directly gives us Gamma(4, 8). 
+Above is the same as taking \(\alpha = 1, \beta = 2, n = 3, x_1 = 1.5, x_2 = 2 \text{ and } x_3 = 2.5\), then we have \(\alpha + n = \text{no. of trials} + 1 = 3 + 1= 4\), \(\beta + n = \text{sum of trials} + \text{prior} = 6 + 2 = 8\). This directly gives us Gamma(4, 8). 
 
 \subsection{Conjugate Prior for Normal Distribution}
 \begin{definition}
