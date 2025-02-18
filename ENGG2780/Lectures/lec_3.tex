@@ -84,7 +84,7 @@ If \(X\) is discrete, then to predict \(x^*\)
 \] 
 
 \subsection{Point Estimation}
-The question then arises: how do we turn the conditional PDF or PMF \(f_{\Theta \vert X} (\theta \vert x)\) estimate into a single number? It turns out we have two methods, namely the Maximum a Posterior (MAP) estimator and the Conditional Expectation (CE) estimator. 
+The question then arises: how do we turn the conditional PDF or PMF \(f_{\Theta \vert X} (\theta \vert x)\) estimate into a single number? Or, to put it simply, how do we find the \(\theta\) that is the best estimate of the parameter from the posterior? It turns out we have two methods, namely the Maximum a Posterior (MAP) estimator and the Conditional Expectation (CE) estimator. 
 
 For MAP, we find the most likely value: 
 \[
@@ -150,9 +150,9 @@ Given that the prior is \(\Theta \sim \mathcal{N}(\mu_0, 1)\), and the posterior
 \]
 
 \subsection{Hypothesis Testing}
-Suppose that in a hypothesis testing problem, \(\Theta\) takes \(m\) values \(\theta_1, \cdots, \theta_m\). Recall that in hypothesis testing, we want to find the best guess for the decision or classification. Then, how do we choose the one for which \(f_{\Theta \vert X} (\theta_i \vert x)\) is the largest (best guess)?
+Suppose that in a hypothesis testing problem, \(\Theta\) takes \(m\) values \(\theta_1, \cdots, \theta_m\). Recall that in hypothesis testing, we want to find the best guess for the decision or classification, i.e., checking how likely the estimated parameter is to be the actual one given the observed data. Then, how do we choose the one for which \(f_{\Theta \vert X} (\theta_i \vert x)\) is the largest (best guess), so that we have the optimal hypothesis \(\theta\)?
 
-\begin{eg}[Binary hypothesis testing - \(\Theta\) takes two values]~
+\begin{eg}[Estimation]~
 
   Now, you receive an email. It could be spam or legitimate, with \(\Theta = 1\) indicating spam with a 20\% chance, and \(\Theta = 0\) indicating legit with an 80\% chance. Suppose there are two patterns, \(X_1\) and \(X_2\), which are independent given a specific email, to classify whether the email is spam or legit.
 
@@ -179,8 +179,9 @@ Suppose that in a hypothesis testing problem, \(\Theta\) takes \(m\) values \(\t
   Thus, MAP \(\Theta = 0\), shows that the email is legitimate. 
 \end{eg}
 
-\begin{eg}
-  We have two coins, A and B. Coin A has a \(\frac{2}{3}\) probability of landing heads, and coin B has a \(\frac{2}{3}\) probability of landing tails. You flip a random coin and observe the sequence "H H T". Which coin did you flip? What is the probability that you are wrong based on MAP, given the outcome is "H H T"? 
+\begin{eg}[Hypothesis testing]~
+
+  We have two coins, A and B. Coin A has a \(\frac{2}{3}\) probability of landing heads, and coin B has a \(\frac{2}{3}\) probability of landing tails. You flip a random coin and observe the sequence \verb|H H T|. Which coin did you flip? What is the probability that you are wrong based on MAP, given the outcome is \verb|H H T|? 
 
   \textbf{Solution:} 
 
@@ -204,6 +205,7 @@ Suppose that in a hypothesis testing problem, \(\Theta\) takes \(m\) values \(\t
 
 We find the probability that, even if the calculation is correct, it is still possible for us to make a wrong guess from time to time. But then, what is the probability of being wrong on average? 
 
+\newpage
 \begin{eg}
   What is the probability that you are wrong on average based on the MAP estimate given the outcome of 3 flips? 
 
@@ -259,7 +261,34 @@ For binary hypothesis testing error, we have \(\theta = 0\) (negative) or \(\the
 
   \textbf{Solution:} 
 
-  Prior: \(\mathbb{P} (\Theta = 1) = p\) 
+  Prior: \(\mathbb{P} (\theta = 1) = p = 10\%\) (assume \(p = 10\%\), and \(\theta = 0\) for no intruder case).
+
+  Then for posterior, we have 
+  \[
+    \begin{aligned}
+      f_{\Theta \vert X} (0 \vert x^*) & \propto \mathbb{P}_{\Theta} (0) f_{X \vert \Theta} (x^* \vert 0) \propto (1 - p)e^{- \frac{{x^*}^2}{2}} \\
+      f_{\Theta \vert X} (1 \vert x^*) & \propto \mathbb{P}_{\Theta} (1) f_{X \vert \Theta} (x^* \vert 1) \propto pe^{- \frac{(x^* - 1)^2}{2}}
+    \end{aligned}
+  \]
+  \[
+    \dfrac{f_{\Theta \vert X} (1 \vert x^*)}{f_{\Theta \vert X} (0 \vert x^*)} = \dfrac{pe^{- \frac{(x^* - 1)^2}{2}}}{(1 - p)e^{- \frac{{x^*}^2}{2}}} = \dfrac{p}{1 - p} e^{x^* - \frac{1}{2}}
+  \]
+  If the value is greater than 1, there will be an intruder. Otherwise, there will be no intruder. To check if the value is greater than 1, we can use a logarithmic trick.
+  \[
+    \dfrac{p}{1 - p} e^{x^* - \frac{1}{2}} > 1 \Longleftrightarrow x^* > \dfrac{1}{2} + \ln \dfrac{1 - p}{p} \approx 2.7
+  \]
+  Therefore, when the signal strength is greater than 2.7, the alarm will be triggered.
+
+  \[
+    \begin{aligned}
+      \text{error} &= \mathbb{P}(\hat{\theta} \neq 0) \\
+      &= \mathbb{P}(\theta = 0, x > 2.7) + \mathbb{P}(\theta = 1, x \leq 2.7) \\
+      &= \mathbb{P}(x > 2.7 \vert \theta = 0)\mathbb{P}(\theta = 0) + \mathbb{P}(x \leq 2.7 \vert \theta = 1)\mathbb{P}(\theta = 1) \\
+      &= \mathbb{P}(\mathcal{N}(0, 1) > 2.7)\mathbb{P}(\theta = 0) + \mathbb{P}(\mathcal{N} (1, 1) \leq 2.7)\mathbb{P}(\theta = 1) \\
+      &\approx 9.86\%
+    \end{aligned}
+  \]
+
 \end{eg}
 
 % L03 finished
