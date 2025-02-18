@@ -1,6 +1,250 @@
 \chapter{Sampling statistics}
 
-Starting from this chapter, we will transition from Bayesian statistics to classical statistics. In Bayesian statistics, parameters are treated as random variables with prior distributions, rather than as fixed but unknown values. However, in classical statistics, parameters are treated as deterministic (fixed) quantities that are simply unknown. Therefore, we use the sampling distributions to estimate parameters. 
+Starting from this chapter, we will transition from Bayesian statistics to classical statistics. In Bayesian statistics, parameters are treated as random variables with prior distributions, rather than fixed but unknown values. In classical statistics, however, parameters are treated as deterministic (fixed) quantities that are simply unknown. Therefore, we use sampling distributions to estimate parameters.
+
+\section{Sample Statistics}
+A random sample of size \(n\) is a joint outcome of \(n\) independent random variables \(X_1, \cdots, X_n\), each with the same PDF or PMF. 
+\begin{remark}
+  By saying same PDF or PMF, we mean that 
+  \[
+    \mathbb{E}[X_1] = \cdots = \mathbb{E}[X_n] = \mu; \quad\quad \Var[X_1] = \cdots = \Var[X_n] = \sigma^2
+  \]
+\end{remark}
+
+The process of generating a specific random sample is called sampling. Note that repetition is allowed when taking samples.
+
+\subsection{Sampling Distributions}
+Given a random sample of \(n\) independent random variables \(X_1, \cdots, X_n\) with the same PDF or PMF, the numerical descriptive measures of the sample are called statistics. 
+
+Sample mean: \(\overline{X} = \dfrac{X_1 + \cdots + X_n}{n}\); 
+
+Sample proportion: \(\hat{p} = \dfrac{X_1 + \cdots + X_n}{n}\), where \(X_i\) are Bernoulli random variables; 
+
+Sample sum: \(X = X_1 + \cdots + X_n\); 
+
+Sample variance: \(s^2 = \dfrac{\sum_{i = 1}^n (X_i - \overline{X})^2}{n}\). 
+
+Here, all the sample statistics are random variables, which are assumed to occur with repetitions. The probability distributions for statistics are called sampling distributions.
+
+\subsection{Sample Mean}
+\begin{eg}
+  Consider a fair coin \(X\) (\(X = 1\) for heads, \(X = 0\) for tails). Flip the coin twice, and we obtain \(X_1, X_2\). Then, what is the PMF of \(\overline{X}\)?
+  
+  \textbf{Solution:} 
+  For the joint PMF of \(X_1, X_2\), we have 
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+        \toprule
+        Joint PMF & \(X_1 = 0\) & \(X_1 = 1\)  \\
+      \midrule
+        \(X_2 = 0\) & \(\dfrac{1}{4}\) & \(\dfrac{1}{4}\)  \\[8pt]
+        \(X_2 = 1\) & \(\dfrac{1}{4}\) & \(\dfrac{1}{4}\)  \\
+        \bottomrule
+    \end{tabular}
+  \end{table}
+
+Then we have 
+
+\begin{minipage}{0.5\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c}
+        \toprule
+        \(x\) & 0 & 1 & 2  \\
+      \midrule
+        \(\mathbb{P}(X_1 + X_2 = x)\) & \(\dfrac{1}{4}\) & \(\dfrac{1}{2}\) & \(\dfrac{1}{4}\) \\
+        \bottomrule
+    \end{tabular}
+  \end{table}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c}
+        \toprule
+        \(x\) & 0 & \(\dfrac{1}{2}\) & 1  \\
+      \midrule
+        \(\mathbb{P}(\overline{X} = \dfrac{X_1 + X_2}{2} = x)\) & \(\dfrac{1}{4}\) & \(\dfrac{1}{2}\) & \(\dfrac{1}{4}\) \\
+        \bottomrule
+    \end{tabular}
+  \end{table}
+\end{minipage}
+
+Thus, when we flip the coin \(n\) times, we have 
+\[
+  n\overline{X} \sim \text{Binomial}(n, \dfrac{1}{2}),
+\]
+where \(\overline{X}\) is always a random variable. 
+\end{eg}
+
+In this example, we assume that \(X \sim \text{Bernoulli}(p)\) with \(p = \mathbb{P}(X = 1) = \frac{1}{2}\). However, in statistics, we do not know \(p\). So how can we describe the distribution? In statistics, we can derive the sampling distribution of sample mean using the laws of probability. 
+
+Consider a class that has just finished an exam, and the grades have been released. Since you are a student, you are not supposed to know all the grades or data. So, how can you find out the average exam grade? The most naive approach is to ask your classmates for their grades. For example, you ask three of them, and their grades are 39, 30, and 43, respectively. Then, you can calculate a sample average, which is simply
+\[
+  \overline{x} = \dfrac{39 + 30 + 43}{3} \approx 37.33. 
+\]
+However, you cannot ensure that this is 100\% accurate, as you might randomly ask three classmates who all happen to have low grades, such as 6, 7, and 5, resulting in a sample average of \(\overline{x} = 6\). So how do we measure accuracy? Again, we use the laws of probability to do so.
+
+The sample mean \(\overline{X} = \dfrac{X_1 + \cdots + X_n}{n}\) is an estimator of the actual mean: 
+\[
+  \mu = \mathbb{E}[X_1] = \cdots = \mathbb{E}[X_n],
+\]
+where \(X_i\) is a random variable. Also, from the Weak Law of Large Number, we have 
+\[
+  \mathbb{P}(\vert \overline{X} - \mu \vert  \geq \epsilon ) \leq \delta, 
+\]
+The law of probability states that the probability of the sample mean being lower than the actual mean is small and is upper bounded by \(\delta\). This leads to an important property of the sample mean: it is \textbf{consistent}. In other words, for every positive \(\epsilon\) and \(\delta\), there exists a sufficiently large sample size \(n\) such that the probability that \(\overline{X}\) differs from the actual mean by more than \(\epsilon\) is less than \(\delta\).
+
+There is another important property of the sample mean: it is an \textbf{unbiased} estimator. This means that for every \(n\), \(\mathbb{E}[\overline{X}] = \mu\). This is an intuitive concept. Since each \(X_i\) is a random variable sampled from the population, the expected value of the sample mean is simply the mean of the actual population.
+
+\begin{proof}
+  \[
+    \mathbb{E}[\overline{X}] = \mathbb{E}\left[\dfrac{X_1 + \cdots + X_n}{n}\right] = \dfrac{1}{n} \mathbb{E}[X_1 + \cdots + X_n] = \dfrac{1}{n} (\mathbb{E}[X_1] + \cdots + \mathbb{E}[X_n]) = \dfrac{1}{n} \times n\mu = \mu
+  \]
+\end{proof}
+
+Then, based on the Central Limit Theorem, we can find the sampling distribution of the sample mean. Since we have 
+\[
+  \mathbb{E}[\overline{X}] = \mu ;\quad\quad \Var[\overline{X}] = \Var\left[\dfrac{\sum_{i = 1}^n X_i}{n}\right] = \dfrac{1}{n^2} \Var\left[\sum_{i = 1}^n X_i\right] = \dfrac{1}{n^2}\sum_{i = 1}^n \Var[X_i] = \dfrac{\sigma^2}{n}, 
+\]
+for every \(t\), 
+\[
+\begin{aligned}
+  \lim_{n \to \infty} \mathbb{P}\left(\dfrac{X}{n} \leq \dfrac{\mathbb{E}[X]}{n} + \dfrac{t\sqrt{\Var[X]}}{n}\right) &= \Phi(t); \\
+  \lim_{n \to \infty} \mathbb{P}\left(\overline{X} \leq \mu + t\dfrac{\sigma}{\sqrt{n}}\right) &= \Phi(t), 
+\end{aligned}
+\]
+where 
+\[
+  \dfrac{\overline{X} - \mu}{\frac{\sigma}{\sqrt{n}}} = Z \sim \mathcal{N}(0, 1) ; \quad\quad \overline{X} \sim \mathcal{N} \left(\mu, \left(\dfrac{\sigma}{\sqrt{n}}\right)^2\right).
+\]
+Note that \(\overline{X}\) follows a normal distribution for sufficiently large \(n\). This leads to the question of how to choose the ideal \(n\). 
+
+\begin{eg}
+  In a population of 1000, 200 people have disease \(X\). For a sample of size 16, what is the probability that the sample mean is in the range of 10\% to 30\%? Also, consider that 100 people have disease \(Y\) out of 1000. For the same sample size, what is \(\mathbb{P}(0.05 \leq \overline{Y} \leq 0.15)\)?
+
+  \textbf{Solution:} 
+
+  \textbf{Disease X:}
+  From data we have 
+  \[
+    X_i \sim \text{Bernoulli}\left(p = \dfrac{200}{1000} = 0.2\right), X_i = 1: \text{ having disease } X
+  \]
+  \[
+    \overline{X} = \dfrac{X_1 + \cdots + X_{16}}{16} \Longrightarrow 16\overline{X} \sim \text{Binomial}(16, 0.2)
+  \]
+  \[
+    \mathbb{P}(0.1 \leq \overline{X} \leq 0.3) = \mathbb{P}(1.6 \leq 16\overline{X} \leq 4.8) = \mathbb{P}(2 \leq \text{Binomial}(16, 0.2) \leq 4) \approx 0.657
+  \]
+  By using Central Limit Theorem, 
+  \[
+    X_i \sim \text{Bernoulli}(0.2),\ \mu(\overline{X}) = \mu_{X_i} = p = 0.2,\ \sigma(\overline{X}) = \dfrac{\sigma_{X_i}}{\sqrt{n}} = \dfrac{\sqrt{p(1 - p)}}{\sqrt{n}} = \dfrac{\sqrt{0.2 \times 0.8}}{\sqrt{16}} = 0.1
+  \]
+  \[
+    \mathbb{P}(0.1 \leq \overline{X} \leq 0.3) \approx \mathbb{P}\left(\dfrac{0.1 - 0.2}{0.1} \leq \dfrac{\overline{X} - \mu_{\overline{X}}}{\sigma_{\overline{X}}} \leq \dfrac{0.3 - 0.2}{0.1}\right) = \mathbb{P}(-1 \leq Z \leq 1) = 0.683
+  \]
+  Here the difference is within 2.6\%. 
+
+  \textbf{Disease Y:} 
+  \[
+    Y_i \sim \text{Bernoulli}\left(p = \dfrac{100}{1000} = 0.1\right), Y_i = 1: \text{ having disease } Y, 16\overline{Y} \sim \text{Binomial}(16, 0.1)
+  \]
+  \[
+    \mathbb{P}(0.05 \leq \overline{Y} \leq 0.15) = \mathbb{P}(0.8 \leq 16\overline{Y} \leq 2.4) = \mathbb{P}(1 \leq \text{Binomial}(16, 0.2) \leq 2) \approx 0.604
+  \]
+  By using Central Limit Theorem, 
+  \[
+    Y_i \sim \text{Bernoulli}(0.1),\ \mu(\overline{Y}) = 0.1,\ \sigma(\overline{Y}) = \dfrac{\sigma_{Y_i}}{\sqrt{n}} = \dfrac{\sqrt{0.1 \times 0.9}}{\sqrt{16}} = 0.075
+  \]
+  \[
+    \mathbb{P}(0.05 \leq \overline{Y} \leq 0.15) \approx \mathbb{P}\left(\dfrac{0.05 - 0.1}{0.075} \leq \dfrac{\overline{Y} - \mu_{\overline{Y}}}{\sigma_{\overline{Y}}} \leq \dfrac{0.15 - 0.1}{0.075}\right) = \mathbb{P}(-0.666 \leq Z \leq 0.666) = 0.495
+  \]
+  Here the difference is within 11\%. 
+\end{eg}
+Therefore, if the population data is normal, then the sampling distribution of \(\overline{X}\) is also normal, regardless of the sample size. For \(n \geq 30\), the Central Limit Theorem (CLT) usually applies. However, it depends on the data and the desired precision.
+
+\begin{remark}
+  Again, note that in statistics, we normally don't have the actual data. We are more likely asked to find a function or model to describe the distribution. The data being used are just for demonstration purposes.
+\end{remark}
+
+\subsection{Sample Variance}
+Above, we talked about the unbiased estimator, the sample mean. However, in terms of sample variance, it is a biased estimator due to the biased expectation.
+
+Consider again the exam grade example that was used for illustration earlier. We have a sample mean \(\overline{x} = 37.33\), and then we can find the sample variance.
+\[
+  s^2 = \dfrac{(39 - 37.33)^2 + (30 - 37.33)^2 + (43 - 37.33)^2}{3} \approx 29.56. 
+\]
+However, as mentioned above, once the sample we take is different, it leads to a different sample variance. In the case of sample variance, the average sample variance, or the expected value of the sample variance, is often smaller than the actual population variance.
+
+For example, we now have data on some \(X \sim \text{Bernoulli}(p), p = \frac{1}{2}\). To find \(\sigma^2\), we can start with the variance for a Bernoulli random variable, in which \(\Var[X] = p(1 - p)\). Then, we have the actual variance \(\sigma^2 = \frac{1}{4}\). When we take two samples, we find that the PMF of \(s^2 = \frac{1}{2}((X_1 - \overline{X})^2 + (X_2 - \overline{X})^2)\).
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c}
+      \toprule
+      Joint PMF & \(X_1 = 0\) & \(X_1 = 1\)  \\
+    \midrule
+      \(X_2 = 0\) & \(\dfrac{1}{4}\) & \(\dfrac{1}{4}\)  \\[8pt]
+      \(X_2 = 1\) & \(\dfrac{1}{4}\) & \(\dfrac{1}{4}\)  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+If \(X_1 = X_2\), then \(\overline{X} = X_1 = X_2, s^2 = 0\); If \(X_1 \neq X_2\), then \(\overline{X} = \frac{1}{2}, s^2 = \frac{1}{4}\). This gives
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c}
+      \toprule
+      \(s^2\) & 0 & \(\frac{1}{4}\) \\
+    \midrule
+      \(\mathbb{P}(S^2 = s^2)\) & \(\dfrac{1}{2}\) & \(\dfrac{1}{2}\) \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+Then we have 
+\[
+  \mathbb{E}[S^2] = 0 \times \frac{1}{2} + \dfrac{1}{4} \times \dfrac{1}{2} = \dfrac{1}{8} = \dfrac{1}{2}\sigma^2,
+\]
+which is smaller than the actual variance. 
+
+In the general case, a random sample of size \(n\) consists of independent random variables \(X_1, \cdots, X_n\) with the same PDF or PMF.
+\[
+  \mathbb{E}[S^2] = \dfrac{n - 1}{n} \sigma^2, 
+\]
+which shows that we tend to underestimate. However, for a sufficiently large \(n \to \infty\), \(\frac{n - 1}{n} \to 1\). 
+
+We can correct the sample variance using the formula above by using \(\frac{n - 1}{n}\), such that 
+\[
+  \mathbb{E}[\dfrac{n}{n - 1} S^2] = \sigma^2 \quad\quad \left(\dfrac{n}{n - 1} S^2 = \dfrac{n}{n - 1} \dfrac{\sum_{i = 1}^n (X_i - \overline{X})^2}{n} = \dfrac{\sum_{i = 1}^n (X_i - \overline{X})^2}{n - 1}\right)
+\]
+
+Note that the factor is not significant when \(n\) is large, but it is important when \(n\) is small.
+
+\begin{proof}
+  \[
+    \begin{aligned}
+      s^2 &= \dfrac{1}{n} \left((X_1 - \overline{X})^2 + \cdots + (X_n - \overline{X})^2\right) \\
+      &= \dfrac{1}{n} \left(\left(X_1 - \dfrac{X_1 + \cdots + X_n}{n}\right)^2 + \cdots + \left(X_n - \dfrac{X_1 + \cdots + X_n}{n}\right)^2\right) \\
+      &= \dfrac{1}{n} \left(\sum_{i = 1}^n X_i^2 + \dfrac{n(\sum_{i = 1}^n X_i)^2}{n^2} - 2\left(\sum_{i = 1}^n X_i\right)\dfrac{\sum_{i = 1}^n X_i}{n}\right) \\
+      &= \dfrac{\sum_{i = 1}^n X_i^2}{n} - \left(\dfrac{\sum_{i = 1}^n X_i}{n}\right)^2 \\
+      &= \dfrac{\sum_{i = 1}^n X_i^2}{n} - \overline{X}^2 \\
+    \end{aligned}
+  \]
+  \[
+    \mathbb{E}[s^2] = \mathbb{E}\left[\dfrac{\sum_{i = 1}^n X_i^2}{n} - \overline{X}^2\right] = \dfrac{\sum_{i = 1}^n \mathbb{E}[X_i^2]}{n} - \mathbb{E}[\overline{X}^2]
+  \]
+  \[
+    \Var[X_i] = \mathbb{E}[X_i^2] - \mathbb{E}[X_i]^2; \quad \mathbb{E}[X_i^2] = \sigma^2 + \mu^2
+  \]
+  \[
+    \Var[\overline{X}] = \mathbb{E}[\overline{X}^2] - \mathbb{E}[\overline{X}]^2; \quad \mathbb{E}[\overline{X}^2] = \dfrac{\sigma^2}{n} + \mu^2
+  \]
+
+  By substitution, we have 
+  \[
+    \mathbb{E}[s^2] = \dfrac{\sum_{i = 1}^n \mathbb{E}[X_i^2]}{n} - \mathbb{E}[\overline{X}^2] = \sigma^2 + \mu^2 - \dfrac{\sigma^2}{n} - \mu^2 = \dfrac{n - 1}{n}\sigma^{2}
+  \]
+\end{proof}
 
 % L04 Finished
 % END OF DOCUMENT
