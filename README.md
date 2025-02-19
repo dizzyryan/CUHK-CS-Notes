@@ -27,14 +27,14 @@ This repository is not intended for teaching purposes.
 |  :---:  |  :---:  |  :---:  |  :---:  |
 |  IERG2080  |  Introduction to System Programming   |  [Repo](IERG2080)  |  X  |
 
-### 23-24 Fall
+### 24-25 Fall
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
 |  CSCI1130  |  Introduction to Computing Using Java  |  [Repo](CSCI1130)  |  X  |
 |  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](https://ryanc.wtf/files/ENGG2440.pdf)  |
 |  ENGG2760  |  Probability for Engineers  |  [Repo](ENGG2760)  |  [Notes](https://ryanc.wtf/files/ENGG2760.pdf)  |
 
-### 23-24 Spring
+### 24-25 Spring
 |  Code  |  Course  |  Repository  |  Notes  |  Cheat Sheet  |
 |  :---:  |  :---:  |  :---:  |  :---:  |  :---:  |
 |  CSCI2100  |  Data Structure  |  X  |  X  |  X  |
