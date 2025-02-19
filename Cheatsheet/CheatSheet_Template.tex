@@ -1,32 +1,25 @@
+% ---------------------- setting ---------------------- %
 \documentclass[10pt,landscape,a4paper]{article}
+\input{../Math.tex}
+\usepackage[margin=0.5in]{geometry}
 \usepackage{multicol}
-\usepackage{calc}
-\usepackage{ifthen}
-\usepackage[landscape]{geometry}
-\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb, mathrsfs}
+\usepackage{lipsum}
 
-\input{cheatsheet_header.tex}
+\setlength\parindent{0pt}
 
-% -----------------------------------------------------------------------
+\setlength{\columnseprule}{0.5pt}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhf{}
+\fancyhead{}
+\fancyfoot{}
 
 \begin{document}
-\raggedright
-\footnotesize
 \begin{multicols}{4}
-
-% multicol parameters
-% These lengths are set only within the two main columns
-%\setlength{\columnseprule}{0.25pt}
-\setlength{\premulticols}{1pt}
-\setlength{\postmulticols}{1pt}
-\setlength{\multicolsep}{1pt}
-\setlength{\columnsep}{2pt}
-
-%%%%%%%%%%%%%%%%%%%%%%% - Main Content - %%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%% - END - %%%%%%%%%%%%%%%%%%%%%%%
-
+% ---------------------- Content ---------------------- %
+\lipsum[1-10]
+% ---------------------- END ---------------------- %
 \end{multicols}
 \end{document}
