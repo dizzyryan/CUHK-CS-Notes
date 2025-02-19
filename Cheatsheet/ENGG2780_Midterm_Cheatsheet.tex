@@ -145,6 +145,30 @@ Convert:
 \]
 
 \section*{Bayesian Statistic}
+\subsection*{Bayes' rule}
+\[
+  \underbrace{f_{\Theta \vert X} (\theta \vert x)}_{\text{Posterior}} = \dfrac{\overbrace{f_{\Theta} (\theta)}^{\text{Prior}} \overbrace{f_{X \vert \Theta} (x \vert \theta)}^{\text{Observation}}}{f_X (x)}
+\]
+\[
+  \underbrace{f_{\Theta \vert X} (\theta \vert x)}_{\text{posterior}} \propto \underbrace{f_{X \vert \Theta} (x \vert \theta)}_{\text{likelihood}} \underbrace{f_{\Theta} (\theta)}_{\text{prior}}
+\]
+
+\subsection*{Beta Distribution}
+\[
+  f_{\Theta} (\theta) = \begin{dcases}
+    \underbrace{\dfrac{1}{B(\alpha, \beta)} \theta^{\alpha-1} (1 - \theta)^{\beta - 1}}_{\text{if}\ 0 < \theta < 1} \\
+    0 \quad \text{ otherwise} 
+  \end{dcases}
+\]
+
+\subsection*{Gamma Distribution}
+\[
+  f_{\Theta} (\theta) = \begin{dcases}
+    \dfrac{\beta^{\alpha}}{\Gamma (\alpha)}\theta^{\alpha - 1} e^{-\beta\theta} &\text{ for } \theta > 0 \\
+    0 &\text{ for } \theta \leq 0 \\
+  \end{dcases}
+\]
+
 \vfill\break
 % ---------------------- END ---------------------- %
 \end{multicols}
