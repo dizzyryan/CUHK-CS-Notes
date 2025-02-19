@@ -1,6 +1,6 @@
 # College Notes
 
-This repository contains the notes and code from the courses I took during university.
+This repository contains the notes and code from the courses I took during my undergraduate study in CUHK.
 
 ## Before You Start
 
