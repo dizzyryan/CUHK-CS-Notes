@@ -1,0 +1,151 @@
+% ---------------------- setting ---------------------- %
+\documentclass[10pt,landscape,a4paper]{article}
+\input{../Math.tex}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb, mathrsfs}
+
+\setlength\parindent{0pt}
+
+\setlength{\columnseprule}{0.5pt}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhf{}
+\fancyhead{}
+\fancyfoot{}
+
+\begin{document}
+\begin{multicols}{4}
+% ---------------------- Content ---------------------- %
+\section*{Probability Functions}
+\subsection*{PMF/PDF, CDF, Expected Value, Variance}
+\subsubsection*{General} 
+(*independent assumed)
+\[
+  \mathbb{E}[X] = \mu = \sum_{x} xp_X (x) = \int_{-\infty}^{\infty} xf_X(x)dx
+\]
+\[
+  \mathbb{E}[\alpha X + \beta Y] = \alpha \mathbb{E}[X] + \beta \mathbb{E}[Y]
+\]
+\[
+  *\mathbb{E}[XY] = \mathbb{E}[X]\mathbb{E}[Y]
+\]
+\[
+  \Var[X] = \mathbb{E}\left[(X - \mu)^2 \right] = \mathbb{E}[X^2] - \mathbb{E}[X]^2
+\]
+\[
+  *\Var[X + Y] = \Var[X] + \Var[Y]
+\]
+\[
+  \sigma_X \coloneqq \sqrt{\Var[X]} =  \sqrt{\mathbb{E}\left[(X - \mu)^2 \right]} 
+\]
+
+\subsubsection*{\(X \sim \text{Bernoulli}(p)\)}
+\[
+  p_X (x) = \begin{dcases}
+    1 - p &\text{ if } x = 0\\
+    p &\text{ if } x = 1
+  \end{dcases}
+\]
+\[
+  \mathbb{E}[X] = p \quad\quad \Var[X] = p(1 - p)
+\]
+
+\subsubsection*{\(X \sim \text{Binomial}(n, p)\)}
+\[
+  p_X (k) = \mathbb{P}(X = k) = \binom{n}{k}p^k(1 - p)^{n-k}
+\]
+\[
+  \mathbb{E}[X] = np \quad\quad \Var[X] = np(1 - p)
+\]
+
+\subsubsection*{\(X \sim \text{Geometric}(p)\)}
+\[
+  p_X (k) = \mathbb{P}(X = k) = p(1 - p)^{k-1} 
+\]
+\[
+  \mathbb{E}[X] = \frac{1}{p} \quad\quad \Var[X] = \frac{1 - p}{p^{2}}
+\]
+
+\subsubsection*{\(X \sim \text{Poisson}(\lambda)\)}
+\[
+  p(k) = e^{-\lambda}\dfrac{\lambda^k}{k!}, \quad k = 0, 1, 2, 3
+\]
+\[
+  \mathbb{E}[X] = \lambda \quad\quad \Var[X] = \lambda 
+\]
+
+\subsubsection*{\(X \sim \text{Uniform}(a, b)\)}
+\[
+    F_X(x) = \begin{dcases}
+        0, &\text{ if } x < a \\
+        \frac{x - a}{b - a}, &\text{ if } a \leq x \leq b \\
+        1 , &\text{ if } b < x
+    \end{dcases}
+\]
+\[
+  f_X(x) = \begin{dcases}
+    0, &\text{ if } x < a \\
+    \frac{1}{b - a}, &\text{ if } a \leq x \leq b \\
+    0 , &\text{ if } b < x
+  \end{dcases}
+\]
+\[
+  \mathbb{E}[X] = \dfrac{a + b}{2} \quad\quad \Var[X] = \dfrac{(b - a)^2}{12}
+\]
+
+\subsubsection*{\(X \sim \text{Exponential}(\lambda)\)}
+\[
+  f_X(x) = \begin{dcases}
+    \lambda e^{-\lambda x} , &\text{ if }  x \geq 0\\
+    0 , &\text{ if } x < 0
+  \end{dcases}
+\]
+\[
+    F_X(x) = 1 - e^{- \lambda x}
+\]
+\[
+  \mathbb{E}[X] = \dfrac{1}{\lambda} \quad\quad \Var[X] = \dfrac{1}{\lambda^2}
+\]
+
+\subsection*{Joint PMF}
+\[
+    p(x, y) = \mathbb{P}(X = x, Y = y)
+\]
+
+\subsection*{Normal Distribution}
+\(X \sim \mathcal{N}(\mu, \sigma^2)\) 
+\[
+  f_X(x) = \dfrac{1}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
+\]
+\[
+    \mathbb{E}[X] = \mu \quad\quad \Var[X] = \sigma^2
+\]
+
+\subsection*{Standard Normal Distribution}
+\(\mathcal{N}(0, 1)\) 
+\[
+  f_X(x) \coloneqq \dfrac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
+\]
+\[
+  \mathbb{E}[Z] = 0 \quad\quad \Var[Z] = 1.
+\]
+Convert: 
+\[
+  Z = \frac{X - \mu}{\sigma}
+\]
+
+\subsection*{Central Limit Theorem}
+\[
+  Z_n = \dfrac{S_n - n\mu}{\sigma\sqrt{n}},\  S_n = X_1 + \cdots + X_n
+\]
+\[
+  \lim_{n \to \infty} \mathbb{P}(Z_n \leq z) = \varPhi (z)
+\]
+
+\section*{Bayesian Statistic}
+\vfill\break
+% ---------------------- END ---------------------- %
+\end{multicols}
+\end{document}
