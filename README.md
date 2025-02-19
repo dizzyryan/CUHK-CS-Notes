@@ -35,11 +35,11 @@ This repository is not intended for teaching purposes.
 |  ENGG2760  |  Probability for Engineers  |  [Repo](ENGG2760)  |  [Notes](https://ryanc.wtf/files/ENGG2760.pdf)  |
 
 ### 23-24 Spring
-|  Code  |  Course  |  Repository  |  Notes  |
-|  :---:  |  :---:  |  :---:  |  :---:  |
-|  CSCI2100  |  Data Structure  |  X  |  X  |
-|  CENG3420  |  Computer Organization & Design  |  X  |  X  |
-|  ENGG2780  |  Statistic for Engineers  |  [Repo](ENGG2780)  |  [Notes](https://ryanc.wtf/files/ENGG2780.pdf)  |
+|  Code  |  Course  |  Repository  |  Notes  |  Cheat Sheet  |
+|  :---:  |  :---:  |  :---:  |  :---:  |  :---:  |
+|  CSCI2100  |  Data Structure  |  X  |  X  |  X  |
+|  CENG3420  |  Computer Organization & Design  |  X  |  X  |  X  |
+|  ENGG2780  |  Statistic for Engineers  |  [Repo](ENGG2780)  |  [Notes](https://ryanc.wtf/files/ENGG2780.pdf)  |  [Ref](https://ryanc.wtf/files/ENGG2780_Midterm_Cheatsheet.pdf)  |
 
 > Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
 
