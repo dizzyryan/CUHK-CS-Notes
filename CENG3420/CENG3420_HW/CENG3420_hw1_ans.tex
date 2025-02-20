@@ -1,0 +1,116 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[all]{xy}
+\usepackage{amsmath,amsthm,amssymb,color,latexsym}
+\usepackage{geometry}        
+\geometry{a4paper}  
+\usepackage{systeme, afterpage}
+\usepackage{graphicx}
+\usepackage{gauss}
+\usepackage{xparse}
+\usepackage{anyfontsize}
+
+\setlength\parindent{0pt}
+\linespread{1.25}
+
+\begin{document}
+
+\section*{Q1}
+1. Given that a die has 0.2 defects on average, Defects per area \(\times\) Die area = defects = 0.2 
+\[
+  \text{Yield1} = \dfrac{1}{\left[1 + \left(\frac{\text{Defects per area \(\times\) Die area}}{2}\right)\right]^2} = \dfrac{1}{\left(1 + \frac{0.2}{2}\right)^2}= 0.826
+\] 
+
+2. If the average defects of a die is reduced to 0.1, 
+\[
+  \text{Yield} = \dfrac{1}{\left(1 + \frac{0.1}{2}\right)^2} = 0.9070
+\]
+\[
+    \text{Cost per die} = \dfrac{\text{Cost per wafer}}{\text{Dies per wafer} \times \text{Yield1}} = \dfrac{\text{Cost per wafer}}{\text{Dies per wafer} \times 0.826}
+\]
+\[
+  \text{New cost per die} = \dfrac{\text{Cost per wafer}}{\text{Dies per wafer} \times \text{Yield}} = \dfrac{\text{Cost per wafer}}{\text{Dies per wafer} \times 0.9070}
+\]
+\[
+  \text{Ratio} = \dfrac{\text{New cost per die} - \text{Cost per die}}{\text{Cost per die}} = \dfrac{\text{New cost per die}}{\text{Cost per die}} - 1 = 0.09753
+\]
+\[
+  \text{Money saved} = 10,000,000 \times 0.09753 = 975,300 \text{HKD}
+\]
+Therefore, HKD\$975300 could be saved.
+
+\section*{Q2}
+\[
+  \dfrac{\text{Power}_\text{new}}{\text{Power}_\text{old}} = \dfrac{75\% \times (80\%)^2 \times (90\%)}{1} = 0.432
+\]
+
+Since the ratio is less than 1, it indicates that less power will be required to perform the same task.
+
+\section*{Q3}
+1. 
+\begin{verbatim}
+  lw a1, 12(a0)
+\end{verbatim}
+
+2. 
+\begin{verbatim}
+  addi a2, a1, -32
+\end{verbatim}
+
+3. 
+For \(\verb|t2|/32\), we can use 
+\begin{verbatim}
+  srli t3, t2, 5
+\end{verbatim}
+
+\quad For \(\verb|t2|\%32\), we can use 
+\begin{verbatim}
+  andi t4, t2, 0x1F
+\end{verbatim}
+
+\section*{Q4}
+1. 
+\begin{verbatim}
+  slli t3, t1, 8 # t3 = 0xABCDEF00
+  srli t3, t3, 8 # t3 = 0x00ABCDEF
+\end{verbatim}
+\quad Value of \verb|t3 = 0x00ABCDEF|
+
+2. 
+\begin{verbatim}
+  slli t3, t2, 8 # t3 = 0xA0000000
+  srai t3, t3, 8 # t3 = 0xFFA00000
+\end{verbatim}
+\quad Value of \verb|t3 = 0xFFA00000|
+
+3. 
+\begin{verbatim}
+  xor t3, t1, t2
+  sw t3, 0(a0)
+  sb t3, 8(a0)
+\end{verbatim}
+
+\section*{Q5}
+1. 4 times
+
+2. \verb|4 12 24 24|
+
+3. It finds the factorial of \verb|t1|
+
+\section*{Q6}
+\begin{verbatim}
+  addi sp, sp, -16 # assign 4 words of data
+  ... 
+  sw ra, 12(sp) # save return address in ra
+  sw a0, 8(sp) # save a0 to stack
+  sw a1, 4(sp) # save a1 to stack
+  ... 
+  lw a1, 4(sp) # restore a1 from stack
+  lw a0, 8(sp) # restore a0 from stack
+  lw ra, 12(sp) # restore ra from stack
+  ...
+  addi sp, sp, 16 # free the stack
+\end{verbatim}
+
+\vfill\centering\textbf{- END -}
+\end{document}
