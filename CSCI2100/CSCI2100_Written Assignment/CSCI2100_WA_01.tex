@@ -1,0 +1,135 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[all]{xy}
+\usepackage{amsmath,amsthm,amssymb,color,latexsym}
+\usepackage{geometry}        
+\geometry{a4paper}  
+\usepackage{systeme, afterpage}
+\usepackage{graphicx}
+\usepackage{gauss}
+\usepackage{xparse}
+\usepackage{anyfontsize}
+
+\setlength\parindent{0pt}
+\linespread{1.25}
+
+\begin{document}
+
+\section*{Problem 1.1}
+
+\subsection*{(1)}
+\[
+  \sum_{i = 0} ^{\infty} \dfrac{1}{4^i} = \sum_{i = 0} ^{\infty} (\dfrac{1}{4})^i = \dfrac{(\frac{1}{4})^{n+1} - 1}{\frac{1}{4} - 1} = \dfrac{4 - 4^{-\infty}}{3} = \dfrac{4}{3}
+\]
+
+\subsection*{(9)}
+\[
+  \sum_{i = 0}^n i^3 = \dfrac{n^{2} (n^{2} + 2 n + 1)}{4}
+\]
+
+\subsection*{(13)}
+Assume that \(2^{2n} = O(2^n)\), then we have \(2^{2n} \leq c \cdot 2^n\) for \(c > 0\) and an \(n_0 \geq 0\) for all \(n \geq n_0\). 
+\[
+  \begin{aligned}
+    2^{2n} &\leq c \cdot 2^n \\
+    2^{n} &\leq c
+  \end{aligned}
+\]
+Since for \(n_0 \geq 0\), there does not exist a fixed \(c\) such that \(2^n \leq c\), by contradiction, it can be proved that \(2^{2n} \neq O(2^n)\).
+
+\section*{Problem 1.3}
+
+\subsection*{(3)}
+Let \(T_0(n) = T_h(n) + T_p(n)\), where \(T_h(n) = aT(n - 1)\). 
+
+For \(T_h(n)\), characteristic equation \(x = a\), then we have \(T_h(n) = \theta a^n\). 
+
+Since \(f(n) = bn^c, s = n\), let \(T_p(n) = x_0 n^c \). 
+\[
+  \begin{aligned}
+    x_0 n^c &= ax_0 (n - 1)^c + bn^c \\
+    x_0 &= \dfrac{bn^c}{n^c - a(n - 1)^c}
+  \end{aligned}
+\]
+
+Then, we have 
+\[
+  T_0(n) = \theta a^n + \dfrac{bn^{2c}}{n^c - a(n - 1)^c}
+\]
+
+Since \(T(1) = 1\), we have 
+\[
+  1 = \theta \cdot a + b \Longrightarrow \theta = \dfrac{1 - b}{a}
+\]
+
+Hence, the solution to the recurrence is given by 
+\[
+  T(n) = (1 - b)a^{n-1}  + \dfrac{bn^{2c}}{n^c - a(n - 1)^c}
+\]
+
+\subsection*{(8)}
+Let \(T_0(n) = T_h(n) + T_p(n)\), where \(T_h(n) = 3T(n - 1)\). 
+
+For \(T_h(n)\), characteristic equation \(x = 3\), then we have \(T_h(n) = \theta 3^n\). 
+
+Since \(f(n) = 2\), let \(T_p(n) = x\). 
+\[
+  \begin{aligned}
+    x &= 3x + 2 \\
+    x &= -1
+  \end{aligned}
+\]
+
+Then, we have 
+\[
+  T_0(n) = \theta 3^n - 1
+\]
+
+Since \(T(1) = 1\), we have 
+\[
+  1 = 3\theta - 1
+\]
+
+This gives \(\theta = \frac{2}{3}\). Hence, the solution to the recurrence is given by 
+\[
+  T(n) = 2 \cdot 3^{n-1}  - 1
+\]
+
+\section*{Problem 1.4}
+
+\subsection*{(2)}
+Let \(P(n)\) be the predicate 
+\[
+  P(n) : \sum_{i = 0}^n 2^i = 2^{n+1} - 1
+\]
+
+For \(n = 0\), \(L.H.S = 2^0 = 1, R.H.S = 2^{0+1} - 1 = 1\), which holds true. 
+
+Assume that 
+\[
+\sum_{i = 0}^n 2^i = 2^{n+1} - 1. 
+\]
+
+For \(P(n + 1)\), 
+\[
+  \begin{aligned}
+    \sum_{i = 0}^{n+1}  2^i &= \sum_{i = 0}^n 2^i + 2^{n+1} \\
+    &= 2^{n+1} - 1 + 2^{n+1} \\
+    &= 2 \times 2^{n+1} - 1\\
+    &= 2^{(n+1)+1} - 1\\
+    &= R.H.S
+  \end{aligned}
+\]
+which shows that \(P(n + 1)\) is also true. 
+Hence, by the principle of MI, we can conclude that \(P(n)\) is true for all integers \(n \geq 1\).
+
+\subsection*{(4)}
+Let \(f(x) = (n + 1)^2, g(x) = n^2\).
+\[
+  f(x) = n^2 + 2n + 1 \leq n^2 + 2n^2 + n^2 = 4n^{2}
+\]
+
+Thus, by taking \(c = 4, n_0 = 1\), for \(n > n_0\), \((n + 1)^2 = O(n^2)\). 
+
+\vfill\centering\textbf{- END -}
+\end{document}

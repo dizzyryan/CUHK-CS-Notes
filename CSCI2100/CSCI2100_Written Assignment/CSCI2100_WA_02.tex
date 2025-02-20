@@ -1,0 +1,147 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[all]{xy}
+\usepackage{amsmath,amsthm,amssymb,color,latexsym}
+\usepackage{geometry}        
+\geometry{a4paper}  
+\usepackage{systeme, afterpage}
+\usepackage{graphicx}
+\usepackage{gauss}
+\usepackage{xparse}
+\usepackage{anyfontsize}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\setlength\parindent{0pt}
+\linespread{1.25}
+
+\begin{document}
+
+\section*{Problem 1.6}
+
+\subsection*{(2)}
+\[
+    \sum_{i = 1}^n \sum_{j = i}^n 1 = \sum_{i = 1}^n (n + 1 - i) = \dfrac{n (n + 1)}{2}
+\]
+
+\[ f(n) = \dfrac{n(n + 1)}{2} = \dfrac{n^2 + n}{2}, \quad g(n) = n^2\]
+
+\subsection*{(5)}
+
+\[
+  \begin{aligned}
+    \sum_{i = 1}^n \sum_{j = i}^n \sum_{k = 1}^{1000} 1 &= \sum_{i = 1}^n \sum_{j = i}^n 1000 \\
+    &= 1000 \left(\sum_{i = 1}^n (n + 1 - i) \right) \\
+    &= 1000 \left((n)(n + 1) - \dfrac{n (n + 1)}{2} \right) \\
+    &= 1000 \left(\dfrac{n (n + 1)}{2} \right) \\
+    &= 500n(n + 1) \\
+  \end{aligned}
+\]
+
+\[f(n) = 500n(n + 1), \quad g(n) = n^2\]
+
+\subsection*{(6)}
+
+\[
+  \begin{aligned}
+    \sum_{i = 1}^{n-1} \sum_{j = i + 1} ^n \sum_{k = 1} ^j 1 &= \sum_{i = 1}^{n-1} \sum_{j = i + 1} ^n j \\
+    &= \sum_{i = 1}^{n-1} \dfrac{(n - i)(n + i + 1)}{2} \\
+    &= \dfrac{1}{2}\sum_{i = 1}^{n-1} n^2 + n - i^2 - i \\
+    &= \dfrac{1}{2} \left[(n - 1)(n^2 + n) - \dfrac{(n-1)(n)(2n-1)}{6} - \dfrac{(n-1)(n)}{2}\right] \\
+    &= \dfrac{1}{2} \left[\dfrac{(n - 1)(4n^2 + 4n)}{6}\right] \\
+    &= \dfrac{1}{3} n(n^2 - 1) \\
+  \end{aligned}
+\]
+
+\[f(n) = \dfrac{1}{3} n(n^2 - 1), \quad g(n) = n^3\]
+
+\section*{Problem 1.8 (2)}
+
+\begin{verbatim}
+  poly = 0;
+  for (i = n; i >= 0; i--)
+    poly = x * poly + a_i
+\end{verbatim}
+
+The algorithm first initializes \verb|poly| to 0 and uses a loop to evaluate the polynomial from \(n\) to 0, meaning it processes the terms in reverse order, from \(a_n\) to \(a_0\). However, the algorithm works correctly because it multiplies by \(x\) each time \(i\) decreases. Since the loop runs \(n\) times, the initial coefficient \(a_n\), after being assigned to \verb|poly| at the beginning, is multiplied by \(x\) exactly \(n\) times, resulting in the term \(a_n x^n\) when the loop ends. Additionally, the loop adds each coefficient \(a_i\) as \(i\) decreases, and each term becomes the multiplicand, getting multiplied by \(x\) \(n - i\) times. This approach produces the desired outcome: \(f(x) = \sum_{i = 0}^n a_i x^i = a_n x^n + a_{n-1} x^{n-1} + \cdots + a_1 x^1 + a_0 x^0\).
+
+\section*{Problem 1.9 (3)}
+
+Since \(C(n) = t(n) + 5 * s(n)\), we have:
+\[
+  C_A (n) = \begin{dcases}
+    n^2 + 5n , &\text{ if } 1 \leq n < 10 ;\\
+    6n , &\text{ if } 10 \leq n < 20 ;\\
+    8.5n , &\text{ if } 20 \leq n < 50 ;\\
+    n^3 + 7.5n , &\text{ if } 50 \leq n \leq 100 .
+  \end{dcases}
+\]
+
+\[
+  C_B (n) = \begin{dcases}
+    26n , &\text{ if } 1 \leq n < 30 ;\\
+    n^2 + 25n , &\text{ if } 30 \leq n < 50 ;\\
+    n^2 + 2.5n , &\text{ if } 50 \leq n < 70 ;\\
+    n^3 + 2.5n , &\text{ if } 70 \leq n \leq 100 .
+  \end{dcases}
+\]
+
+Given the cost for different cases varies, which algorithm is better can be viewed as following: 
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c}
+      \toprule
+       & \(C_A (n)\) & \(C_B (n)\) & Better Algorithm  \\
+    \midrule
+      \(1 \leq n < 10\) & \(\mathcal{O}(n^2)\) & \(\mathcal{O}(n)\) & \(C_B (n)\) \\
+      \(10 \leq n < 20\) & \(\mathcal{O}(n)\) & \(\mathcal{O}(n)\) & \(C_A (n)\) \\
+      \(20 \leq n < 30\) & \(\mathcal{O}(n)\) & \(\mathcal{O}(n)\) & \(C_A (n)\) \\
+      \(30 \leq n < 50\) & \(\mathcal{O}(n)\) & \(\mathcal{O}(n^2)\) & \(C_A (n)\) \\
+      \(50 \leq n < 70\) & \(\mathcal{O}(n^3)\) & \(\mathcal{O}(n^2)\) & \(C_B (n)\) \\
+      \(70 \leq n \leq 100\) & \(\mathcal{O}(n^3)\) & \(\mathcal{O}(n^3)\) & \(C_B (n)\) \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+\section*{Problem 2.32}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|c}
+      \toprule
+      Operation &  \verb|top(S)| \\
+    \midrule
+      \verb|add(4,S)| & \verb|4|  \\
+      \verb|add(1,S)| & \verb|1|  \\
+      \verb|add(3,S)| & \verb|3|  \\
+      \verb|delete(S)| & \verb|1|  \\
+      \verb|add(8,S)| & \verb|8|  \\
+      \verb|delete(S)| & \verb|1|  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+\section*{Problem 2.33}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|c|c}
+      \toprule
+      Operation &  \verb|front(Q)| & \verb|rear(Q)| \\
+    \midrule
+      \verb|add(4,Q)| & \verb|4| & \verb|4|  \\
+      \verb|add(1,Q)| & \verb|4| & \verb|1|  \\
+      \verb|add(3,Q)| & \verb|4| & \verb|3|  \\
+      \verb|delete(Q)| & \verb|1| & \verb|3|  \\
+      \verb|add(8,Q)| & \verb|1| & \verb|8|  \\
+      \verb|delete(Q)| & \verb|3| & \verb|8|  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+
+\vfill\centering\textbf{- END -}
+\end{document}
