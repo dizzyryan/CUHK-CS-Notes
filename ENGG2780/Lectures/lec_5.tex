@@ -1,1 +1,172 @@
 \section{Point Estimation}
+
+Previously, in Bayesian statistics, we used MAP for point estimation. In classical statistics, there is also a method for point estimation, called Maximum Likelihood Estimation (MLE). 
+
+Recall that in classical statistics, the parameter \(\theta\) is a deterministic quantity that happens to be unknown, and we try to estimate this parameter. Therefore, we develop an estimator \(\hat{\theta}\) based on the observations.
+
+\subsection{Estimators}
+Suppose that \(X_1, \cdots, X_n\) are independent samples with the same PDF/PMF parameterized by \(\theta\). Then we can define the following random variables:
+\[
+\begin{aligned}
+  \text{Estimator: } &\widehat{\Theta}_n = g(X_1, \cdots, X_n); \\
+  \text{Estimate: } &\hat{\theta}_n = g(X_1 = x_1, \cdots, X_n = x_n),
+\end{aligned}
+\]
+where \(\Theta\) is the random variable that estimates \(\theta\), for example, the sample mean. 
+
+Then we have: 
+
+Unbiased: \(\mathbb{E}[\widehat{\Theta}_n] = \theta\)
+
+Asymptotically unbiased: \(\displaystyle\lim_{n \to \infty} \mathbb{E}[\widehat{\Theta}_n] = \theta\)
+
+Consistent: \(\widehat{\Theta}_n\) converges to \(\theta\) in probability 
+\[
+  \lim_{\varepsilon \to 0} \lim_{n \to \infty} \mathbb{P}(\vert \widehat{\Theta}_n - \theta \vert \geq \varepsilon) = 0
+\]
+For an asymptotically unbiased estimator, when \(n\) is large enough, i.e., with a sufficiently large sample size, we can approximate the estimator to the actual value. Therefore, we can also use the weak law of large numbers, which states that with a sufficiently large sample size, \(\mathbb{P}(\text{sample error } > 0)\) becomes small, meaning \(\widehat{\Theta}_n\) is a good estimator.
+
+\subsection{Maximum Likelihood Estimation}
+Suppose that \(X_1, \cdots, X_n\) are independent samples with the same PDF \(f_X (X \vert \theta)\) (or PMF \(\mathbb{P}_X(X \vert \theta)\)). Then, for the maximum likelihood estimate of \(\theta\), we have 
+\[
+  \hat{\theta}_n = \arg \max_\theta f_X (x_1, \cdots, x_n \vert \theta).
+\]
+Through the observation process, we estimate \(\theta\) using different values. The maximum likelihood estimate is the value of \(\theta\) that maximizes the likelihood function, representing the parameter value most likely to have produced the observed data: 
+\[
+  f_X(x \vert \hat{\theta}) = \max_\theta f_X(x \vert \theta)
+\]
+
+\begin{eg}
+  What is the MLE for \(\theta\) from Uniform\((0, \theta)\) samples? 
+
+  \textbf{Solution:} 
+  As we observe \(x_1, x_2, x_3\) independently from \(\text{Uniform}(0, \theta)\), we have:
+  \[
+    f_X(x_1, x_2, x_3 \vert \theta) = f_X(x_1 \vert \theta) f_X(x_2 \vert \theta) f_X(x_3 \vert \theta) = \dfrac{1}{\theta^3} (\text{ if } \theta \geq x_1, x_2, x_3 > 0)
+  \]
+  Here, \(\frac{1}{\theta^3}\) is a decreasing function when \(\theta > 0\). To maximize the probability, we want to minimize \(\theta\). However, the constraint is that \(\theta \geq \max\{x_1, x_2, x_3\} > 0\). Therefore, we choose \(\theta = \max \{x_1, x_2, x_3\}\), where \(\frac{1}{\theta^3}\) reaches its maximum.
+  \[
+    \theta_{\text{MLE}} = \max \{x_1, x_2, x_3\}
+  \]  
+\end{eg}
+\begin{remark}
+  Notice that here \(\theta\) is treated as an unknown value. 
+\end{remark}
+
+\begin{eg}
+  Now we try to find the MLE for Bernoulli(\(\theta\)). Suppose we observe \(k\) heads and \(n - k\) tails. What is \(\theta_{\text{MLE}}\)?
+  
+  \textbf{Solution:}
+  \[
+    \begin{aligned}
+      \theta_{\text{MLE}} &= \arg \max_\theta f_X (x_1, \cdots, x_n \vert \theta) \\
+      &= \arg \max_\theta \theta^k (1 - \theta)^{n-k} \\
+      &= \arg \max_\theta \text{Beta}(k + 1, n - k + 1)
+    \end{aligned}
+  \] 
+  Since
+  \[
+    \text{Beta}(k + 1, n - k + 1) = \begin{dcases}
+      \dfrac{1}{B(k + 1, n - k + 1)} \theta^k (1 - \theta)^{n-k}  &\text{ if } 0 < \theta < 1 ;\\
+      0  &\text{ otherwise}
+    \end{dcases}
+  \]
+  and we have 
+  \[
+    \text{mode}(\text{Beta}(\alpha, \beta)) = \dfrac{\alpha - 1}{\alpha - 1 + \beta - 1}. 
+  \]
+  Thus, 
+  \[
+    \theta_{\text{MLE}} = \dfrac{k}{n}. 
+  \]
+\end{eg}
+
+\subsection{Systematic Approach to the MLE}
+We can have a general approach to find MLE. As before, we have MLE: \(\hat{\theta} = \arg \max_\theta f_X (x_1, \cdots, x_n \vert \theta)\). If \(\theta\) has discrete values, we then compute \(f_X(x_1, \cdots, x_n \vert \theta)\) for each possible value and choose the one that maximizes the likelihood. If \(\theta\) has continuous values, then we can rely on the properties of \(f_X (x_1, \cdots, x_n \vert \theta)\) to find \(\theta_{\text{MLE}}\). However, for complicated cases, we need to use another approach. 
+
+Since \(f_X(x_1, \cdots, x_n \vert \theta)\) is a function of \(\theta\), we can find the \(\theta\) that maximizes the function by using derivatives if \(f_X(x_1, \cdots, x_n \vert \theta)\) is differentiable with respect to \(\theta\) (we also consider the boundary cases).
+\[
+  \dfrac{\partial f_X (x_1, \cdots, x_n \vert \theta)}{\partial \theta} = 0
+\]
+If such an equation can be solved, then we get a closed-form (analytical) solution for \(\theta_\text{MLE}\).
+
+Moreover, if there are more than one parameter to estimate, we can solve the equations jointly.
+\[
+  \{\hat{\theta}_1, \cdots, \hat{\theta}_m\} = \arg \max_{\{\hat{\theta}_1, \cdots, \hat{\theta}_m\}} f_X (x_1, \cdots, x_n \vert \theta_1, \cdots, \theta_m)
+\]
+\[
+  \begin{dcases}
+    \dfrac{\partial f_X (x_1, \cdots, x_n \vert \theta_1, \cdots, \theta_m)}{\partial \theta_1} = 0\\
+    \cdots \\
+    \dfrac{\partial f_X (x_1, \cdots, x_n \vert \theta_1, \cdots, \theta_m)}{\partial \theta_m} = 0
+  \end{dcases}
+\]
+
+However, it can become complicated when \(n\) is large, as \(X_1, \cdots, X_n\) are independent.
+\[
+  f_X (x_1, \cdots, x_n \vert \theta) = \prod_{i = 1}^n f_X (x_i \vert \theta) \Longrightarrow \dfrac{\partial f_X (x_1, \cdots, x_n \vert \theta)}{\partial \theta} = \dfrac{\partial \displaystyle\prod_{i = 1}^n f_X (x_i \vert \theta)}{\partial \theta}
+\]
+
+Therefore, we introduce the log-likelihood. For maximum likelihood, we have:
+\[
+  \hat{\theta} = \arg \max_\theta f_X (x_1, \cdots, x_n \vert \theta). 
+\]
+For maximum log-likelihood, we have 
+\[
+  \hat{\theta} = \arg \max_\theta \ln \left(f_X (x_1, \cdots, x_n \vert \theta)\right). 
+\]
+This is because the \(\ln (\cdot)\) function converts the product into sum. Then we have 
+\[
+  \ln \left(f_X (x_1, \cdots, x_n \vert \theta)\right) = \ln \left(\prod_{i = 1}^n f_X (x_i \vert \theta)\right) = \sum_{i = 1}^n \ln \left(f_X (x_i \vert \theta)\right)
+\]
+Also, the \(\ln(\cdot)\) function is a strictly increasing function. If \(\hat{\theta}\) maximizes \(\ln \left(f_X (x_1, \cdots, x_n \vert \theta)\right)\), it also maximizes \(f_X(x_1, \cdots, x_n \vert \theta)\). 
+
+\begin{eg}
+  A \(\mathcal{N} (\mu, \sigma^2)\) random variable takes the values 2.9 and 3.3. What is the MLE for \(\mu\) and \(\sigma^2\)?
+
+  \textbf{Solution:} 
+  Denote \(v = \sigma^2\). For likelihood, we have 
+  \[
+    f_X(2.9, 3.3 \vert \mu, v) = \dfrac{1}{\sqrt{2\pi v}} e^{\left(-\frac{(2.9 - \mu)^2}{2v}\right)}\dfrac{1}{\sqrt{2\pi v}} e^{\left(-\frac{(3.3 - \mu)^2}{2v}\right)} = \dfrac{1}{2\pi v} e^{\left(-\frac{(2.9 - \mu)^2}{2v}\right)} e^{\left(-\frac{(3.3 - \mu)^2}{2v}\right)}
+  \]
+  For log-likelihood, we have 
+  \[
+  \begin{aligned}
+    \ln f_X(2.9, 3.3 \vert \mu, v) &= \ln e^{\left(-\frac{(2.9 - \mu)^2}{2v}\right)} + \ln e^{\left(-\frac{(3.3 - \mu)^2}{2v}\right)} - \ln 2\pi v \\
+    &= - \dfrac{(2.9 - \mu)^2 + (3.3 - \mu)^2}{2v} - \ln 2\pi - \ln v
+  \end{aligned}
+  \]
+  Then we differentiate the log-likelihood. 
+  \[
+    \begin{aligned}
+      \dfrac{\partial \ln f_X(2.9, 3.3 \vert \mu, v)}{\partial \mu} &= 0 \\
+      \dfrac{2.9 - \mu + 3.3 - \mu}{v} &= 0 \\
+      \hat{\mu} = \dfrac{2.9 + 3.3}{2} = 3.1
+    \end{aligned}
+  \]
+  \[
+    \begin{aligned}
+      \dfrac{\partial \ln f_X(2.9, 3.3 \vert \mu, v)}{\partial v} &= 0 \\
+      \dfrac{(2.9 - \mu)^2 + (3.3 - \mu)^2}{2v^2} - \dfrac{1}{v} &= 0 \\
+      \dfrac{(2.9 - \mu)^2 + (3.3 - \mu)^2 - 2v}{2v^2} &= 0 \\
+      v &= \dfrac{0.04 + 0.04}{2} = 0.04
+    \end{aligned}
+  \]
+\end{eg}
+
+In general, for a random sample of size \(n\), \(X_1, \cdots, X_n\) drawn from a normal distribution \(\mathcal{N}(\mu, \sigma^2)\), the maximum likelihood estimations for \(\mu\) and \(\sigma^2\) are:
+\[
+  \begin{dcases}
+    \hat{\mu} = \dfrac{1}{n} \sum_{i = 1}^n X_i \\
+    \hat{\sigma}^2 = \dfrac{1}{n} \sum_{i = 1}^n (X_i - \hat{\mu})^2
+  \end{dcases} ,
+\]
+where the sample mean is an unbiased estimator \(\mathbb{E}[\hat{\mu}] = \mu\), and the sample variance is a biased estimator \(\mathbb{E}[\hat{\sigma}^2] = \frac{n - 1}{n} \sigma^2 \neq \sigma^2\). 
+
+Notice that in practice, we use the corrected unbiased estimator
+\[
+  \hat{\sigma}^2 = \dfrac{1}{n - 1} \sum_{i = 1}^n (X_i - \hat{\mu})^2. 
+\]
+
+% L05 Finished
+% END OF DOCUMENT
