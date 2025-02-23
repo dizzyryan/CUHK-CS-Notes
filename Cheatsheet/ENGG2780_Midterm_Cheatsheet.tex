@@ -5,6 +5,7 @@
 \usepackage{multicol}
 \usepackage{fancyhdr}
 \usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb, mathrsfs}
+\usepackage{titlesec}
 
 \setlength\parindent{0pt}
 
@@ -12,21 +13,32 @@
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
 \fancyhf{}
-\fancyhead{}
-\fancyfoot{}
+\pagestyle{empty}
+
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+
 
 \begin{document}
 \begin{multicols}{4}
 % ---------------------- Content ---------------------- %
 \section*{Probability Functions}
-\subsection*{PMF/PDF, CDF, Expected Value, Variance}
-\subsubsection*{General} 
-(*independent assumed)
+\subsection*{General (*independent assumed)} 
 \[
   \mathbb{E}[X] = \mu = \sum_{x} xp_X (x) = \int_{-\infty}^{\infty} xf_X(x)dx
-\]
-\[
-  \mathbb{E}[\alpha X + \beta Y] = \alpha \mathbb{E}[X] + \beta \mathbb{E}[Y]
 \]
 \[
   *\mathbb{E}[XY] = \mathbb{E}[X]\mathbb{E}[Y]
@@ -41,7 +53,7 @@
   \sigma_X \coloneqq \sqrt{\Var[X]} =  \sqrt{\mathbb{E}\left[(X - \mu)^2 \right]} 
 \]
 
-\subsubsection*{\(X \sim \text{Bernoulli}(p)\)}
+\subsection*{\(X \sim \text{Bernoulli}(p)\)}
 \[
   p_X (x) = \begin{dcases}
     1 - p &\text{ if } x = 0\\
@@ -52,7 +64,7 @@
   \mathbb{E}[X] = p \quad\quad \Var[X] = p(1 - p)
 \]
 
-\subsubsection*{\(X \sim \text{Binomial}(n, p)\)}
+\subsection*{\(X \sim \text{Binomial}(n, p)\)}
 \[
   p_X (k) = \mathbb{P}(X = k) = \binom{n}{k}p^k(1 - p)^{n-k}
 \]
@@ -60,7 +72,7 @@
   \mathbb{E}[X] = np \quad\quad \Var[X] = np(1 - p)
 \]
 
-\subsubsection*{\(X \sim \text{Geometric}(p)\)}
+\subsection*{\(X \sim \text{Geometric}(p)\)}
 \[
   p_X (k) = \mathbb{P}(X = k) = p(1 - p)^{k-1} 
 \]
@@ -68,7 +80,7 @@
   \mathbb{E}[X] = \frac{1}{p} \quad\quad \Var[X] = \frac{1 - p}{p^{2}}
 \]
 
-\subsubsection*{\(X \sim \text{Poisson}(\lambda)\)}
+\subsection*{\(X \sim \text{Poisson}(\lambda)\)}
 \[
   p(k) = e^{-\lambda}\dfrac{\lambda^k}{k!}, \quad k = 0, 1, 2, 3
 \]
@@ -76,7 +88,18 @@
   \mathbb{E}[X] = \lambda \quad\quad \Var[X] = \lambda 
 \]
 
-\subsubsection*{\(X \sim \text{Uniform}(a, b)\)}
+\subsection*{\(X \sim \text{Exponential}(\lambda)\)}
+\[
+  f_X(x) = \begin{dcases}
+    \lambda e^{-\lambda x} , &\text{ if }  x \geq 0\\
+    0 , &\text{ if } x < 0
+  \end{dcases}
+\]
+\[
+    F_X(x) = 1 - e^{- \lambda x} \  \mathbb{E}[X] = \dfrac{1}{\lambda} \ \Var[X] = \frac{1}{\lambda^2}
+\]
+
+\subsection*{\(X \sim \text{Uniform}(a, b)\) \(dF_X(x) \implies f_X(x)\) }
 \[
     F_X(x) = \begin{dcases}
         0, &\text{ if } x < a \\
@@ -85,55 +108,21 @@
     \end{dcases}
 \]
 \[
-  f_X(x) = \begin{dcases}
-    0, &\text{ if } x < a \\
-    \frac{1}{b - a}, &\text{ if } a \leq x \leq b \\
-    0 , &\text{ if } b < x
-  \end{dcases}
-\]
-\[
   \mathbb{E}[X] = \dfrac{a + b}{2} \quad\quad \Var[X] = \dfrac{(b - a)^2}{12}
 \]
 
-\subsubsection*{\(X \sim \text{Exponential}(\lambda)\)}
-\[
-  f_X(x) = \begin{dcases}
-    \lambda e^{-\lambda x} , &\text{ if }  x \geq 0\\
-    0 , &\text{ if } x < 0
-  \end{dcases}
-\]
-\[
-    F_X(x) = 1 - e^{- \lambda x}
-\]
-\[
-  \mathbb{E}[X] = \dfrac{1}{\lambda} \quad\quad \Var[X] = \dfrac{1}{\lambda^2}
-\]
-
-\subsection*{Joint PMF}
-\[
-    p(x, y) = \mathbb{P}(X = x, Y = y)
-\]
-
 \subsection*{Normal Distribution}
-\(X \sim \mathcal{N}(\mu, \sigma^2)\) 
-\[
-  f_X(x) = \dfrac{1}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
+\[X \sim \mathcal{N}(\mu, \sigma^2): f_X(x) = \dfrac{1}{\sqrt{2\pi \sigma ^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
 \]
 \[
     \mathbb{E}[X] = \mu \quad\quad \Var[X] = \sigma^2
 \]
 
 \subsection*{Standard Normal Distribution}
-\(\mathcal{N}(0, 1)\) 
-\[
-  f_X(x) \coloneqq \dfrac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
+\[\mathcal{N}(0, 1): f_X(x) \coloneqq \dfrac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}
 \]
 \[
-  \mathbb{E}[Z] = 0 \quad\quad \Var[Z] = 1.
-\]
-Convert: 
-\[
-  Z = \frac{X - \mu}{\sigma}
+  \mathbb{E}[Z] = 0 \quad\quad \Var[Z] = 1 \quad Z = \frac{X - \mu}{\sigma}
 \]
 
 \subsection*{Central Limit Theorem}
@@ -147,10 +136,13 @@ Convert:
 \section*{Bayesian Statistic}
 \subsection*{Bayes' rule}
 \[
-  \underbrace{f_{\Theta \vert X} (\theta \vert x)}_{\text{Posterior}} = \dfrac{\overbrace{f_{\Theta} (\theta)}^{\text{Prior}} \overbrace{f_{X \vert \Theta} (x \vert \theta)}^{\text{Observation}}}{f_X (x)}
+  f_{\Theta \vert X} (\theta \vert x) = \dfrac{f_{\Theta} (\theta) f_{X \vert \Theta} (x \vert \theta)}{f_X (x)} \propto f_{X \vert \Theta} f_{\Theta} (\theta)
 \]
 \[
-  \underbrace{f_{\Theta \vert X} (\theta \vert x)}_{\text{posterior}} \propto \underbrace{f_{X \vert \Theta} (x \vert \theta)}_{\text{likelihood}} \underbrace{f_{\Theta} (\theta)}_{\text{prior}}
+  \mathbb{P}(\theta \vert x_1, x_2) = \dfrac{\mathbb{P}(x_2 \vert \theta, x_1) \mathbb{P}(\theta \vert x_1)}{\mathbb{P}(x_2 \vert x_1)}
+\]
+\[
+  f_{X_1 \vert \Theta} (x_1 \vert \theta) \cdots f_{X_n  \vert \Theta(x_n \vert \theta)} f_{\Theta} (\theta)
 \]
 
 \subsection*{Beta Distribution}
@@ -160,6 +152,24 @@ Convert:
     0 \quad \text{ otherwise} 
   \end{dcases}
 \]
+\[
+  B(\alpha, \beta) = \dfrac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}, \quad \Gamma(\alpha) = (\alpha - 1)!
+\]
+\[
+  B(\alpha, \beta) = \dfrac{(\alpha - 1)!(\beta - 1)!}{(\alpha + \beta -1)!} .
+\]
+\[
+  \Theta \sim \text{Uniform}(0, 1) = \text{Beta}(1, 1)
+\]
+\[
+  \text{mode}[\theta] = \dfrac{\alpha - 1}{\alpha - 1 + \beta - 1} \quad \text{when}\ \alpha, \beta > 1
+\] 
+\[
+  \text{Bernoulli: Beta}(\alpha + \sum_{i = 1}^n x_i, \beta + n - \sum_{i = 1}^n x_i)
+\]
+\[
+  \text{Posterior: }(\theta \vert h, t) \sim \text{Beta} (h + 1, t + 1)
+\]
 
 \subsection*{Gamma Distribution}
 \[
@@ -168,7 +178,108 @@ Convert:
     0 &\text{ for } \theta \leq 0 \\
   \end{dcases}
 \]
+Poisson, prior \(\text{Gamma}(\alpha, \beta)\), n = \#exp
+\[
+  \text{Gamma}(\alpha + \sum_{i = 1}^n x_i, \beta + n)
+\]
+Exponential, prior \(\text{Gamma}(\alpha, \beta)\),
+\[
+  \text{Gamma}(\alpha + n, \beta + \sum_{i = 1}^n x_i)
+\]
+OR \(\alpha =\)\# trials + 1, \(\beta =\) data sum \(+\) prior
 
+\subsection*{Normal Distribution}
+\[
+  \text{prior: } \mathcal{N} (\mu, \sigma_0^2), \text{ posterior: }
+\]
+\[
+  \mu^{\prime} = \dfrac{\sigma^2\mu_0 + \sigma_0^2 \sum_{i = 1}^n x_i}{\sigma^2 + n\sigma_0^2} \quad \sigma^{\prime2} = \dfrac{\sigma^2\sigma_o^2}{\sigma^2 + n\sigma_o^2}
+\]
+General, prior \(\mathcal{N} (\mu_0, \sigma_0^2)\), post \(\mathcal{N}(\mu, \sigma^2)\) 
+\(
+  \frac{\mu}{\sigma^2} = \frac{\mu_0}{\sigma_0^2} + \frac{x_1}{\sigma_1^2} + \cdot + \frac{x_n}{\sigma_n^2}\ \frac{1}{\sigma^2} = \frac{1}{\sigma_0^2} + \frac{1}{\sigma_1^2} + \cdot + \frac{1}{\sigma_n^2}
+\)
+
+Special, \(\sigma_0^2 = \sigma^2 = 1\)
+\[
+  \mu^{\prime} = \dfrac{\mu_0 + \sum_{i = 1}^n x_i}{1 + n} \quad\quad \sigma^{\prime2} = \dfrac{1}{1 + n}
+\]
+
+\subsection*{Prediction}
+\[
+  \mathbb{P}(x^* \in [a, b] \vert X = x) = \int_{-}^{+} \mathbb{P}(\cdot) f_{\Theta \vert X} (\theta \vert x) d \theta
+\]
+\[
+  \mathbb{P}(x^* \in [a, b] \vert \theta) = \int_a^b f_{X \vert \Theta} (x^* \vert \theta) dx^*.
+\]
+
+\subsection*{Point estimation MAP - find post, cal}
+\[
+  \theta_{\text{MAP}} = \arg \max_{\theta} f_{\Theta \vert X} (\theta \vert x)
+\]
+prior \(\text{Beta}(1, 1)\), post \(\text{Beta}(1 + h, 1 + t)\)
+\[
+  \text{Beta: }\theta_{MAP} = \dfrac{\alpha - 1}{\alpha - 1 + \beta - 1} = \dfrac{h}{h + t}
+\]
+prior \(\mathcal{N}(\mu_0, 1)\), post \(\mathcal{N} (\frac{\mu_0 + x_1 + \cdots + x_n }{n + 1}, \frac{1}{n + 1})\):
+\[
+  \text{Normal: } \theta_{MAP} = \dfrac{\mu_0 + x_1 + \cdots + x_n }{n + 1}
+\]
+
+\subsection*{Hypothesis Testing}
+\[
+\begin{aligned}
+  \mathbb{P} (\hat{\theta} \neq \theta) &= \mathbb{P}(\hat{\theta} = 1, \theta = 0) + \mathbb{P}(\hat{\theta} = 0, \theta = 1) \\ 
+  &= \mathbb{P}(\hat{\theta} = 1 \vert \theta = 0)\mathbb{P}(\theta = 0) + \dots 
+\end{aligned}
+\]
+
+\subsection*{Sampling Statistic}
+Sample mean: \(\overline{X} = \dfrac{X_1 + \cdots + X_n}{n}\)
+
+Sample variance: \(s^2 = \dfrac{\sum_{i = 1}^n (X_i - \overline{X})^2}{n}\)
+\[
+    \mathbb{E}[\overline{X}] = \mu \quad \Var[\overline{X}] = \dfrac{\sigma^2}{n} \quad Z = \dfrac{\overline{X} - \mu}{\frac{\sigma}{\sqrt{n}}}
+\]
+\[
+  \overline{X} \sim \mathcal{N} \left(\mu, \left(\frac{\sigma}{\sqrt{n}}\right)^2\right) \ 
+  \lim_{n \to \infty} \mathbb{P}\left(\overline{X} \leq \mu + t\dfrac{\sigma}{\sqrt{n}}\right)
+\]
+\[
+  \mathbb{E}[S^2] = \dfrac{n - 1}{n} \sigma^2 \quad \mathbb{E}[\dfrac{n}{n - 1} S^2] = \sigma^2 \text{(unbiased)}
+\]
+
+\subsection*{Max Likelihood Estimation}
+Unbiased: \(\mathbb{E}[\widehat{\Theta}_n] = \theta\)
+
+Asymptotically unbiased: \(\displaystyle\lim_{n \to \infty} \mathbb{E}[\widehat{\Theta}_n] = \theta\)
+
+Consistent: \(\widehat{\Theta}_n\) converges to \(\theta\)
+\[
+  \lim_{\varepsilon \to 0} \lim_{n \to \infty} \mathbb{P}(\vert \widehat{\Theta}_n - \theta \vert \geq \varepsilon) = 0
+\]
+\[
+  \hat{\theta}_n = \arg \max_\theta f_X (x_1, \cdots, x_n \vert \theta)\ \theta\text{ unknown}
+\]
+\[
+  \text{Bernoulli: } \theta_{\text{MLE}} = \dfrac{k}{n}
+\]
+\[
+  \dfrac{\partial f_X (x_1, \cdots, x_n \vert \theta)}{\partial \theta} = 0
+\]
+\[
+  \hat{\theta} = \arg \max_\theta \ln \left(f_X (x_1, \cdots, x_n \vert \theta)\right)
+\]
+Find likelihood functions, ln, differentiate
+\[
+  \text{max likelihood }\begin{dcases}
+    \hat{\mu} = \dfrac{1}{n} \sum_{i = 1}^n X_i \\
+    \hat{\sigma}^2 = \dfrac{1}{n} \sum_{i = 1}^n (X_i - \hat{\mu})^2
+  \end{dcases}
+\]
+\[
+  \text{Unbiased estimator: } \hat{\sigma}^2 = \dfrac{1}{n - 1} \sum_{i = 1}^n (X_i - \hat{\mu})^2
+\]
 \vfill\break
 % ---------------------- END ---------------------- %
 \end{multicols}
