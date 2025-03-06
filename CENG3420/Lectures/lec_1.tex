@@ -1,1 +1,34 @@
 \chapter{Introduction}
+
+This course is about how computers work. 
+
+\section{The Manufacturing Process of Integrated Circuit}
+
+For this chapter, only a few calculations need to be considered:
+
+1. Yield = The proportion of working dies per wafer. 
+
+2. Cost per die \(= \dfrac{\text{Cost per wafer}}{\text{Dies per wafer }\times\text{ Yield}}\) 
+
+3. Dies per wafer \(\approx \dfrac{\text{Wafer area}}{\text{Die area}}\) (since wafers are circle)
+
+4. Yield = \(\dfrac{1}{\left[1 + (\frac{\text{Defects per area} \times \text{Die area}}{2})\right]^2}\) 
+
+\begin{remark}
+  Note that the defects on average \(= \text{Defects per unit area} \times \text{Die area}\).
+\end{remark}
+
+\section{Power}
+\[
+  \text{Power } = \text{ Capacitive load } \times \text{ Voltage}^2 \times \text{ Frequency}
+\]
+
+\begin{eg}
+  For a simple processor, the capacitive load is reduced by 15\%, voltage is reduced by 15\%, and the frequency remains the same. Then, how much power consumption can be reduced? 
+
+  \textbf{Solution:} 
+  \[
+    1 - (1 - 15\%) \times (1 - 15\%) \times 1 = 27.75\%
+  \]
+  Thus, 27.75\% of the power consumption can be reduced. 
+\end{eg}
