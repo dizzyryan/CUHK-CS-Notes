@@ -1,7 +1,7 @@
+# dump file
 .DS_Store
-ENGG2440/ENGG2440.synctex.gz
-ENGG2760/ENGG2760.synctex.gz
-ENGG2780/ENGG2780.synctex.gz
+**/*.synctex.gz
+**/*.bbl
 
 # temporary hide
 temp_test/
