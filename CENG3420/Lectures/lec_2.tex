@@ -1,1 +1,95 @@
-\chapter{ISA intro}
+\chapter{Instruction Set Architecture (ISA)}
+
+\section{Organization}
+Computer components include the processor, input, output, memory, and network. The primary focus of this course is on the processor and its interaction with the memory system. However, it is impossible to understand their operation by examining each transistor individually due to their enormous quantity. Therefore, abstraction is necessary.
+
+Both the control unit and datapath need circuitry to manipulate instructions — for example, deciding the next instruction, decoding, and executing instructions.
+
+There is also system software, such as the operating system and compiler, which translate programs written in high-level languages into machine instructions.
+
+For example, after a program is written in a high-level language (like C), the compiler translates it into assembly language. Then, the assembler converts the assembly code into machine code (object code). The machine code is stored in memory, and the processor's control unit fetches an instruction from memory, decodes it to determine the operation, and signals the datapath to execute the instruction. The processor then fetches the next instruction from memory, and this cycle repeats. 
+
+\section{Instruction Set Architecture}
+The instruction set architecture (ISA) is the bridge between hardware and software. It is the interface that separates software from hardware and includes all the information necessary to write a machine language program, such as instructions, registers, memory access, I/O, etc. 
+
+To put it simple, ISA is a formal specification of the instruction set that is implemented in the machine hardware. It defines how software can control the hardware by specifying the instructions, registers, memory addressing modes, and I/O operations that the processor can execute.
+
+Assembly language instructions are the language of the machine. We aim to design an ISA that makes it easy to build hardware and compilers while maximizing performance and minimizing cost. Therefore, in this course, we focus on the RISC-V ISA.
+
+In a Reduced Instruction Set Computer (RISC), we have fixed instruction lengths, a load-store instruction set, and a limited number of addressing modes and operations. Thus, it is optimized for speed.
+
+There are four design principles in RISC-V: 
+
+1. Simplicity favours regularity. 
+
+2. Smaller is faster. 
+
+3. Make the common case fast. 
+
+4. Good design demands good compromises. 
+
+\section{RISC-V}
+There are five Instruction Categories: 
+
+1. Load and Store instruction
+
+2. Bitwise instructions
+
+3. Arithmetic instructions
+
+4. Control transfer instructions
+
+5. Pseudo instructions
+
+\begin{center}
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 25, 24, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{R-Type\ }][r]{R-Type\ }}
+\bitbox{7}{funct7} & \bitbox{5}{rs2} & \bitbox{5}{rs1} &\bitbox{3}{funct3} &\bitbox{5}{rd} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}\vspace{1ex}
+
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{R-Type\ }][r]{I-Type\ }}
+\bitbox{12}{imm[11:0]} & \bitbox{5}{rs1} &\bitbox{3}{funct3} &\bitbox{5}{rd} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}\vspace{1ex}
+    
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 25, 24, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{S-Type\ }][r]{S-Type\ }}
+\bitbox{7}{imm[11:5]} & \bitbox{5}{rs2} & \bitbox{5}{rs1} &\bitbox{3}{funct3} &\bitbox{5}{imm[4:0]} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}\vspace{1ex}
+
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 12, 11, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{U-Type\ }][r]{U-Type\ }}
+\bitbox{20}{imm[31:12]} & \bitbox{5}{rd} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}
+\end{center}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c}
+      \toprule
+      Register names & ABI Names & Description \\
+    \midrule
+      x0 & zero & Hard-wired zero  \\
+      x1 & ra & Return address  \\
+      x2 & sp & Stack pointer  \\
+      x3 & gp & Global pointer  \\
+      x4 & tp & Thread pointer  \\
+      x5 & t0 & Temporary / Alternate link register  \\
+      x6-7 & t1 - t2 & Temporary register  \\
+      x8 & s0 / fp & Saved register / Frame pointer  \\
+      x9 & s1 & Saved register  \\
+      x10-11 & a0 - a1 & Function argument / Return value registers  \\
+      x12-17 & a2 - a7 & Function argument registers  \\
+      x18-27 & s2 - s11 & Saved register  \\
+      x28-31 & t3 - t6 & Temporary register  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
