@@ -78,108 +78,128 @@ Here, we introduce some simple arithmetic and logical instructions.
 In RISC-V, each arithmetic instruction performs a single operation and specifies exactly three operands, all of which are contained in the datapath's register file.
 
 For example, we have:
-\begin{verbatim}
+\begin{codeBlock}
   add t0, a1, a2   # t0 = a1 + a2
   sub t0, a1, a2   # t0 = a1 - a2
-\end{verbatim}
+\end{codeBlock}
+
 which can be understood as:
-\begin{verbatim}
+\begin{codeBlock}
   destination = source1 op source2
-\end{verbatim}
+\end{codeBlock}
+
 These instructions follow the R-type format.
 
 \subsection{Immediate Instructions}
 Small constants are often used directly in typical assembly code to avoid load instructions. RISC-V provides special instructions that contain constants. For example:
-\begin{verbatim}
+\begin{codeBlock}
   addi sp, sp, 4    # sp = sp + 4
   slti t0, s2, 15   # t0 = 1 if s2 < 15
-\end{verbatim}
+\end{codeBlock}
+
 These instructions follow the I-type format. The constants are embedded within the instructions, limiting their values to the range from \(-2^{11}\) to \(2^{11} - 1\). 
 
 \begin{eg}~
 
-\begin{verbatim}
-  1   .global _start
-  2
-  3   .text
-  4   _start:
-  5           li a1, 20
-  6           li a2, 23
-  7           add t0, a1, a2
-  8           sub t1, a1, a2
-\end{verbatim}
-The above will give the result: \verb|t0 = 0x2b|, \verb|t1 = 0xfffffffd|
+\begin{minipage}{0.5\textwidth}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+.global _start
 
+.text
+_start:
+        li a1, 20
+        li a2, 23
+        add t0, a1, a2
+        sub t1, a1, a2
+\end{Verbatim}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}\color{red}
+This will give the result: 
+
+\verb|t0 = 0x2b|, \verb|t1 = 0xfffffffd|
+\end{minipage}
 \begin{note}
   The calculation of \verb|t1| involves two's complement, which will be introduced later.
 \end{note}
 \end{eg}
 
 If we want to load a 32-bit constant into a register, we must use two instructions:
-\begin{verbatim}
+\begin{codeBlock}
   lui t0, 1010 1010 1010 1010 1010b
   ori t0, t0, 1010 1010 1010b
-\end{verbatim}
+\end{codeBlock}
+
 Here, \verb|lui| loads the upper 20 bits with an immediate value, and \verb|ori| sets the lower 12 bits using an immediate value.
 
 If a number is signed, then \verb|1000 0000 ...| represents the most negative value, and \verb|0111 1111 ...| represents the most positive value, since the first bit is used to distinguish between signed and unsigned values.
 
 \subsection{Shift Operations}
 We need operations to pack and unpack 8-bit characters into a 32-bit word, and we can achieve this by using shift operations. We can shift all the bits left or right:
-\begin{verbatim}
+\begin{codeBlock}
   slli t2, s0, 8   # t2 = s0 << 8 bits
   srli t2, s0, 8   # t2 = s0 >> 8 bits
-\end{verbatim}
+\end{codeBlock}
+
 These instructions follow the I-type format. The above shifts are called logical because they fill the vacancy with zeros. Notice that a 5-bit shamt field is enough to shift a 32-bit value  \(2^5 - 1\) or 31 bit positions. 
 
 \begin{eg}~
+
+\begin{minipage}{0.4\textwidth}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+.global _start
+
+.text
+_start:
+        li a1, 20
+        li a2, 23
+        slli t0, a1, 2
+        srli t1, a1, 1
+\end{Verbatim}
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+\color{red}
 \begin{verbatim}
-  1   .global _start
-  2
-  3   .text
-  4   _start:
-  5           li a1, 20
-  6           li a2, 23
-  7           slli t0, a1, 2
-  8           srli t1, a1, 1
+  Line 7: 10100 -> 1010000   # after slli 2 bits
+  Line 8: 10111 -> 01011     # after srli 1 bits
 \end{verbatim}
-
-\verb|Line 7: 10100 -> 1010000   # after slli 2 bits|
-
-\verb|Line 8: 10111 -> 01011     # after srli 1 bits|
+\end{minipage}
 \end{eg}
 
 \subsection{Logical Operations}
 There are numbers of bitwise logical operations in RISC-V ISA. For example: 
 
 R format: 
-\begin{verbatim}
+\begin{codeBlock}
   and t0, t1, t2   # t0 = t1 & t2
   or  t0, t1, t2   # t0 = t1 | t2
   xor t0, t1, t2   # t0 = t1 & (not t2) + (not t1) & t2
-\end{verbatim}
+\end{codeBlock}
 
 I format: 
-\begin{verbatim}
+\begin{codeBlock}
   andi t0, t1, 0xFF00   # t0 = t1 & 0xFF00
   ori  t0, t1, 0xFF00   # t0 = t1 | 0xFF00
-\end{verbatim}
+\end{codeBlock}
 
 \begin{eg}~
-\begin{verbatim}
-  1   .global _start
-  2
-  3   .text
-  4   _start:
-  5           li a1, 20
-  6           li a2, 23
-  7           and t0, a1, a2
-  8           or t1, a1, a2
-  9           xor t2, a1, a2
-  10          andi t3, a1, 0x12
-  11          ori t4, a2, 0x21
-\end{verbatim}
 
+\begin{minipage}{0.5\textwidth}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+.global _start
+
+.text
+_start:
+        li a1, 20
+        li a2, 23
+        and t0, a1, a2
+        or t1, a1, a2
+        xor t2, a1, a2
+        andi t3, a1, 0x12
+        ori t4, a2, 0x21
+\end{Verbatim}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\color{red}
 \begin{verbatim}
 a1 = 10100, a2 = 10111
 Line 7:   t0 = 10100 & 10111  ->  10100
@@ -188,40 +208,48 @@ Line 9:   t2 = 10100 ^ 10111  ->  00011
 Line 10:  t3 = 10100 & 10010  ->  10000
 Line 11:  t4 = 10111  100001 ->  110111
 \end{verbatim}
+\end{minipage}
 \end{eg}
 
 \section{Data Transfer Instruction}
 There are two basic data transfer instructions for accessing data memory:
-\begin{verbatim}
+\begin{codeBlock}
   lw t0, 4(s3)   # load word from memory to register
   sw t0, 8(s3)   # store word from register to memory
-\end{verbatim}
+\end{codeBlock}
+
 The data is loaded or stored using a 5-bit address. The memory address is formed by adding the contents of the base address register to the offset value.
 
 \begin{eg}~
-\begin{verbatim}
-  1   .global _start
-  2
-  3   .data
-  4   a: .word 1 2 3 4 5
-  5
-  6   .text
-  7   _start:
-  8           la a1, a 
-  9           lw t0, 0(a1) 
-  10          lw t1, 4(a1) 
-  11          lw t2, 8(a1) 
-  12          lw t3, 12(a1) 
-  13          lw t4, 16(a1) 
-  14          addi t4, t4, 1
-  15          sw t4, 20(a1)
-  16          lw t5, 20(a1)
-\end{verbatim}
 
-\begin{verbatim}
-t0 = 0x01, t1 = 0x02, t2 = 0x03, t3 = 0x04, t4 = 0x06, t5 = 0x06
-\end{verbatim}
+\begin{minipage}{0.5\textwidth}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+.global _start
 
+.data
+a: .word 1 2 3 4 5
+
+.text
+_start:
+        la a1, a 
+        lw t0, 0(a1) 
+        lw t1, 4(a1) 
+        lw t2, 8(a1) 
+        lw t3, 12(a1) 
+        lw t4, 16(a1) 
+        addi t4, t4, 1
+        sw t4, 20(a1)
+        lw t5, 20(a1)
+\end{Verbatim}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\color{red}
+\begin{verbatim}
+t0 = 0x01, t1 = 0x02
+t2 = 0x03, t3 = 0x04
+t4 = 0x06, t5 = 0x06
+\end{verbatim}
+\end{minipage}
 \begin{remark}
   Address is byte-base, thus the increment is 4 when accessing \verb|a1|. 
 \end{remark}
@@ -234,17 +262,16 @@ Since 8-bit bytes are useful, most architectures address individual bytes in mem
 Note that in byte addressing, we have Big Endian, where the leftmost byte is the word address, and the rightmost byte is the word address for Little Endian. In RISC-V, we use Little Endian, where the leftmost byte is the least significant byte.
 
 We also have loading and storing byte operations: 
-\begin{verbatim}
+\begin{codeBlock}
   lb t0, 1(s3)   # load byte from memory
   sb t0, 6(s3)   # store byte to memory
-\end{verbatim}
+\end{codeBlock}
+
 Here, \verb|lb| places the byte from memory into the rightmost 8 bits of the destination register and performs signed extension. \verb|sb| then takes the byte from the rightmost 8 bits of a register and writes it to memory.
 
 \begin{eg}
-  Suppose that in memory, we have:
+  Assume that in memory, we have:
   \begin{verbatim}
-    0x10000010    16
-    0x01000402    8
     0xFFFFFFFF    4
     0x009012A0    0
   \end{verbatim}
@@ -265,16 +292,12 @@ Here, \verb|lb| places the byte from memory into the rightmost 8 bits of the des
   
   2. New memory:
     \begin{verbatim}
-      0x10000010    16
-      0x01000402    8
       0xFF12FFFF    4
       0x009012A0    0
     \end{verbatim}
 
   3. \verb|t0 =  0x00000090|, New memory:
     \begin{verbatim}
-      0x10000010    16
-      0x01000402    8
       0xFFFF90FF    4
       0x009012A0    0
     \end{verbatim}
