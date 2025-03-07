@@ -9,28 +9,28 @@ Previously we have take a look on the instruction fields of RISC-V. Now, we can 
 \begin{leftwordgroup}{\makebox[\widthof{R-Type\ }][r]{R-Type\ }}
 \bitbox{7}{funct7} & \bitbox{5}{rs2} & \bitbox{5}{rs1} & \bitbox{3}{funct3} & \bitbox{5}{rd} & \bitbox{7}{opcode}
 \end{leftwordgroup}\\
-\end{bytefield}\vspace{1ex}
+\end{bytefield}
 
 \begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
 \bitheader[endianness=big]{31, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
-\begin{leftwordgroup}{\makebox[\widthof{R-Type\ }][r]{I-Type\ }}
+\begin{leftwordgroup}{\makebox[\widthof{I-Type\ }][r]{I-Type\ }}
 \bitbox{12}{imm[11:0]} & \bitbox{5}{rs1} & \bitbox{3}{funct3} & \bitbox{5}{rd} & \bitbox{7}{opcode}
 \end{leftwordgroup}\\
-\end{bytefield}\vspace{1ex}
+\end{bytefield}
     
 \begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
 \bitheader[endianness=big]{31, 25, 24, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
 \begin{leftwordgroup}{\makebox[\widthof{S-Type\ }][r]{S-Type\ }}
 \bitbox{7}{imm[11:5]} & \bitbox{5}{rs2} & \bitbox{5}{rs1} & \bitbox{3}{funct3} & \bitbox{5}{imm[4:0]} & \bitbox{7}{opcode}
 \end{leftwordgroup}\\
-\end{bytefield}\vspace{1ex}
+\end{bytefield}
 
 \begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
 \bitheader[endianness=big]{31, 30, 25, 24, 20, 19, 15, 14, 12, 11, 8, 7, 6, 0} \\
 \begin{leftwordgroup}{\makebox[\widthof{B-Type\ }][r]{B-Type\ }}
 \bitbox{7}{imm[12|10:5]} & \bitbox{5}{rs2} & \bitbox{5}{rs1} &\bitbox{3}{funct3} & \bitbox{5}{imm[4:1|11]} & \bitbox{7}{opcode}
 \end{leftwordgroup}\\
-\end{bytefield}\vspace{1ex}
+\end{bytefield}
 
 \begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
 \bitheader[endianness=big]{31, 12, 11, 7, 6, 0} \\
@@ -44,7 +44,7 @@ Previously we have take a look on the instruction fields of RISC-V. Now, we can 
 \begin{leftwordgroup}{\makebox[\widthof{J-Type\ }][r]{J-Type\ }}
 \bitbox{20}{imm[20|10:1|11|19:12]} & \bitbox{5}{rd} & \bitbox{7}{opcode}
 \end{leftwordgroup}\\
-\end{bytefield}\vspace{1ex}
+\end{bytefield}
 \end{center}
 
 There are a total of five instruction categories, including
@@ -61,6 +61,7 @@ There are a total of five instruction categories, including
 
 The RISC-V register file holds 32 32-bit general-purpose registers, with two read ports and one write port. Thus, there are at most three operands. Registers are faster than main memory, and they are easier for the compiler to use. However, register files with more locations are slower.
 
+\newpage
 \section{Control Instructions}
 In RISC-V, we have control flow instructions. For example, we have conditional branch instructions:
 \begin{codeBlock}
