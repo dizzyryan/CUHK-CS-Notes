@@ -1,1 +1,80 @@
-\chapter{Datapath}
+\chapter{Floating Numbers}
+We discussed the representation of integers in previous chapters, and the representation of floating-point numbers is more complex.
+
+However, we can break a floating-point number into parts. For example, consider 
+\[
+  \underbrace{6.6254}_{\text{Mantissa (always positive)}} \times {\underbrace{10}_{\text{Base}}}^{\overbrace{-27}^{\text{Exponent}}}
+\]
+
+We have:
+
+1. Mantissa: A normalized number with a certain level of accuracy (e.g., 6.6254).
+
+2. Exponent: A scale factor that determines the position of the decimal point (e.g., \(10^{-27}\)).
+
+3. Sign bit: Indicates whether the number is positive or negative.
+
+We normalize the mantissa to fall within the range \([1, R)\), where \(R\) is the base. For instance, in the case of a binary base, this range would be \([1, 2)\).
+
+In IEEE Standard 753 Single Precision, we have 
+\begin{center}
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+  \bitbox{1}{\(S\)} & \bitbox{8}{\(E^{\prime}\)} & \bitbox{23}{\(M\)}
+\end{bytefield}
+\end{center}
+
+Here, \(S\) represents the sign bit, where 0 indicates a positive number and 1 indicates a negative number. \(E^{\prime}\) is the 8-bit signed exponent, represented in excess-127 notation, ranging from \(-127\) to \(128\). \(M\) is the 23-bit mantissa fraction. The value is thus represented as \(\pm 1.M \times 2^{E^{\prime} - 127}\).
+\begin{remark}
+  Minimum exponent \(= 1 - 127 = -126\); Maximum exponent \(= 254 - 127 = 127\)
+\end{remark}
+
+For double precision, we use 64 bits. \(E^{\prime}\) is the 11-bit signed exponent, represented in excess-1023 notation, and \(M\) is the 52-bit mantissa fraction.
+
+\begin{eg}
+  What is the IEEE single precision number \(\verb|40C0000|_{\verb|16|}\) in decimal?
+
+  \textbf{Solution:} 
+  First, convert the hexadecimal number \(\verb|40C0000|_{\verb|16|}\) to binary:  
+  \[
+  \verb|40C0000|_{\verb|16|} = \verb|0100 0000 1100 0000 0000 0000 0000 0000|_{\verb|2|}
+  \]
+  
+  Sign bit (0): Positive (\(+\))
+
+  Exponent: \(\verb|10000001|_{\verb|2|} - 127 = 129 - 127 = 2\)
+
+  Mantissa: \(\verb|1.100 0000 0000 0000 0000 0000|_{\verb|2|} = 1 + 1 \times 2^{-1} = 1.5\)
+
+  Therefore, the result is:  
+  \[
+  1.5 \times 2^2 = 6_{10}
+  \]
+\end{eg}
+
+\begin{eg}
+  What is \(-0.5_{10}\) in IEEE single precision binary floating-point format? 
+
+  \textbf{Solution:}  
+  Sign bit: 1 (since the number is negative)  
+  
+  Mantissa: \(1 - 0.5 = 0.5 = 1 \times 2^{-1}\)  
+  
+  Exponent: \(127 - 1 = 126 = 0111 1110\)
+
+  Thus, in binary:
+  \[
+    -0.5_{10} = \verb|1011 1111 0000 0000 0000 0000 0000 0000|_{\verb|2|}
+  \]
+\end{eg}
+
+\begin{remark}
+  Exponents with all 0's or all 1's have special meanings in IEEE floating-point representation:
+  
+  - \(E = 0, M = 0\): Represents 0.
+
+  - \(E = 0, M \neq 0\): Represents a denormalized number, which is \(\pm 0.M \times 2^{-126}\).
+
+  - \(E = 1\ldots 1\), \(M = 0\): Represents \(\pm \infty\), depending on the sign.
+
+  - \(E = 1\ldots 1\), \(M \neq 0\): Represents \verb|NaN| (Not a Number).
+\end{remark}
