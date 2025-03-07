@@ -1,1 +1,30 @@
 \chapter{Logic basis}
+\section{Numeral System}
+In common we use decimal, binary, octal and hexadecimal number systems. radix or base of the number system is the total number of digits allowed in the number system. 
+
+The conversion from a decimal integer to another number system is simple: divide the decimal number by the radix and save the remainder. Keep repeating the steps until the quotient is zero. The result is the reverse order of the remainders.
+
+As shown in the previous chapter, we need to deal with signed integers. The original notation is simple, where we use the first bit of the binary string to represent the sign. For example, \(1001_2\) represents -1 and \(0001_2\) represents 1, which is called 1's complement. However, this leads to the situation where there are two types of zero: negative zero and positive zero. 
+
+Thus, we use 2's complement. We first complement all the bits and then add 1. For example, if we have -6 and want to represent it in binary notation, we have:
+\[
+  6_{10} = 0000\ 0000\ ...\ 0110_2 \Rightarrow 1111\ 1111\ ...\ 1001_2 + 1 \Rightarrow 1111\ 1111\ ...\ 1010 = -6
+\]
+
+For an \(n\)-bit signed binary numeral system, the largest positive number is \(2^{n-1} - 1\), and the smallest negative number is \(-2^{n-1}\).
+
+There are two types of signals: analog and digital. For an analog signal, it varies smoothly over time. For a digital signal, it maintains a constant level and then changes to another constant level at regular intervals. We can use 0 and 1 to represent a digital signal, with 1 being High/True/On/... and 0 being Low/False/Off/....
+
+\section{Logic Gates}
+Logic gates can produce different outputs for the same input signal. We can use a truth table to describe how the logic circuit's output depends on the logic levels of the inputs. For example, here is the truth table for an AND gate:
+\[
+\begin{array}{c|c|c}
+  \toprule
+  A & B & \text{Output (A AND B)} \\
+  \midrule 
+  0 & 0 & 0 \\
+  0 & 1 & 0 \\
+  1 & 0 & 0 \\
+  1 & 1 & 1 \\
+\end{array}
+\]
