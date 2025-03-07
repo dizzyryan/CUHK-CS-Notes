@@ -1,1 +1,391 @@
-\chapter{Control}
+\chapter{Control Instruction}
+
+\section{Introduction to Register}
+Previously we have take a look on the instruction fields of RISC-V. Now, we can take a closer look on it. 
+
+\begin{center}
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 25, 24, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{R-Type\ }][r]{R-Type\ }}
+\bitbox{7}{funct7} & \bitbox{5}{rs2} & \bitbox{5}{rs1} & \bitbox{3}{funct3} & \bitbox{5}{rd} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}\vspace{1ex}
+
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{R-Type\ }][r]{I-Type\ }}
+\bitbox{12}{imm[11:0]} & \bitbox{5}{rs1} & \bitbox{3}{funct3} & \bitbox{5}{rd} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}\vspace{1ex}
+    
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 25, 24, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{S-Type\ }][r]{S-Type\ }}
+\bitbox{7}{imm[11:5]} & \bitbox{5}{rs2} & \bitbox{5}{rs1} & \bitbox{3}{funct3} & \bitbox{5}{imm[4:0]} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}\vspace{1ex}
+
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 30, 25, 24, 20, 19, 15, 14, 12, 11, 8, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{B-Type\ }][r]{B-Type\ }}
+\bitbox{7}{imm[12|10:5]} & \bitbox{5}{rs2} & \bitbox{5}{rs1} &\bitbox{3}{funct3} & \bitbox{5}{imm[4:1|11]} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}\vspace{1ex}
+
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 12, 11, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{U-Type\ }][r]{U-Type\ }}
+\bitbox{20}{imm[31:12]} & \bitbox{5}{rd} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}
+
+\begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+\bitheader[endianness=big]{31, 30, 21, 20, 19, 12, 11, 7, 6, 0} \\
+\begin{leftwordgroup}{\makebox[\widthof{J-Type\ }][r]{J-Type\ }}
+\bitbox{20}{imm[20|10:1|11|19:12]} & \bitbox{5}{rd} & \bitbox{7}{opcode}
+\end{leftwordgroup}\\
+\end{bytefield}\vspace{1ex}
+\end{center}
+
+There are a total of five instruction categories, including
+
+1. Load and Store instruction
+
+2. Bitwise instructions
+
+3. Arithmetic instructions
+
+4. Control transfer instructions
+
+5. Pseudo instructions
+
+The RISC-V register file holds 32 32-bit general-purpose registers, with two read ports and one write port. Thus, there are at most three operands. Registers are faster than main memory, and they are easier for the compiler to use. However, register files with more locations are slower.
+
+\section{Control Instructions}
+In RISC-V, we have control flow instructions. For example, we have conditional branch instructions:
+\begin{codeBlock}
+  bne s0, s1, Lbl   # go to Lbl if s0 != s1
+  beq s0, s1, Lbl   # go to Lbl if s0 == s1
+\end{codeBlock}
+
+These instructions follow the B-format.
+
+\begin{eg}~
+
+\begin{minipage}{0.5\textwidth}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+.global _start
+
+.text
+_start:
+        li a0, 1
+        li a1, 1
+        li t0, 20
+        li t1, 23
+        bne t0, t1, inst1
+        addi a0, a0, 1
+        beq t0, t1, inst2
+        inst1:  addi a0, a0, 2
+        bne t0, zero, end
+        inst2:  addi a0, a0, 3
+        end:    sub a0, a0, a1
+\end{Verbatim}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\color{red}
+\begin{verbatim}
+  Line 5:   a0 = 1
+  Line 6:   a1 = 1
+  Line 7:   t0 = 20
+  Line 8:   t1 = 23
+  Line 9:   t0 != t1 -> goto inst1
+  Line 10 & 11 -> ignored
+  Line 12:  a0 = 3
+  Line 13:  t0 != 0  -> goto end 
+  Line 14 -> ignored
+  Line 15:  a0 = 2
+\end{verbatim}
+\end{minipage}
+\end{eg}
+
+We need some extra instructions to support branch instructions. For example, we can use \verb|slt| to support the branch-if-less-than instruction.
+\begin{codeBlock}
+  slt t0, s0, s1      # if s0 < s1, then t0 = 1; else, t0 = 0
+  slti t0, s0, 25     # if s0 < 25, then t0 = 1; else, t0 = 0 (signed)
+  sltu t0, s0, s1     # if s0 < s1, then t0 = 1; else, t0 = 0 (unsigned)
+  sltiu t0, s0, 25    # if s0 < 25, then t0 = 1; else, t0 = 0 (immediate unsigned)
+\end{codeBlock}
+
+This instruction follows R format or I format. 
+
+\begin{eg}~
+
+\begin{minipage}{0.5\textwidth}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+.global _start
+
+.text
+_start:
+        li a0, 1
+        li t0, 20
+        li t1, 23
+        slt a1, t0, t1
+        beq a0, a1, inst1
+        addi a0, a0, 2
+inst1:  addi a0, a0, 3
+\end{Verbatim}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\color{red}
+\begin{verbatim}
+  Line 5:   a0 = 1
+  Line 6:   t0 = 20
+  Line 7:   t1 = 23
+  Line 8:   t0 < t1 -> a1 = 1
+  Line 9:   a0 == a1 -> goto inst1
+  Line 10:  ignored
+  Line 11:  a0 = 4
+\end{verbatim}
+\end{minipage}
+\end{eg}
+
+We can then use these instructions to create other conditions. We can also check for boundaries using these instructions. For example, with \verb|slt| and \verb|bne|, we can implement a branch-if-less-than:
+\begin{codeBlock}
+  slt t0, s1, s2        # t0 set to 1 if s1 < s2
+  bne t0, zero, Label
+\end{codeBlock}
+
+Treating signed numbers as if they were unsigned provides a low-cost way to perform these checks. For example:
+\begin{codeBlock}
+  sltu t0, s1, t2       # t0 = 0 if s1 > t2 (max)
+                        # or s1 < 0 (min)
+  beq t0, zero, IOOB    # go to IOOB if t0 = 0
+\end{codeBlock}
+
+Since negative numbers in 2's complement look like very large numbers in unsigned notation, it checks both if \verb|t0| is less than or equal to zero and greater than \verb|t2|. 
+
+There are also unconditional branch instructions:
+\begin{codeBlock}
+  jal zero, Label   # go to Label, Label can be immediate value
+  j Label           # go to Label and discard return address
+\end{codeBlock}
+
+These instructions follow J format. 
+
+\begin{eg}~
+
+\begin{minipage}{0.5\textwidth}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+.global _start
+
+.text
+_start:
+        li a0, 1
+        li t0, 20
+        jal ra, loop 
+loop:
+        addi a0, a0, 1
+        beq a0, t0, end 
+        j loop
+end:    
+        addi a0, a0, 1
+\end{Verbatim}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\color{red}
+\begin{verbatim}
+  Line 5:   a0 = 1
+  Line 6:   t0 = 20
+  Line 7:   jump to Line 9
+  Line 9:   a0 = 2, 3, ...
+  Line 10:  a0 != t0
+  Line 11:  keep looping
+  Line 13:  a0 = 21
+\end{verbatim}
+\end{minipage}
+\end{eg}
+
+If the branch destination is further away than can be captured in 12 bits, we can use the following to perform a jump:
+\begin{codeBlock}
+  bne s0, s1, L2
+  j L1
+L2: ...
+\end{codeBlock}
+
+\begin{eg}
+  How a while-loop in C is compiled? For example 
+  \begin{center}
+    \verb|while (save[i] == k) i += 1;|
+  \end{center}
+  Assume that \verb|i| and \verb|k| correspond to registers \verb|s3| and \verb|s5|, and the base of the array \verb|save| is in \verb|s6|.
+
+  \textbf{Solution:} 
+  \color{red}
+  \begin{verbatim}
+    Loop: slli t1, s3, 2      # shift left 4 bytes (array operation)
+          add t1, t1, s6      # t1 = address of save[i]
+          lw t0, 0(t1)        # Temp reg t0 = save[i]
+          bne t0, s5, Exit    # go to Exit if save[i] != k
+          addi s3, s3,1       # i = i + 1
+          j Loop              # go to Loop
+    Exit:
+  \end{verbatim}
+
+  \begin{remark}
+    Left shifting \verb|s3| is used to align the word address (4 bytes), and it is increased by 1 in \verb|addi|. Thus, each time it is increased by 4.
+
+    Address of save[i] = save array address + shift address \((i \times 4)\).
+  \end{remark}
+\end{eg}
+
+\newpage
+\section{Accessing Procedures}
+Other than \verb|jal|, we have branch instructions that return to the original location.
+\begin{codeBlock}
+  jal ra, label   # jump and link
+  jalr x0, 0(ra)  # return
+\end{codeBlock}
+
+Here, \verb|jal| saves \verb|PC + 4| by default into \verb|ra|, so that when the procedure returns, it proceeds to the next instruction. \verb|jalr| then uses the return address to return to the next procedure.
+
+\begin{eg}~
+
+\begin{minipage}{0.5\textwidth}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+.global _start
+
+.text
+_start:
+        li a0, 20
+        li a1, 23
+        jal ra, add_two_numbers 
+        addi t1, a2, 0
+        j end 
+add_two_numbers:
+        mv a3, a0
+        mv a4, a1
+        add a2, a3, a4
+        jalr zero, 0(ra)
+end:    
+        addi t1, t1, 1
+\end{Verbatim}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\color{red}
+\begin{verbatim}
+  Line 5:   a0 = 20
+  Line 6:   a1 = 23
+  Line 7:   jump to Line 11
+  Line 11:  a3 = 20
+  Line 12:  a4 = 23
+  Line 13:  a2 = 43
+  Line 14:  jump to Line 8
+  Line 8:   t1 = 43
+  Line 9:   jump to Line 16
+  Line 16:  t1 = 44
+\end{verbatim}
+\end{minipage}
+\end{eg}
+
+However, the number of registers is not enough for some operations. Thus, we use the stack, which is a last-in-first-out (LIFO) data structure. We use \verb|sp| to address the stack, and it grows from high address to low address. To push data onto the stack, we use \verb|sp = sp - 4|. To pop data from the stack, we use \verb|sp = sp + 4|. 
+
+To allocate space on the stack, we have a frame pointer (\verb|fp|) that points to the first word of the frame of a procedure, providing a stable base register for the procedure. \verb|fp| is initialized using \verb|sp| on a call, and \verb|sp| is restored using \verb|fp| on a return.
+
+\begin{eg}~
+
+\begin{minipage}{0.45\textwidth}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+.global _start
+
+.text
+_start:
+        li a0, 20
+        li a1, 23
+        jal ra, add_two_numbers 
+        addi t1, a2, 0
+        j end 
+add_two_numbers:
+        addi sp, sp, -8
+        sw a0, 4(sp)
+        sw a1, 0(sp)
+        add a2, a0, a1
+        lw a0, 4(sp)
+        lw a1, 0(sp)
+        addi sp, sp, 8
+        jalr zero, 0(ra)
+end:    
+        addi t1, t1, 1
+\end{Verbatim}
+\end{minipage}
+\begin{minipage}{0.55\textwidth}
+\color{red}
+\begin{verbatim}
+  Line 5:   a0 = 20
+  Line 6:   a1 = 23
+  Line 7:   jump to Line 11
+  Line 11:  assign 8 bytes in stack 
+            (from high to low)
+  Line 12:  save argument in stack 4(sp)
+  Line 13:  save argument in stack 0(sp)
+  Line 14:  a2 = 43
+  Line 15:  load argument from stack 4(sp)
+  Line 16:  load argument from stack 0(sp)
+  Line 17:  free stack
+  Line 18:  jump to Line 8
+  Line 8:   t1 = 43
+  Line 9:   jump to Line 16
+  Line 16:  t1 = 44
+\end{verbatim}
+\end{minipage}
+\end{eg}
+
+\begin{eg}
+  Leaf procedures are ones that do not call other procedures. Give the RISC-V assembler code for the follows. 
+  \begin{verbatim}
+    int leaf_ex (int g, int h, int i, int j)
+    {
+      int f;
+      f = (g + h) - (i + j)
+      return f;
+    }
+  \end{verbatim}
+
+  \textbf{Solution:} 
+  Suppose \verb|g|, \verb|h|, \verb|i|, and \verb|j| are in \verb|a0|, \verb|a1|, \verb|a2|, \verb|a3|: 
+  \begin{verbatim}
+    leaf_ex: 
+            addi sp, sp, -8   # initialize stack room
+            sw t1, 4(sp)      # save t1 on stack
+            sw t0, 0(sp)      # save t0 on stack
+            add t0, a0, a1
+            add t1, a2, a3
+            sub s0, t0, t1
+            lw t0, 0(sp)      # restore t0
+            lw t1, 4(sp)      # restore t1
+            addi sp, sp, 8    # free stack
+            jalr zero, 0(ra)
+  \end{verbatim}
+\end{eg}
+
+For nested procedures, we can store the return address on the stack so that, at the end, we can return to the original return address. For example, to find the factorial of a number, we can use:
+\begin{codeLargeBlock}
+fact: 
+      addi sp, sp, -8     # initialize stack pointer
+      sw ra, 4(sp)        # save return address
+      sw a0, 0(sp)        # save argument n
+      slti t0, a0, 1      # test for n < 1
+      beq t0, zero, L1    # if n >= 1, go to L1
+      addi s0, zero, 1    # else return 1 in s0
+      addi sp, sp, 8      # adjust stack pointer
+      jalr zero, 0(ra)    # return to caller
+L1: 
+      addi a0, a0, -1     # n >= 1, so decrement n
+      jal ra, fact        # call fact with (n-1)
+                          # this is where fact returns
+bk_f:
+      lw a0, 0(sp)        # restore argument n
+      lw ra, 4(sp)        # restore return address
+      addi sp, sp, 8      # free stack pointer
+      mul s0, a0, s0      # s0 = n * fact(n-1)
+      jalr zero, 0(ra)    # return to caller
+\end{codeLargeBlock}
