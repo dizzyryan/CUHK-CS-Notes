@@ -1,1 +1,281 @@
-\chapter{Arithmetic}
+\chapter{Arithmetic Instructions}
+
+\section{Introduction to RISC-V}
+Previously, we had the RV32I Unprivileged Integer Register table: 
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c}
+      \toprule
+      Register names & ABI Names & Description \\
+    \midrule
+      x0 & zero & Hard-Wired Zero  \\
+      x1 & ra & Return Address  \\
+      x2 & sp & Stack Pointer  \\
+      x3 & gp & Global Pointer  \\
+      x4 & tp & Thread Pointer  \\
+      x5 & t0 & Temporary / Alternate Link Register  \\
+      x6-7 & t1 - t2 & Temporary Register  \\
+      x8 & s0 / fp & Saved Register / Frame Pointer  \\
+      x9 & s1 & Saved Register  \\
+      x10-11 & a0 - a1 & Function Argument / Return Value Registers  \\
+      x12-17 & a2 - a7 & Function Argument Registers  \\
+      x18-27 & s2 - s11 & Saved Register  \\
+      x28-31 & t3 - t6 & Temporary Register  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+There are some important registers to note:
+
+Return address (ra): Used to save the function return address, usually PC + 4.
+
+Stack pointer (sp): Holds the base address of the stack. It must be aligned to 4 bytes.
+
+Global pointer (gp): Holds the base address of the location where global variables reside.
+
+Argument registers (a0–a7): Used to pass arguments to functions.
+
+Also, we have the RV32I base types:
+\begin{center}
+  \begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+  \bitheader[endianness=big]{31, 25, 24, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
+  \begin{leftwordgroup}{\makebox[\widthof{R-Type\ }][r]{R-Type\ }}
+  \bitbox{7}{funct7} & \bitbox{5}{rs2} & \bitbox{5}{rs1} &\bitbox{3}{funct3} &\bitbox{5}{rd} & \bitbox{7}{opcode}
+  \end{leftwordgroup}\\
+  \end{bytefield}
+  
+  \begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+  \bitheader[endianness=big]{31, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
+  \begin{leftwordgroup}{\makebox[\widthof{R-Type\ }][r]{I-Type\ }}
+  \bitbox{12}{imm[11:0]} & \bitbox{5}{rs1} &\bitbox{3}{funct3} &\bitbox{5}{rd} & \bitbox{7}{opcode}
+  \end{leftwordgroup}\\
+  \end{bytefield}
+      
+  \begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+  \bitheader[endianness=big]{31, 25, 24, 20, 19, 15, 14, 12, 11, 7, 6, 0} \\
+  \begin{leftwordgroup}{\makebox[\widthof{S-Type\ }][r]{S-Type\ }}
+  \bitbox{7}{imm[11:5]} & \bitbox{5}{rs2} & \bitbox{5}{rs1} &\bitbox{3}{funct3} &\bitbox{5}{imm[4:0]} & \bitbox{7}{opcode}
+  \end{leftwordgroup}\\
+  \end{bytefield}
+  
+  \begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
+  \bitheader[endianness=big]{31, 12, 11, 7, 6, 0} \\
+  \begin{leftwordgroup}{\makebox[\widthof{U-Type\ }][r]{U-Type\ }}
+  \bitbox{20}{imm[31:12]} & \bitbox{5}{rd} & \bitbox{7}{opcode}
+  \end{leftwordgroup}\\
+  \end{bytefield}
+\end{center}
+
+Here, the opcode (7 bits) specifies the operation. rs1 (5 bits) is the register file address of the first source operand. rs2 (5 bits) is the register file address of the second source operand. rd (5 bits) is the register file address of the destination for the result. imm (12 bits or 20 bits) is the immediate value field. funct (3 bits or 10 bits) is the function code that augments the opcode.
+
+Note that the rs1 and rs2 fields are kept in the same place, which causes the imm field in S-type instructions to be separated into two parts.
+
+\section{Arithmetic and Logical Instructions}
+Here, we introduce some simple arithmetic and logical instructions.
+
+\subsection{Arithmetic Instructions}
+In RISC-V, each arithmetic instruction performs a single operation and specifies exactly three operands, all of which are contained in the datapath's register file.
+
+For example, we have:
+\begin{verbatim}
+  add t0, a1, a2   # t0 = a1 + a2
+  sub t0, a1, a2   # t0 = a1 - a2
+\end{verbatim}
+which can be understood as:
+\begin{verbatim}
+  destination = source1 op source2
+\end{verbatim}
+These instructions follow the R-type format.
+
+\subsection{Immediate Instructions}
+Small constants are often used directly in typical assembly code to avoid load instructions. RISC-V provides special instructions that contain constants. For example:
+\begin{verbatim}
+  addi sp, sp, 4    # sp = sp + 4
+  slti t0, s2, 15   # t0 = 1 if s2 < 15
+\end{verbatim}
+These instructions follow the I-type format. The constants are embedded within the instructions, limiting their values to the range from \(-2^{11}\) to \(2^{11} - 1\). 
+
+\begin{eg}~
+
+\begin{verbatim}
+  1   .global _start
+  2
+  3   .text
+  4   _start:
+  5           li a1, 20
+  6           li a2, 23
+  7           add t0, a1, a2
+  8           sub t1, a1, a2
+\end{verbatim}
+The above will give the result: \verb|t0 = 0x2b|, \verb|t1 = 0xfffffffd|
+
+\begin{note}
+  The calculation of \verb|t1| involves two's complement, which will be introduced later.
+\end{note}
+\end{eg}
+
+If we want to load a 32-bit constant into a register, we must use two instructions:
+\begin{verbatim}
+  lui t0, 1010 1010 1010 1010 1010b
+  ori t0, t0, 1010 1010 1010b
+\end{verbatim}
+Here, \verb|lui| loads the upper 20 bits with an immediate value, and \verb|ori| sets the lower 12 bits using an immediate value.
+
+If a number is signed, then \verb|1000 0000 ...| represents the most negative value, and \verb|0111 1111 ...| represents the most positive value, since the first bit is used to distinguish between signed and unsigned values.
+
+\subsection{Shift Operations}
+We need operations to pack and unpack 8-bit characters into a 32-bit word, and we can achieve this by using shift operations. We can shift all the bits left or right:
+\begin{verbatim}
+  slli t2, s0, 8   # t2 = s0 << 8 bits
+  srli t2, s0, 8   # t2 = s0 >> 8 bits
+\end{verbatim}
+These instructions follow the I-type format. The above shifts are called logical because they fill the vacancy with zeros. Notice that a 5-bit shamt field is enough to shift a 32-bit value  \(2^5 - 1\) or 31 bit positions. 
+
+\begin{eg}~
+\begin{verbatim}
+  1   .global _start
+  2
+  3   .text
+  4   _start:
+  5           li a1, 20
+  6           li a2, 23
+  7           slli t0, a1, 2
+  8           srli t1, a1, 1
+\end{verbatim}
+
+\verb|Line 7: 10100 -> 1010000   # after slli 2 bits|
+
+\verb|Line 8: 10111 -> 01011     # after srli 1 bits|
+\end{eg}
+
+\subsection{Logical Operations}
+There are numbers of bitwise logical operations in RISC-V ISA. For example: 
+
+R format: 
+\begin{verbatim}
+  and t0, t1, t2   # t0 = t1 & t2
+  or  t0, t1, t2   # t0 = t1 | t2
+  xor t0, t1, t2   # t0 = t1 & (not t2) + (not t1) & t2
+\end{verbatim}
+
+I format: 
+\begin{verbatim}
+  andi t0, t1, 0xFF00   # t0 = t1 & 0xFF00
+  ori  t0, t1, 0xFF00   # t0 = t1 | 0xFF00
+\end{verbatim}
+
+\begin{eg}~
+\begin{verbatim}
+  1   .global _start
+  2
+  3   .text
+  4   _start:
+  5           li a1, 20
+  6           li a2, 23
+  7           and t0, a1, a2
+  8           or t1, a1, a2
+  9           xor t2, a1, a2
+  10          andi t3, a1, 0x12
+  11          ori t4, a2, 0x21
+\end{verbatim}
+
+\begin{verbatim}
+a1 = 10100, a2 = 10111
+Line 7:   t0 = 10100 & 10111  ->  10100
+Line 8:   t1 = 10100 | 10111  ->  10111
+Line 9:   t2 = 10100 ^ 10111  ->  00011
+Line 10:  t3 = 10100 & 10010  ->  10000
+Line 11:  t4 = 10111  100001 ->  110111
+\end{verbatim}
+\end{eg}
+
+\section{Data Transfer Instruction}
+There are two basic data transfer instructions for accessing data memory:
+\begin{verbatim}
+  lw t0, 4(s3)   # load word from memory to register
+  sw t0, 8(s3)   # store word from register to memory
+\end{verbatim}
+The data is loaded or stored using a 5-bit address. The memory address is formed by adding the contents of the base address register to the offset value.
+
+\begin{eg}~
+\begin{verbatim}
+  1   .global _start
+  2
+  3   .data
+  4   a: .word 1 2 3 4 5
+  5
+  6   .text
+  7   _start:
+  8           la a1, a 
+  9           lw t0, 0(a1) 
+  10          lw t1, 4(a1) 
+  11          lw t2, 8(a1) 
+  12          lw t3, 12(a1) 
+  13          lw t4, 16(a1) 
+  14          addi t4, t4, 1
+  15          sw t4, 20(a1)
+  16          lw t5, 20(a1)
+\end{verbatim}
+
+\begin{verbatim}
+t0 = 0x01, t1 = 0x02, t2 = 0x03, t3 = 0x04, t4 = 0x06, t5 = 0x06
+\end{verbatim}
+
+\begin{remark}
+  Address is byte-base, thus the increment is 4 when accessing \verb|a1|. 
+\end{remark}
+\end{eg}
+
+These instructions follow the I-type format.
+
+Since 8-bit bytes are useful, most architectures address individual bytes in memory.
+
+Note that in byte addressing, we have Big Endian, where the leftmost byte is the word address, and the rightmost byte is the word address for Little Endian. In RISC-V, we use Little Endian, where the leftmost byte is the least significant byte.
+
+We also have loading and storing byte operations: 
+\begin{verbatim}
+  lb t0, 1(s3)   # load byte from memory
+  sb t0, 6(s3)   # store byte to memory
+\end{verbatim}
+Here, \verb|lb| places the byte from memory into the rightmost 8 bits of the destination register and performs signed extension. \verb|sb| then takes the byte from the rightmost 8 bits of a register and writes it to memory.
+
+\begin{eg}
+  Suppose that in memory, we have:
+  \begin{verbatim}
+    0x10000010    16
+    0x01000402    8
+    0xFFFFFFFF    4
+    0x009012A0    0
+  \end{verbatim}
+
+  Now, we have the following operation:
+
+  \begin{verbatim}
+    add s3, zero, zero
+    lb t0, 1(s3)
+    sb t0, 6(s3)
+  \end{verbatim}
+  
+  What is the value left in \verb|t0|? What word is changed in memory and to what? What if the machine was Big Endian? 
+
+  \textbf{Solution:} 
+
+  1. \verb|t0 =  0x00000012|
+  
+  2. New memory:
+    \begin{verbatim}
+      0x10000010    16
+      0x01000402    8
+      0xFF12FFFF    4
+      0x009012A0    0
+    \end{verbatim}
+
+  3. \verb|t0 =  0x00000090|, New memory:
+    \begin{verbatim}
+      0x10000010    16
+      0x01000402    8
+      0xFFFF90FF    4
+      0x009012A0    0
+    \end{verbatim}
+\end{eg}
