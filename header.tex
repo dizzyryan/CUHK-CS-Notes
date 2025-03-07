@@ -13,6 +13,10 @@
 \usepackage[usenames,dvipsnames]{xcolor}
 \input{../Math.tex}
 
+\usepackage{bytefield} 
+\usepackage{calc}
+\usepackage{fancyvrb}
+\usepackage{verbatim}
 
 \usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb, mathrsfs}
 \usepackage{geometry}
@@ -366,3 +370,11 @@
 % end appendix autoref patch
 
 \setcounter{tocdepth}{1}
+
+\newenvironment{codeBlock}%
+   {\par\noindent\adjustbox{margin=1ex,bgcolor=Gray!20,margin=0.5ex \medskipamount}\bgroup\varwidth\linewidth\verbatim}%
+   {\endverbatim\endvarwidth\egroup}
+
+\newenvironment{codeLargeBlock}%
+   {\par\noindent\adjustbox{margin=1ex,bgcolor=Gray!20,margin=0.5ex \medskipamount}\bgroup\minipage\linewidth\verbatim}%
+   {\endverbatim\endminipage\egroup}
