@@ -118,10 +118,10 @@ if \(X_1, \cdots, X_n\) are independent given \(\Theta\).
   Let \(X \sim \text{Bernoulli}(\Theta)\), where \(\Theta = \mathbb{P}(X = H)\). We have a prior \(\Theta \sim \text{Uniform}(0, 1)\). To find the posterior (bias), we have:
   \[
     \begin{aligned}
-      f_{\Theta \vert X_1, X_2, X_3} (\theta \vert H,H,T) &\propto p_{X_1 \vert \Theta} (H \vert \theta) p_{X_2 \vert \Theta} (T \vert \theta) p_{X_3 \vert \Theta} (T \vert \theta) f_{\Theta} (\theta) \\
+      f_{\Theta \vert X_1, X_2, X_3} (\theta \vert H, T, T) &\propto p_{X_1 \vert \Theta} (H \vert \theta) p_{X_2 \vert \Theta} (T \vert \theta) p_{X_3 \vert \Theta} (T \vert \theta) f_{\Theta} (\theta) \\
       &= \theta (1 - \theta) (1 - \theta) \times 1 \\
       &= \theta (1 - \theta)^2 \\
-      \Longrightarrow f_{\Theta \vert X_1, X_2, X_3} (\theta \vert H,H,T) &= \dfrac{\theta (1 - \theta)^2}{\int_0 ^1 \theta  (1 - \theta)^2 d \theta} = 12\theta (1 - \theta)^2
+      \Longrightarrow f_{\Theta \vert X_1, X_2, X_3} (\theta \vert H, T, T) &= \dfrac{\theta (1 - \theta)^2}{\int_0 ^1 \theta  (1 - \theta)^2 d \theta} = 12\theta (1 - \theta)^2
     \end{aligned}
   \]
 \end{eg}
@@ -163,7 +163,7 @@ The Beta random variable is widely used to model the prior distribution of a ran
 
 Recalling the coin flip example above, with the prior \(\Theta\) and observation \(X\) remaining unchanged, we can use the Beta distribution to perform the calculation. We have \(\Theta \sim \text{Uniform}(0, 1) = \text{Beta}(1, 1)\), and for \(h = 1, t = 2\), we have:
 \[
-  f_{\Theta \vert X_1, X_2, X_3} (\theta \vert H,H,T) = \dfrac{1}{\text{Beta}(h + 1, t + 1)} \theta^{2-1} (1 - \theta)^{3 - 1} = 12\theta (1 - \theta)^2
+  f_{\Theta \vert X_1, X_2, X_3} (\theta \vert H, T, T) = \dfrac{1}{\text{Beta}(h + 1, t + 1)} \theta^{2-1} (1 - \theta)^{3 - 1} = 12\theta (1 - \theta)^2
 \]
 
 In general, for a coin of unknown bias flips \(n\) times and gets \(h\) heads and \((n - h)\) tails (or \(t\) tails), we can have prior of \(\Theta \sim \text{Uniform}(0, 1) = \text{Beta}(1, 1)\), and \((\theta \vert h\ \text{heads}, t\ \text{tails}) \sim \text{Beta} (h + 1, t + 1)\). 
