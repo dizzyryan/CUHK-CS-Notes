@@ -37,8 +37,8 @@ This repository is not intended for teaching purposes.
 ### 24-25 Spring
 |  Code  |  Course  |  Repository  |  Notes  |  Cheat Sheet  |
 |  :---:  |  :---:  |  :---:  |  :---:  |  :---:  |
-|  CSCI2100  |  Data Structure  |  X  |  X  |  X  |
-|  CENG3420  |  Computer Organization & Design  |  X  |  X  |  X  |
+|  CSCI2100  |  Data Structure  |  [Repo](CSCI2100)  |  X  |  X  |
+|  CENG3420  |  Computer Organization & Design  |  [Repo](CENG3420)  |  [Notes](https://ryanc.wtf/files/CENG3420.pdf)  |  X  |
 |  ENGG2780  |  Statistic for Engineers  |  [Repo](ENGG2780)  |  [Notes](https://ryanc.wtf/files/ENGG2780.pdf)  |  [Ref](https://ryanc.wtf/files/ENGG2780_Midterm_CheatSheet.pdf)  |
 
 > Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
