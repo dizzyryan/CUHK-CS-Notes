@@ -1,0 +1,97 @@
+\chapter{Analysis}
+
+\section{Complexity}
+Before, we talked about the definition of an algorithm. In this part, we would like to know how we can estimate the time required for a program, how to reduce the running time of a program, what the storage complexity is, and how to deal with trade-offs.
+
+We can analyze the runtime by comparing functions. For example, given two functions \(f(N)\) and \(g(N)\), we can compare their relative rates of growth. There are three types of comparisons that we can make: \(f(n) = \Theta(g(n))\) represents the exact bound, \(f(n) = O(g(n))\) represents the upper bound, and \(f(n) = \Omega(g(n))\) represents the lower bound.
+
+By using bounds, we can establish a relative order among functions. Here, we often use \(O(n)\) to analyze time complexity. 
+
+For the definition of the upper bound, it says that there is some point \(n_0\) past which \(c f(N)\) is always at least as large as \(T(N)\). Then we say that \(T(N) = O(f(N))\), where \(f(N)\) is the upper bound on \(T(N)\).
+
+\begin{definition}
+  We say that \(f(n) = O(g(n))\) iff there exists a constant \(c > 0\) and an \(n_0 \geq 0\) such that
+  \[
+  f(n) \leq cg(n)\quad\text{for all}\ n \geq n_0
+  \]
+  Or we can use the following notation
+  \[
+      \exists c > 0, n_0 \geq 0\ \text{such that}\ f(n) \leq cg(n) \forall n \geq n_0
+  \]
+\end{definition}
+
+There are some rules to follow:
+
+\begin{itemize}
+  \item Transitivity
+      \[
+          \text{If}\ f(n) = O(g(n))\ \text{and}\ g(n) = O(h(n)),\ \text{then}\ f(n) = O(h(n))
+      \]
+  \item Rule of sums
+      \[
+          f(n) + g(n) = O(max\{f(n), g(n)\})
+      \]
+  \item Rule of products
+      \[
+          \text{If}\ f_1(n) = O(g_1(n)), f_2(n) = O(g_2(n)),\ \text{then}\ f_1(n)f_2(n) = O(g_1(n)g_2(n))
+      \]
+\end{itemize}
+
+We do not include constants or lower-order terms inside Big-O notation.
+
+If \(f(n)\) is a polynomial in \(n\) with degree \(r\), then \(f(n) = O(n^r)\), but for \(s < r\), \(f(n) \neq O(n^s)\).
+
+Also, any logarithm of \(n\) grows more slowly than any positive power of \(n\) as it increases. Hence, \(\log n\) is \(O(n^k)\) for any \(k > 0\), but \(n^k\) is never \(O(\log n)\) for any \(k > 0\).
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c}
+      \toprule
+      Order & Time  \\
+    \midrule
+      \(O(1)\) & constant time  \\
+      \(O(n)\) & linear time  \\
+      \(O(n^2)\) & quadratic time  \\
+      \(O(n^3)\) & cubic time  \\
+      \(O(2^n)\) & exponential time  \\
+      \(O(\log n)\) & logarithmic time  \\
+      \(O(\log^2 n)\) & log-squared time  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+On a list of length \(n\), sequential search has a running time of \(O(n)\).
+
+On an ordered list of length \(n\), binary search has a running time of \(O(\log n)\).
+
+The sum of the sums of integer indices of a loop from 1 to \(n\) is \(O(n^2)\).
+
+In summary, Big-O notation provides an upper bound of the complexity in the \textbf{worst-case}, helping to quantify performance as the input size becomes arbitrarily large. However, it doesn't measure the actual time, but represents the number of operations an algorithm will execute.
+
+\section{Recurrence Relations}
+Recurrence relations are useful in certain counting problems, for example, recursive algorithms. They relate the \(n\)-th element of a sequence to its predecessors.
+
+By definition, a recurrence relation for the sequence \(a_0, a_1, \cdots\) is an equation that relates \(a_n\) to certain of its predecessors \(a_0, a_1, \cdots, a_{n-1}\). Initial conditions for the sequence are explicitly given values for a finite number of the terms of the sequence.
+
+To solve a recurrence relation, we can use iteration. We use the recurrence relation to write the \(n\)-th term \(a_n\) in terms of certain of its predecessors. We then successively use the recurrence relation to replace each of \(a_{n-1}, \cdots\) by certain of their predecessors. We continue until an explicit formula is obtained. 
+
+For example, the Fibonacci sequence is also defined by the recurrence relation. 
+
+\begin{eg}[Tower of Hanoi]
+  Find an explicit formula for \(a_n\), the minimum number of moves in which the \(n\)-disk Tower of Hanoi puzzle can be solved.
+
+  Given \(a_n = 2a_{n-1} + 1\), \(a_1 = 1\), by applying the iterative method, we obtain:
+  \[
+    \begin{aligned}
+      a_n &= 2a_{n-1} + 1 \\
+      &= 2(2a_{n-2} + 1) + 1 \\
+      &= 2^2a_{n-2} + 2 + 1 \\
+      &= 2^2(2a_{n-3} + 1) + 2 + 1 \\
+      &= 2^3a_{n-3} + 2^2 + 2 + 1 \\
+      &= \cdots \\
+      &= 2^{n-1} a_1 + 2^{n-2} + 2^{n-3} + \cdots + 2 + 1\\
+      &= 2^{n-1} + 2^{n-2} + 2^{n-3} + \cdots + 2 + 1\\
+      &= 2^n - 1
+    \end{aligned}
+  \]
+\end{eg}
