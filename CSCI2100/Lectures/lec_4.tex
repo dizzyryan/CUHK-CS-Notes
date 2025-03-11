@@ -221,19 +221,20 @@ The implementation of an AVL tree is similar to a binary search tree, with the a
 
 \section{B-Tree}
 \subsection{Definition}
-A B-Tree of order \(m\) is a tree with the following structural properties:  
+A B-Tree of order \(m\) is a tree with the following properties:  
+
+- All the leaf nodes must be at the same level (have the same depth).  
+
+- All non-leaf nodes except the root must have at least \(\lceil \frac{m}{2} \rceil - 1\) keys and a maximum of \(m - 1\) keys.  
+
+- All non-leaf nodes except the root (i.e., all internal nodes) must have children between \(\lceil \frac{m}{2} \rceil\) and \(m\).  
 
 - The root is either a leaf or has between 2 and \(m\) children.  
 
-- The non-leaf nodes store up to \(m - 1\) keys.  
+- A non-leaf node with \(n-1\) keys must have \(n\) children.  
 
-- All non-leaf nodes (except the root) have between \(\lceil \frac{m}{2} \rceil\) and \(m\) children.  
+- All the key values within a node must be in ascending order.  
 
-- All leaves are at the same depth and have between \(\lceil \frac{l}{2} \rceil\) and \(l\) elements.  
-
-- All data is stored at the leaves. Each interior node contains pointers \(P_1, P_2, \dots, P_m\) to its children, and values \(K_1, K_2, \dots, K_{m-1}\), where each \(K_i\) represents the smallest key found in the subtrees \(P_2, P_3, \dots, P_m\), respectively.  
-
-For every node, all the keys in subtree \(P_1\) are smaller than the keys in subtree \(P_2\), and so on.
 
 \begin{figure}[H]
   \centering
