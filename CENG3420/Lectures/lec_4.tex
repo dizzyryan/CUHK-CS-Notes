@@ -61,12 +61,13 @@ There are a total of five instruction categories, including
 
 The RISC-V register file holds 32 32-bit general-purpose registers, with two read ports and one write port. Thus, there are at most three operands. Registers are faster than main memory, and they are easier for the compiler to use. However, register files with more locations are slower.
 
-\newpage
 \section{Control Instructions}
 In RISC-V, we have control flow instructions. For example, we have conditional branch instructions:
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   bne s0, s1, Lbl   # go to Lbl if s0 != s1
   beq s0, s1, Lbl   # go to Lbl if s0 == s1
+\end{verbatim}
 \end{codeBlock}
 
 These instructions follow the B-format.
@@ -110,11 +111,13 @@ _start:
 \end{eg}
 
 We need some extra instructions to support branch instructions. For example, we can use \verb|slt| to support the branch-if-less-than instruction.
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   slt t0, s0, s1      # if s0 < s1, then t0 = 1; else, t0 = 0
   slti t0, s0, 25     # if s0 < 25, then t0 = 1; else, t0 = 0 (signed)
   sltu t0, s0, s1     # if s0 < s1, then t0 = 1; else, t0 = 0 (unsigned)
   sltiu t0, s0, 25    # if s0 < 25, then t0 = 1; else, t0 = 0 (immediate unsigned)
+\end{verbatim}
 \end{codeBlock}
 
 This instruction follows R format or I format. 
@@ -151,24 +154,30 @@ inst1:  addi a0, a0, 3
 \end{eg}
 
 We can then use these instructions to create other conditions. We can also check for boundaries using these instructions. For example, with \verb|slt| and \verb|bne|, we can implement a branch-if-less-than:
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   slt t0, s1, s2        # t0 set to 1 if s1 < s2
   bne t0, zero, Label
+\end{verbatim}
 \end{codeBlock}
 
 Treating signed numbers as if they were unsigned provides a low-cost way to perform these checks. For example:
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   sltu t0, s1, t2       # t0 = 0 if s1 > t2 (max)
                         # or s1 < 0 (min)
   beq t0, zero, IOOB    # go to IOOB if t0 = 0
+\end{verbatim}
 \end{codeBlock}
 
 Since negative numbers in 2's complement look like very large numbers in unsigned notation, it checks both if \verb|t0| is less than or equal to zero and greater than \verb|t2|. 
 
 There are also unconditional branch instructions:
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   jal zero, Label   # go to Label, Label can be immediate value
   j Label           # go to Label and discard return address
+\end{verbatim}
 \end{codeBlock}
 
 These instructions follow J format. 
@@ -207,11 +216,11 @@ end:
 \end{eg}
 
 If the branch destination is further away than can be captured in 12 bits, we can use the following to perform a jump:
-\begin{codeBlock}
+\begin{verbatim}
   bne s0, s1, L2
   j L1
 L2: ...
-\end{codeBlock}
+\end{verbatim}
 
 \begin{eg}
   How a while-loop in C is compiled? For example 
@@ -231,20 +240,20 @@ L2: ...
           j Loop              # go to Loop
     Exit:
   \end{verbatim}
-
-  \begin{remark}
-    Left shifting \verb|s3| is used to align the word address (4 bytes), and it is increased by 1 in \verb|addi|. Thus, each time it is increased by 4.
-
-    Address of save[i] = save array address + shift address \((i \times 4)\).
-  \end{remark}
 \end{eg}
+\begin{remark}
+  Left shifting \verb|s3| is used to align the word address (4 bytes), and it is increased by 1 in \verb|addi|. Thus, each time it is increased by 4.
 
-\newpage
+  Address of save[i] = save array address + shift address \((i \times 4)\).
+\end{remark}
+
 \section{Accessing Procedures}
 Other than \verb|jal|, we have branch instructions that return to the original location.
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   jal ra, label   # jump and link
   jalr x0, 0(ra)  # return
+\end{verbatim}
 \end{codeBlock}
 
 Here, \verb|jal| saves \verb|PC + 4| by default into \verb|ra|, so that when the procedure returns, it proceeds to the next instruction. \verb|jalr| then uses the return address to return to the next procedure.
@@ -292,6 +301,7 @@ However, the number of registers is not enough for some operations. Thus, we use
 
 To allocate space on the stack, we have a frame pointer (\verb|fp|) that points to the first word of the frame of a procedure, providing a stable base register for the procedure. \verb|fp| is initialized using \verb|sp| on a call, and \verb|sp| is restored using \verb|fp| on a return.
 
+\newpage
 \begin{eg}~
 
 \begin{minipage}{0.45\textwidth}
@@ -369,7 +379,8 @@ end:
 \end{eg}
 
 For nested procedures, we can store the return address on the stack so that, at the end, we can return to the original return address. For example, to find the factorial of a number, we can use:
-\begin{codeLargeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
 fact: 
       addi sp, sp, -8     # initialize stack pointer
       sw ra, 4(sp)        # save return address
@@ -389,4 +400,5 @@ bk_f:
       addi sp, sp, 8      # free stack pointer
       mul s0, a0, s0      # s0 = n * fact(n-1)
       jalr zero, 0(ra)    # return to caller
-\end{codeLargeBlock}
+\end{verbatim}
+\end{codeBlock}

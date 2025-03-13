@@ -236,6 +236,16 @@
 		}
 ]{conjpurplebox}
 
+\declaretheoremstyle[
+	headfont=\bfseries\sffamily\color{Violet!70!black}, bodyfont=\normalfont,
+	mdframed={
+			linewidth=2pt,
+			rightline=false, topline=false, bottomline=false,
+			linecolor=Violet, backgroundcolor=Violet!5,
+			nobreak=true
+		}
+]{codeBlock}
+
 \declaretheorem[style=thmgreenbox, name=Definition, numberwithin=section]{definition}
 \declaretheorem[style=thmgreen2box, name=Definition, numbered=no]{definition*}
 \declaretheorem[style=thmredbox, name=Theorem, numberwithin=section]{theorem}
@@ -247,6 +257,7 @@
 \declaretheorem[style=thmpinkbox, name=Problem, numbered=no]{problem*}
 \declaretheorem[style=thmblue2box, name=Claim, numbered=no]{claim}
 \declaretheorem[style=conjpurplebox, name=Conjecture, numberwithin=section]{conjecture}
+\declaretheorem[style=codeBlock, name=Code, numberwithin=section]{codeBlock}
 
 % Redefine proof environment to get a full control.
 \makeatletter
@@ -370,11 +381,3 @@
 % end appendix autoref patch
 
 \setcounter{tocdepth}{1}
-
-\newenvironment{codeBlock}%
-   {\par\noindent\adjustbox{margin=1ex,bgcolor=Gray!20,margin=0.5ex \medskipamount}\bgroup\varwidth\linewidth\verbatim}%
-   {\endverbatim\endvarwidth\egroup}
-
-\newenvironment{codeLargeBlock}%
-   {\par\noindent\adjustbox{margin=1ex,bgcolor=Gray!20,margin=0.5ex \medskipamount}\bgroup\minipage\linewidth\verbatim}%
-   {\endverbatim\endminipage\egroup}

@@ -120,9 +120,11 @@ The refined version combines the Quotient register with the right half of the Re
 
 \section{Shifter}
 Shifts by a constant are encoded as a specialization of the I-type format. The operand to be shifted is in rs1, and the shift amount is encoded in the lower 5 bits of the I-immediate field.
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   srli rd, rs1, imm[4:0]
   srai rd, rs1, imm[4:0]
+\end{verbatim}
 \end{codeBlock}
 
 \verb|slli| is a logical left shift, \verb|srli| is a logical right shift, and \verb|srai| is an arithmetic right shift. Logical shifts fill with zeros, while arithmetic right shifts fill with the sign bit. For example, a logical right shift of \verb|1111| by 2 bits results in \verb|0011|, while an arithmetic right shift of \verb|1111| by 2 bits results in \verb|1111|. 

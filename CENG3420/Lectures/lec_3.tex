@@ -78,23 +78,27 @@ Here, we introduce some simple arithmetic and logical instructions.
 In RISC-V, each arithmetic instruction performs a single operation and specifies exactly three operands, all of which are contained in the datapath's register file.
 
 For example, we have:
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   add t0, a1, a2   # t0 = a1 + a2
   sub t0, a1, a2   # t0 = a1 - a2
+\end{verbatim}
 \end{codeBlock}
 
 which can be understood as:
-\begin{codeBlock}
+\begin{verbatim}
   destination = source1 op source2
-\end{codeBlock}
+\end{verbatim}
 
 These instructions follow the R-type format.
 
 \subsection{Immediate Instructions}
 Small constants are often used directly in typical assembly code to avoid load instructions. RISC-V provides special instructions that contain constants. For example:
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   addi sp, sp, 4    # sp = sp + 4
   slti t0, s2, 15   # t0 = 1 if s2 < 15
+\end{verbatim}
 \end{codeBlock}
 
 These instructions follow the I-type format. The constants are embedded within the instructions, limiting their values to the range from \(-2^{11}\) to \(2^{11} - 1\). 
@@ -124,9 +128,11 @@ This will give the result:
 \end{eg}
 
 If we want to load a 32-bit constant into a register, we must use two instructions:
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   lui t0, 1010 1010 1010 1010 1010b
   ori t0, t0, 1010 1010 1010b
+\end{verbatim}
 \end{codeBlock}
 
 Here, \verb|lui| loads the upper 20 bits with an immediate value, and \verb|ori| sets the lower 12 bits using an immediate value.
@@ -135,9 +141,11 @@ If a number is signed, then \verb|1000 0000 ...| represents the most negative va
 
 \subsection{Shift Operations}
 We need operations to pack and unpack 8-bit characters into a 32-bit word, and we can achieve this by using shift operations. We can shift all the bits left or right:
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   slli t2, s0, 8   # t2 = s0 << 8 bits
   srli t2, s0, 8   # t2 = s0 >> 8 bits
+\end{verbatim}
 \end{codeBlock}
 
 These instructions follow the I-type format. The above shifts are called logical because they fill the vacancy with zeros. Notice that a 5-bit shamt field is enough to shift a 32-bit value  \(2^5 - 1\) or 31 bit positions. 
@@ -169,18 +177,23 @@ _start:
 There are numbers of bitwise logical operations in RISC-V ISA. For example: 
 
 R format: 
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   and t0, t1, t2   # t0 = t1 & t2
   or  t0, t1, t2   # t0 = t1 | t2
   xor t0, t1, t2   # t0 = t1 & (not t2) + (not t1) & t2
+\end{verbatim}
 \end{codeBlock}
 
 I format: 
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   andi t0, t1, 0xFF00   # t0 = t1 & 0xFF00
   ori  t0, t1, 0xFF00   # t0 = t1 | 0xFF00
+\end{verbatim}
 \end{codeBlock}
 
+\newpage
 \begin{eg}~
 
 \begin{minipage}{0.5\textwidth}
@@ -213,9 +226,11 @@ Line 11:  t4 = 10111  100001 ->  110111
 
 \section{Data Transfer Instruction}
 There are two basic data transfer instructions for accessing data memory:
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   lw t0, 4(s3)   # load word from memory to register
   sw t0, 8(s3)   # store word from register to memory
+\end{verbatim}
 \end{codeBlock}
 
 The data is loaded or stored using a 5-bit address. The memory address is formed by adding the contents of the base address register to the offset value.
@@ -262,9 +277,11 @@ Since 8-bit bytes are useful, most architectures address individual bytes in mem
 Note that in byte addressing, we have Big Endian, where the leftmost byte is the word address, and the rightmost byte is the word address for Little Endian. In RISC-V, we use Little Endian, where the leftmost byte is the least significant byte.
 
 We also have loading and storing byte operations: 
-\begin{codeBlock}
+\begin{codeBlock}~
+\begin{verbatim}
   lb t0, 1(s3)   # load byte from memory
   sb t0, 6(s3)   # store byte to memory
+\end{verbatim}
 \end{codeBlock}
 
 Here, \verb|lb| places the byte from memory into the rightmost 8 bits of the destination register and performs signed extension. \verb|sb| then takes the byte from the rightmost 8 bits of a register and writes it to memory.
@@ -275,15 +292,12 @@ Here, \verb|lb| places the byte from memory into the rightmost 8 bits of the des
     0xFFFFFFFF    4
     0x009012A0    0
   \end{verbatim}
-
   Now, we have the following operation:
-
   \begin{verbatim}
     add s3, zero, zero
     lb t0, 1(s3)
     sb t0, 6(s3)
   \end{verbatim}
-  
   What is the value left in \verb|t0|? What word is changed in memory and to what? What if the machine was Big Endian? 
 
   \textbf{Solution:} 
