@@ -6,16 +6,18 @@ A trie, also called a digital tree, radix tree, or prefix tree, is a special typ
 
 \begin{minipage}{0.5\textwidth}
 For example, strings are stored in a top-to-bottom manner based on their prefixes in a trie. All prefixes of length 1 are stored at level 1, all prefixes of length 2 are stored at level 2, and so on. For the string set \( S = \{ \text{bear}, \text{bell}, \text{bid}, \text{bull}, \text{but}, \text{sell}, \text{stock}, \text{stop} \} \), we can have the tree structure as shown on the right. \\[3pt]
-This figure shows how the strings are stored in the trie. Inserting and deleting words in this tree is straightforward. For example, when typing "belt," it can be inserted in the subtree starting from \verb|b -> e -> l|.
+This figure shows how the strings are stored in the trie. Inserting and deleting words in this tree is straightforward. For example, when typing "belt," it can be inserted in the subtree starting from \verb|b -> e -> l|. \\[3pt]
+Unlike a binary search tree, no node in a trie stores the key associated with that node; instead, its position in the tree defines the key with which it is associated.
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{Figure/Tries.pdf}  
+  \includegraphics[width=0.8\textwidth]{Figure/Tries.pdf}
+  \caption{Tries}
 \end{figure}
 \end{minipage}
 
-Unlike a binary search tree, no node in a trie stores the key associated with that node; instead, its position in the tree defines the key with which it is associated. 
+ 
 
 All the descendants of a node share a common prefix in the string associated with that node, and the root is associated with the empty string.
 
@@ -44,7 +46,7 @@ Following these properties, for example, a B-Tree of order 4 contains a maximum 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{Figure/B-Tree.pdf}
-  \caption*{B-tree of order 4}
+  \caption{B-tree of order 4}
 \end{figure}
 
 \subsection{Operations}
