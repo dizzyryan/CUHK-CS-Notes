@@ -1,0 +1,40 @@
+% ---------------------- setting ---------------------- %
+\documentclass[10pt,landscape,a4paper]{article}
+\input{../Math.tex}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb, mathrsfs}
+\usepackage{lipsum}
+
+\setlength\parindent{0pt}
+
+\setlength{\columnseprule}{0.5pt}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhf{}
+\pagestyle{empty}
+
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+\begin{document}
+\begin{multicols}{4}
+% ---------------------- Content ---------------------- %
+Computer components: processor, input, output, memory, and network.
+% ---------------------- END ---------------------- %
+\vfill\break
+\end{multicols}
+\end{document}
