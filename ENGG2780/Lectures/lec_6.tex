@@ -1,0 +1,203 @@
+\chapter{Confidence Intervals}
+
+In this chapter, we continue the discussion of classical statistics.
+
+In the previous chapter, we discussed the estimation of the value of estimators. However, what we did not discuss is how much the value deviates from the actual one. In other words, how likely is it that the estimated value we have will be the actual one? Since, in classical statistics, the parameters are unknown and not deterministic, we use confidence intervals to determine this probability.
+
+\section{Definition}
+In the previous discussion, we stated that \(\theta\) is an unknown parameter. We then use the estimator \(\hat{\Theta}\) to estimate the value of \(\theta\), where \(\hat{\Theta}\) is a random variable with sample size \(n\). Given different sample sets, the estimate of \(\theta\) varies. We have discussed unbiasedness, asymptotic unbiasedness, and consistency, which are properties of the estimator rather than a specific estimate.  
+
+Thus, besides obtaining a single numerical estimate \(\hat{\theta}_n\) of \(\theta\) based on a specific set of \(n\) observed samples, we also want to construct a so-called confidence interval, which not only provides a point estimate but also estimates an interval of values that we are confident contains the unknown \(\theta\).  
+
+A confidence interval is an interval that contains \(\theta\) with a certain high probability. For example, we could say that there is a \(90\%\) probability that \(\theta\) lies within the interval.  
+
+Based on the point estimate \(\hat{\theta}_n\), we construct an interval \([\hat{\theta}_n^-, \hat{\theta}_n^+]\), where \(\hat{\theta}_n^- < \hat{\theta}_n^+\), such that we are confident that \(\theta\) falls within the interval:  
+\[
+  \mathbb{P}(\hat{\theta}_n^- \leq \theta \leq \hat{\theta}_n^+) \geq \underbrace{1 - \alpha}_{\text{Confidence Level}}
+\]
+Here, \([\hat{\theta}_n^-, \hat{\theta}_n^+]\) is called the \((1 - \alpha)\) confidence interval, where \(\hat{\theta}_n^-\) is the lower confidence limit, and \(\hat{\theta}_n^+\) is the upper confidence limit. 
+
+\begin{remark}
+  Note that in the above, \(\theta\) is a true parameter rather than a random variable. To find the probability, one must use the random variable \(\Theta\); otherwise, we are unable to determine the likelihood.
+\end{remark}
+
+We define the width of the confidence interval as \(\hat{\theta}_n^+ - \hat{\theta}_n^-\), and \(\alpha\) as the confidence parameter. For example, if the confidence parameter is \(\alpha = 5\%\), then the confidence level is \(95\%\). One needs to ensure that the confidence parameter is low while maintaining a high confidence level.
+
+For \(\hat{\theta}_n^-\) and \(\hat{\theta}_n^+\), we can theoretically choose any values. For example, setting them to \(-\infty\) and \(+\infty\) would give a \(100\%\) confidence level, but such an interval is uninformative. Additionally, in most cases, \(\hat{\theta}_n^-\) and \(\hat{\theta}_n^+\) are symmetric in magnitude since we aim to find the narrowest confidence interval.
+
+Naturally, a question arises: what is the best confidence interval we can choose?
+
+\section{Confidence Interval for Mean}
+Suppose we have independent samples \(X_1, \cdots, X_n\) with the same PDF or PMF, i.e., they share the same mean \(\mu\) and variance \(\sigma^2\). If these samples are normally distributed, i.e., \(X_i \sim \mathcal{N}(\mu, \sigma^2)\), then the sample mean 
+\[
+\overline{X} = \frac{X_1 + \cdots + X_n}{n}
+\]
+also follows a normal distribution:
+\[
+\overline{X} \sim \mathcal{N}\left(\mu, \left(\frac{\sigma}{\sqrt{n}}\right)^2\right).
+\]
+If \(X_1, \cdots, X_n\) are not normally distributed but \(n\) is large (\(n \geq 30\)), then by the central limit theorem, the sample mean \(\overline{X}\) can still be approximated by the same normal distribution. 
+
+As shown before, if \(X_1, \cdots, X_n\) are normally distributed as \(\mathcal{N}(\mu, \sigma^2)\) or if \(n\) is large, then
+\[
+  \overline{X} \sim \mathcal{N}\left(\mu, \left(\frac{\sigma}{\sqrt{n}}\right)^2\right) \quad\quad Z = \dfrac{\overline{X} - \mu}{\frac{\sigma}{\sqrt{n}}} \sim \mathcal{N}(0, 1). 
+\]
+Suppose \(\sigma^2\) is known. Then, a \((1 - \alpha)\)-confidence interval for the mean \(\mu\) is given by:
+\[
+  \overline{x} \pm z_{\frac{\alpha}{2}}\left(\frac{\sigma}{\sqrt{n}}\right) \Longleftrightarrow \left[\overline{x} - z_{\frac{\alpha}{2}}\left(\frac{\sigma}{\sqrt{n}}\right), x + z_{\frac{\alpha}{2}}\left(\frac{\sigma}{\sqrt{n}}\right)\right]
+\]
+where \(\overline{x}\) is the sample mean estimate based on observed samples, and \(z_{\frac{\alpha}{2}}\) is called the \(z\)-value or \(z\)-score, which satisfies the property that the area to its right under the standard normal curve is \(\frac{\alpha}{2}\).
+
+However, since \(\overline{x}\) here is a single estimate with a fixed value rather than a random variable, we cannot calculate its probability.
+
+We can derive the probability function for finding such an interval. Since what we are trying to find is the interval such that the actual mean \(\mu\) will fall into an interval around the sample mean \(\overline{X}\), we can define \(\varepsilon\) as the margin of error, controlling the width of the interval, where \(\varepsilon = z_{\frac{\alpha}{2}}\). Then we have:
+\[
+  \begin{aligned}
+    \mathbb{P}\left(\overline{X} - \varepsilon \leq \mu \leq \overline{X} + \varepsilon\right) &= 1 - \alpha \\
+    \mathbb{P}\left(-\varepsilon \leq \overline{X} - \mu \leq \varepsilon\right) &= 1 - \alpha \\
+    \mathbb{P}\left(-\varepsilon \leq \dfrac{\sigma}{\sqrt{n}} \mathcal{N}(0, 1) \leq \varepsilon\right) &= 1 - \alpha \\
+    \mathbb{P}\left(-\dfrac{\varepsilon\sqrt{n}}{\sigma} \leq \mathcal{N}(0, 1) \leq \dfrac{\varepsilon\sqrt{n}}{\sigma}\right) &= 1 - \alpha \\
+    \mathbb{P}\left(-z_{\frac{\alpha}{2}}\dfrac{\sqrt{n}}{\sigma} \leq \mathcal{N}(0, 1) \leq z_{\frac{\alpha}{2}}\dfrac{\sqrt{n}}{\sigma}\right) &= 1 - \alpha \\
+  \end{aligned}
+\]
+Alternatively, we can also express this as:
+\[
+  \begin{aligned}
+    \mathbb{P}\left(-z_{\frac{\alpha}{2}} \leq \frac{\overline{X}- \mu}{\frac{\sigma}{\sqrt{n}}} \leq z_{\frac{\alpha}{2}}\right) &= 1 - \alpha \\
+    \mathbb{P}\left(-z_{\frac{\alpha}{2}} \cdot \frac{\sigma}{\sqrt{n}} \leq \overline{X} - \mu \leq z_{\frac{\alpha}{2}} \cdot \frac{\sigma}{\sqrt{n}} \right) &= 1 - \alpha \\
+    \mathbb{P}\left(\overline{X} - z_{\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}} \leq \mu \leq \overline{X} + z_{\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}}\right) &= 1 - \alpha
+  \end{aligned}
+\]
+Note that \(\overline{X}\) is a random variable, and this function describes a random interval centered at \(\overline{X}\) that has a \((1 - \alpha)\) probability of containing the population mean \(\mu\) before a sample is drawn. Once the specific sample is observed, the sample mean \(\overline{x}\) becomes fixed, and the interval becomes:
+\[
+  \left[\overline{x} - z_{\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}}, \overline{x} + z_{\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}}\right]
+\]
+If we repeatedly sampled and computed intervals this way, \(100(1 - \alpha)\%\) of those intervals would contain \(\mu\).
+
+Suppose \(\sigma^2\) is unknown, but \(n\) is large (\(n \geq 30\)), then a confidence interval for the mean can also be found by:
+\[
+  \overline{x} \pm z_{\frac{\alpha}{2}}\left(\frac{s}{\sqrt{n}}\right) \Longleftrightarrow \left[\overline{x} - z_{\frac{\alpha}{2}}\left(\frac{s}{\sqrt{n}}\right), \overline{x} + z_{\frac{\alpha}{2}}\left(\frac{s}{\sqrt{n}}\right)\right]
+\]
+where \(s^2\) is an unbiased sample standard deviation estimate based on observed samples:
+\[
+  s^2 = \dfrac{\sum_{i = 1}^n (X_i - \overline{X})^2}{n - 1}
+\]
+
+\begin{eg}
+  Given a 95\% confidence interval for the mean from 30 \(\mathcal{N} \left(\mu, \left(\frac{1}{2}\right)^2\right)\) samples. 
+
+  \textbf{Solution:} 
+  As \(1 - \alpha = 95\%\), thus \(\frac{\alpha}{2} = 2.5\% = 0.025\). 
+
+  Since \(\overline{X} = \frac{X_1 + \cdots + X_n}{n}\) is a normal random variable, we have
+  \[
+    \overline{X} \sim \text{Normal }\left(\mu, \left(\frac{1}{2\sqrt{30}}\right)^2\right)
+  \]
+  Given \(\sigma = \frac{1}{2}\), we have 
+  \[
+  \begin{aligned}
+    \mathbb{P}\left(\overline{X} - z_{\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}} \leq \mu \leq \overline{X} + z_{\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}}\right) &= 1 - \alpha \\
+    \mathbb{P}\left(\overline{X} - z_{0.025} \frac{\frac{1}{2}}{\sqrt{30}} \leq \mu \leq \overline{X} + z_{0.025} \frac{\frac{1}{2}}{\sqrt{30}}\right) &= 95\% \\
+  \end{aligned}
+  \]
+  From Z-table, we have \(z_{0.025} = 1.96\), then we have 
+  \[
+  \begin{aligned}
+    \mathbb{P}\left(\overline{X} - z_{0.025} \frac{\frac{1}{2}}{\sqrt{30}} \leq \mu \leq \overline{X} + z_{0.025} \frac{\frac{1}{2}}{\sqrt{30}}\right) &= 95\% \\
+    \mathbb{P}\left(\overline{X} - 1.96 \frac{\frac{1}{2}}{\sqrt{30}} \leq \mu \leq \overline{X} + 1.96 \frac{\frac{1}{2}}{\sqrt{30}}\right) &= 95\% \\
+    \mathbb{P}\left(\overline{X} - 0.18 \leq \mu \leq \overline{X} + 0.18\right) &= 95\% \\
+  \end{aligned}
+  \]
+  Then, we can say that we are 95\% confident that the actual mean will fall into this interval. 
+  \begin{remark}
+    For a given sample, we can find \(\overline{x}\). However, the change of \(\overline{x}\) will not affect the width of the interval but only shift it to the left or right. Only the change of size \(n\) will change the interval. 
+  \end{remark}
+\end{eg}
+
+\begin{eg}
+  How many \(\mathcal{N}(\mu, 25^2)\) samples are needed for a 95\% confidence with width = 10 intervals?
+
+  \textbf{Solution:} 
+  As \(1 - \alpha = 95\%\), thus \(\frac{\alpha}{2} = 2.5\% = 0.025\). 
+
+  Then the corresponding confidence interval: 
+  \[
+  \left[\overline{x} - z_{\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}}, \overline{x} + z_{\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}}\right] \Longrightarrow 
+  \left[\overline{x} - z_{0.025} \frac{\sigma}{\sqrt{n}}, \overline{x} + z_{0.025} \frac{\sigma}{\sqrt{n}}\right]
+  \]
+  Then we have
+  \[
+  \begin{aligned}
+    2 \times z_{0.025} \frac{\sigma}{\sqrt{n}} = 10 \Longrightarrow 2 \times 1.96 \frac{25}{\sqrt{n}} &= 10 \\
+    n &= \left(\dfrac{2 \times 1.96 \times 25}{10}\right)^2 \approx 96
+  \end{aligned}
+  \]
+
+  \begin{remark}
+    We can also use the probability function to do the calculation: 
+    \[
+      \begin{aligned}
+        \mathbb{P}\left(\overline{X} - \varepsilon \leq \mu \leq \overline{X} + \varepsilon\right) &= \mathbb{P}\left(- \varepsilon \leq \overline{X} - \mu \leq \varepsilon\right) \\
+        &= \mathbb{P}\left(- \varepsilon \leq \dfrac{\sigma}{\sqrt{n}} \mathcal{N}(0, 1) \leq \varepsilon\right) \\
+        &= \mathbb{P}\left(-\dfrac{\varepsilon\sqrt{n}}{\sigma} \leq \mathcal{N}(0, 1) \leq \dfrac{\varepsilon\sqrt{n}}{\sigma}\right) \\
+      \end{aligned}
+    \]
+    \[
+    \begin{aligned}
+      \dfrac{\varepsilon\sqrt{n}}{\sigma} &= 1.96 \\
+      \dfrac{5 \times \sqrt{n}}{25} &= 1.96 \\
+      n &= \left(\frac{25 \times 1.96}{5}\right)^2 = 96\\
+    \end{aligned}
+    \]
+  \end{remark}
+\end{eg}
+
+\begin{eg}
+  34 out of 100 Bernoulli(\(p\)) samples came out positive. Given a \(95\%\) confidence interval, what are the upper and lower limits?
+
+  \textbf{Solution:}  
+  As \(1 - \alpha = 95\%\), thus \(\frac{\alpha}{2} = 2.5\% = 0.025\).  
+
+  Since it is a Bernoulli random variable, we have  
+  \[
+    \overline{x} = \hat{p} = \frac{34}{100} = 0.34
+  \]  
+  Although \(\sigma\) is unknown, since \(n = 100\) is large, we can use \(s = \sqrt{\hat{p}(1 - \hat{p})} \approx 0.47\) to approximate \(\sigma\):  
+  \[
+    \left[\overline{x} - z_{\frac{\alpha}{2}} \frac{s}{\sqrt{n}}, \overline{x} + z_{\frac{\alpha}{2}} \frac{s}{\sqrt{n}}\right] \Longrightarrow  
+    \left[\overline{x} - z_{0.025} \frac{s}{\sqrt{n}}, \overline{x} + z_{0.025} \frac{s}{\sqrt{n}}\right]
+  \]  
+  Then we have  
+  \[
+    \left[\overline{x} - z_{0.025} \frac{s}{\sqrt{n}}, \overline{x} + z_{0.025} \frac{s}{\sqrt{n}}\right] = \left[0.34 - 1.96 \times \frac{0.47}{10}, 0.34 + 1.96 \times \frac{0.47}{10}\right] = [0.248, 0.432]
+  \]  
+\end{eg}
+
+\section{One Sided Confidence Intervals}
+Provides a bound for a population parameter with a specified confidence level \((1 - \alpha)\). A one-sided interval addresses situations where only one direction is of interest.
+
+\subsection{Lower One-sided Confidence Interval}
+For the lower one-sided confidence interval, we have \([\hat{\theta}_n^{\min}, +\infty]\), where we are confident that \(\theta\) is at least as large as \(\hat{\theta}_n^{\min}\). 
+
+To find \(\hat{\theta}_n^{\min}\) such that \(\mathbb{P}(\mu \geq \hat{\theta}_n^{\min}) = 1 - \alpha\), we proceed similarly to the two-sided case. However, here we focus only on one side, which leads to:
+\[
+  \mathbb{P}\left(\frac{\overline{X} - \mu}{\frac{\sigma}{\sqrt{n}}} \leq z_{\alpha}\right) = 1 - \alpha \quad \Longrightarrow \quad
+  \mathbb{P}\left(\mu \geq \overline{X} - z_{\alpha} \frac{\sigma}{\sqrt{n}}\right) = 1 - \alpha
+\]
+Therefore, given a specific sample mean \(\overline{x}\), the lower one-sided confidence interval is:
+\[
+    \left[\overline{x} - z_{\alpha} \frac{\sigma}{\sqrt{n}}, +\infty\right]
+\]
+
+\subsection{Upper One-sided Confidence Interval}
+For the upper one-sided confidence interval, we have \([-\infty, \hat{\theta}_n^{\max}]\), where we are confident that \(\theta\) is at most as large as \(\hat{\theta}_n^{\max}\). 
+
+To find \(\hat{\theta}_n^{\max}\) such that \(\mathbb{P}(\mu \leq \hat{\theta}_n^{\max}) = 1 - \alpha\), we follow a similar approach, focusing on just one side of the distribution:
+\[
+  \mathbb{P}\left(\frac{\overline{X} - \mu}{\frac{\sigma}{\sqrt{n}}} \geq z_{\alpha}\right) = 1 - \alpha \quad \Longrightarrow \quad
+  \mathbb{P}\left(\mu \leq \overline{X} + z_{\alpha} \frac{\sigma}{\sqrt{n}}\right) = 1 - \alpha
+\]
+Therefore, given a specific sample mean \(\overline{x}\), the upper one-sided confidence interval is:
+\[
+  \left[-\infty, \overline{x} + z_{\alpha} \frac{\sigma}{\sqrt{n}}\right]
+\]
