@@ -90,9 +90,9 @@ The J-immediate encodes a signed offset in multiples of 2 bytes. The offset is s
 The partition of \verb|imm| field is designed to align the \verb|imm| bits better with other instruction types, enabling a more efficient implementation of control units.
 
 \section{Datapath}
-By assemble the above datapathn elements, add control lines and desgin the control path, we can create a signle datapath. 
+By assembling the above datapath elements, adding control lines, and designing the control path, we can create a single datapath.
 
-We need to fetch, decode, and execute each instruction in one clock cycle, which is called the single-cycle design. No datapath resource can be used more than once per instruction, so some components must be duplicated. Additionally, multiplexers are needed at the input of the shared elements with control lines to perform the selection, allowing datapath elements to be shared between two different instructions.
+We need to fetch, decode, and execute each instruction in one clock cycle, which is called the single-cycle design. No datapath resource can be used more than once per instruction, so some components must be duplicated. Additionally, multiplexers are needed at the input of the shared elements with control lines to perform the selection, allowing datapath elements to be shared between different instructions.
 
 \begin{center}
   \includegraphics[width=0.8\textwidth]{Figure/Datapath.png}
