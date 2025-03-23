@@ -16,7 +16,7 @@ We have:
 
 We normalize the mantissa to fall within the range \([1, R)\), where \(R\) is the base. For instance, in the case of a binary base, this range would be \([1, 2)\).
 
-In IEEE Standard 753 Single Precision, we have 
+In IEEE Standard 754 Single Precision, we have 
 \begin{center}
 \begin{bytefield}[leftcurly=., leftcurlyspace=0pt, bitwidth=12pt]{32}
   \bitbox{1}{\(S\)} & \bitbox{8}{\(E^{\prime}\)} & \bitbox{23}{\(M\)}
@@ -57,7 +57,7 @@ For double precision, we use 64 bits. \(E^{\prime}\) is the 11-bit signed expone
   \textbf{Solution:}  
   Sign bit: 1 (since the number is negative)  
   
-  Mantissa: \(1 - 0.5 = 0.5 = 1 \times 2^{-1}\)  
+  Mantissa: \(0.5_{10}  = 1.0 \times 2^{-1} = 0.1_{2c} \)  
   
   Exponent: \(127 - 1 = 126 = 0111 1110\)
 
