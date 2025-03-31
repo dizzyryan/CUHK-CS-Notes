@@ -67,8 +67,7 @@ Node* getDeepestRightmostNode(Node* root) {
     return temp;
 }
 
-void deleteDRN(Node* root, Node* dNode)
-{
+void deleteDRN(Node* root, Node* dNode) {
     Node* temp;
     Node* queue[MAX_SIZE];
     int front = -1, rear = -1;
@@ -105,8 +104,7 @@ void deleteDRN(Node* root, Node* dNode)
     }
 }
 
-void deleteNode (Node** root, int data)
-{
+void deleteNode (Node** root, int data) {
     if (*root == NULL) {
         puts("Empty Tree");
         return;
@@ -152,8 +150,7 @@ void deleteNode (Node** root, int data)
     }
 }
 
-int search(Node* root, int data)
-{
+int search(Node* root, int data) {
     if (root == NULL) {
         puts("Empty Tree");
         return -1;
@@ -206,6 +203,14 @@ void postorder(Node* root) {
   printf("%d-> ", root->data);
 }
 
+void freeTree(Node* root) {
+	if (!root)
+        return;
+	freeTree(root->left);
+	freeTree(root->right);
+	free(root);
+}
+
 int main() {
     Node* root = NULL;
     search(root, 1);
@@ -227,5 +232,6 @@ int main() {
     printf("Postorder: ");
     postorder(root);
     printf("\n");
+    freeTree(root);
     return 0;
 }

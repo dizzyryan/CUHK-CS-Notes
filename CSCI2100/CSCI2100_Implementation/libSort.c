@@ -5,9 +5,9 @@
 
 /**
  * #include <stdlib.h>
- * NOTSTABLE: void qsort (void *base, size_t nmemb, size_t size, int (*compar ) (const void *, const void * ))
- * NOTSTABLE: int heapsort (void *base, size_t nmemb, size_t size, int (*compar ) (const void *, const void * ))
- * STABLE: 		int mergesort (void *base, size_t nmemb, size_t size, int (*compar ) (const void *, const void * ))
+ * UNSTABLE: void qsort (void *base, size_t nmemb, size_t size, int (*compar ) (const void *, const void * ))
+ * UNSTABLE: int heapsort (void *base, size_t nmemb, size_t size, int (*compar ) (const void *, const void * ))
+ * STABLE:	 int mergesort (void *base, size_t nmemb, size_t size, int (*compar ) (const void *, const void * ))
 */
 
 /**

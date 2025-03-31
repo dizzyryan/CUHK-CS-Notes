@@ -18,7 +18,7 @@ int max(int a, int b) {
 	return a > b ? a : b;
 }
 
-void updateHeight(AVLNode* tree){
+void updateHeight(AVLNode* tree) {
 	tree->height = max(height(tree->left), height(tree->right)) + 1;
 }
 
@@ -59,7 +59,7 @@ AVLNode* RLRotation(AVLNode* x) {
 	return leftRotation(x);
 }
 
-AVLNode* balance(AVLNode* tree){
+AVLNode* balance(AVLNode* tree) {
 	if (!tree)
 		return tree;
 	int balance = height(tree->left) - height(tree->right);
@@ -128,6 +128,21 @@ AVLNode* delete(AVLNode* tree, int data) {
 	return balance(tree);
 }
 
+AVLNode* search(AVLNode* root, int tar) {
+    if (root != NULL) {
+        if (tar < root->data) {
+            return search(root->left, tar);
+        }
+        if (tar > root->data) {
+            return search(root->right, tar);
+        }
+        else
+            return root;
+    }
+    else
+        return NULL;
+}
+
 void inorder(AVLNode* root) {
 	if (root == NULL) {
 		return;
@@ -177,6 +192,10 @@ int main() {
 	tree = insert(tree, 19);
 	tree = insert(tree, 3);
 	tree = insert(tree, 27);
+	printf(search(tree, 22) ? "Yes1\n" : "No");
+	printf(search(tree, 1) ? "Yes2\n" : "No");
+	printf(search(tree, 22) ? "Yes3\n" : "No");
+	printf(search(tree, 23) ? "No" : "Yes4\n");
 	printAll(tree);
 	tree = delete(tree, 14);
 	tree = delete(tree, 3);

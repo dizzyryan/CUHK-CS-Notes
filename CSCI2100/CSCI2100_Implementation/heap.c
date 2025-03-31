@@ -25,8 +25,7 @@ void swap(int* a, int* b) {
 }
 
 // change > or < will give find min and max
-void percolateDown(Heap* h, int i)
-{
+void percolateDown(Heap* h, int i) {
   int largest = i;
   int left = 2 * i + 1;
   int right = 2 * i + 2;
@@ -99,8 +98,7 @@ void printHeap(Heap* h) {
 }
 
 // Function to delete an element at a given index
-void deleteKey(Heap* h, int index)
-{
+void deleteKey(Heap* h, int index) {
   if (index >= h->currSize) {
     return;
   }

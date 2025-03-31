@@ -38,13 +38,12 @@ int getMin(Node* root) {
 	return getMin(root->left);
 }
 
-Node* search(Node* root, int tar)
-{
-    if (root != NULL){
-        if (tar < root->data){
+Node* search(Node* root, int tar) {
+    if (root != NULL) {
+        if (tar < root->data) {
             return search(root->left, tar);
         }
-        if (tar > root->data){
+        if (tar > root->data) {
             return search(root->right, tar);
         }
         else
@@ -86,7 +85,7 @@ Node* delete(Node* root, int tar) {
 }
 
 int height(Node* root) {
-    if (!root){
+    if (!root) {
         return -1;
     }
     else {
@@ -100,8 +99,7 @@ int height(Node* root) {
     }
 }
 
-void inorder(Node* root)
-{
+void inorder(Node* root) {
     if (root == NULL) {
         return;
     }
@@ -110,8 +108,8 @@ void inorder(Node* root)
     inorder(root->right);
 }
 
-void preorder(Node* root){
-  if (root == NULL){
+void preorder(Node* root) {
+  if (root == NULL) {
     return;
   }
   printf("%d -> ", root->data);
@@ -119,8 +117,8 @@ void preorder(Node* root){
   preorder(root->right);
 }
 
-void postorder(Node* root){
-  if (root == NULL){
+void postorder(Node* root) {
+  if (root == NULL) {
     return;
   }
   postorder(root->left);

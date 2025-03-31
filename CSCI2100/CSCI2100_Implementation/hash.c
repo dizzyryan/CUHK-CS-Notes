@@ -58,12 +58,24 @@ void freeHashTable(HashTable* ht) {
 // 	return ((inKey % ht->maxSize) + probes) % ht->maxSize;
 // }
 
+// string hash function
+// int hash(HashTable* ht, const char* key){
+// 	int hash = 0;
+// 	while(*key != '\0' )
+// 		hash += *key++;
+// 	return hash % ht->maxSize;
+// }
+
+// int hash(HashTable* ht, const char* key){
+// 	return ( Key[ 0 ] + 27 * Key[ 1 ] + 729 * Key[ 2 ] ) % TableSize;
+// }
+
 // Quadratic hash function
-int hash(HashTable *ht, int inKey, int probes) {
+int hash(HashTable* ht, int inKey, int probes) {
 	return ((inKey % ht->maxSize) + probes * probes) % ht->maxSize;
 }
 
-HashTable* insert(HashTable *ht, int key){
+HashTable* insert(HashTable* ht, int key) {
 	int probes = 0;
 	int hashVal = hash(ht, key, probes);
 	while (ht->arr[hashVal].type == ACTIVE) {
