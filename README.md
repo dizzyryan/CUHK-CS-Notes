@@ -2,15 +2,15 @@
 
 This repository contains the notes and code from the courses I took during my undergraduate study in CUHK.
 
-## Before You Start
+## Disclaimer
+This repository contains content intended to serve as a study aid, which I am comfortable sharing. However, I would like to issue the following disclaimer: I bear no personal responsibility for any inaccuracies or errors contained within this material. Users are advised to utilize these resources thoughtfully and responsibly.
 
-This repository is not intended for teaching purposes.
+If any content is found to infringe upon copyright, please contact me directly so that it can be promptly removed.
 
 **The code and notes provided are for reference only. Copying this material may violate academic honesty policies.**
 
 > [!Note]
 > + The notes may contain typos and errors.
-> + Materials will only be available after the end of the current semester.
 > + All notes are written in LaTeX. The source code is available in this repository.
 > + If you find any issues, feel free to contact me.
 > + You can access the PDF files directly or download the folder to compile the LaTeX files offline.
