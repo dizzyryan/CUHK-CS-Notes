@@ -1,0 +1,53 @@
+\chapter{Hypothesis Testing}
+
+Previously, we talked about hypothesis testing in the context of Bayesian statistics, where we use it to check how likely the estimated parameter is to be the actual one given the observed data and a prior. The same applies to classical statistics, but instead of having a prior, we only have observations.
+
+So, how do we determine how likely the estimated distribution is to be the actual one, or to what extent it has errors? This is where hypothesis testing comes in.
+
+\section{Terminology}
+Before we dive into the context, we first define some terminology.
+
+Recall that in Bayesian statistics, we have a parameter \(\Theta\) that takes \(m\) possible values \(\theta_1, \theta_2, \dots, \theta_m\), and we use Bayesian inference to estimate the most likely value given observed data. Now, we consider a special case where \(\Theta\) can take only two values, 0 and 1. This scenario is known as binary hypothesis testing.
+
+We denote the hypothesis \(\Theta = 0\) by \(H_0\), called the null hypothesis, which is considered the default assumption.  
+
+We denote the hypothesis \(\Theta = 1\) by \(H_1\), called the alternative hypothesis.  
+
+Note that under each hypothesis, the data follows a specific probability distribution. By default, we assume the sample follows the distribution defined by \(H_0\), and hypothesis testing determines whether there is sufficient evidence to reject \(H_0\) in favor of \(H_1\).
+
+After observing \(n\) independent samples \(X_1, \dots, X_n\) with the same PMF or PDF, which depends on the hypothesis, we denote by \(f_{X \mid \Theta}\) the PMF or PDF defined by the hypothesis.
+
+A binary decision rule can be represented by two disjoint regions of all possible observations. We have \(R\), called the rejection region, where hypothesis \(H_0\) is rejected if the observed data fall within this region. Simply put, the samples suggest that the data follow the distribution under hypothesis \(H_1\).  
+
+The complement \(R^{\prime}\) is called the acceptance region, where hypothesis \(H_0\) is accepted if the observed data fall within this region. In other words, the data are consistent with the distribution under \(H_0\).
+
+For a particular choice of the rejection region, we have two types of errors.
+
+For a \textbf{Type I error}, also known as a false rejection or false positive, we reject hypothesis \(H_0\) even though \(H_0\) is true. In other words, the data suggest that it follows \(H_1\), while the actual distribution is \(H_0\).
+
+We define the probability of a Type I error as:  
+\[
+  \alpha (R) = \mathbb{P}(X \in R \mid H_0).
+\]
+
+Similarly, we have a \textbf{Type II error}, also known as a false acceptance or false negative. This occurs when we accept hypothesis \(H_0\) even though \(H_0\) is false. In other words, the data suggest that it follows \(H_0\), while the actual distribution is \(H_1\).
+
+We define the probability of a Type II error as:  
+\[
+  \beta (R) = \mathbb{P}(X \notin R \mid H_1).
+\]
+
+\section{Likelihood Ratio}
+Now, let's look at an example. Suppose we have a coin that can either be fair (\(H_0\)) or loaded (\(H_1\)), where \(p_H = \frac{3}{4}\). If we decide that when the number of heads observed is greater than or equal to 14, we would conclude that it is more likely to be \(H_1\).  
+
+We can now calculate the error as follows:  
+\[
+  \mathbb{P}(H_1 \mid H_0) = \mathbb{P}(\text{Binomial}(20, 0.5) \geq 14) = 0.057
+\]  
+\[
+  \mathbb{P}(H_0 \mid H_1) = \mathbb{P}(\text{Binomial}(20, \frac{3}{4}) \leq 13) = 0.214
+\]
+
+Note that 
+
+But we normally want to make the decision, then how do we make sure that the decision we made is optimize? we could use the Likelihood ratio test. 
