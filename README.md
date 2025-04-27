@@ -38,7 +38,7 @@ If any content is found to infringe upon copyright, please contact me directly s
 |  Code  |  Course  |  Repository  |  Notes  |  Cheat Sheet  |
 |  :---:  |  :---:  |  :---:  |  :---:  |  :---:  |
 |  CSCI2100  |  Data Structure  |  [Repo](CSCI2100)  |  X  |  X  |
-|  CENG3420  |  Computer Organization & Design  |  [Repo](CENG3420)  |  [Notes](https://ryanc.wtf/files/CENG3420.pdf)  |  X  |
+|  CENG3420  |  Computer Organization & Design  |  [Repo](CENG3420)  [Lab3](https://github.com/dizzyryan/CENG3420_main)  |  [Notes](https://ryanc.wtf/files/CENG3420.pdf)  |  X  |
 |  ENGG2780  |  Statistic for Engineers  |  [Repo](ENGG2780)  |  [Notes](https://ryanc.wtf/files/ENGG2780.pdf)  |  [Ref](https://ryanc.wtf/files/ENGG2780_Midterm_CheatSheet.pdf)  |
 
 > Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
