@@ -90,7 +90,7 @@ The memory controller accepts a complete address and the \texttt{R/W} signal fro
 
 Again, as mentioned before, the processor and cache are fast, but the main memory is slow. Thus, we try to hide access latency by interleaving memory accesses across several memory modules. Each memory module has its own Address Buffer Register and Data Buffer Register.
 
-To perform memory module interleaving, two or more compatible memory modules are used. Within a memory module, several chips are used in 'parallel'.
+To perform memory module interleaving, two or more compatible memory modules are used. Within a memory module, several chips are used in "parallel".
 
 For example, suppose we have a cache read miss and need to load from main memory. Assume a cache with an 8-word block, i.e., the cache line size is 8 words. Then, assume it takes one clock to send the address to DRAM memory and one clock to send the data back. In addition, DRAM has a 6-cycle latency for the first word, with each of the subsequent words in the same row taking only 4 cycles. Then for a single memory read, we have 
 \[
