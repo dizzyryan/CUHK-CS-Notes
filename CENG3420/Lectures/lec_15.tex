@@ -1,1 +1,23 @@
-\chapter{Virtual Machine}
+\chapter{Virtual Memory}
+
+Physical memory may not be as large as the "possible address space" spanned by a processor. For example, a processor can address 4 GB with a 32-bit address. However, the installed main memory may only be 1 GB. How can we run many programs simultaneously when their total memory consumption exceeds the installed main memory capacity?
+
+First, we introduce some terminology. A running program is called a process or a thread. The operating system (OS) controls the processes.
+
+We can use main memory as a "cache" for the secondary memory. Each program is then compiled into its own virtual address space. This approach relies on the principle of locality.
+
+In virtual memory, a virtual address is translated to a physical address during runtime. It enables efficient and safe sharing of memory among multiple programs, the ability to run programs larger than the size of physical memory, and code relocation, meaning that code can be loaded anywhere in main memory.
+
+To share physical memory, a program's address space is divided into pages (fixed size) or segments (variable sizes). The frequently used blocks are copied into the cache.
+
+In Virtual Memory, part of the process(es) are stored temporarily on the hard disk and brought into main memory as needed. This is done automatically by the operating system; the application program does not need to be aware of the existence of virtual memory (VM). The memory management unit (MMU) translates virtual addresses to physical addresses.
+
+In address translation, memory is divided into pages of size ranging from 2KB to 16KB. If the page is too small, too much time is spent getting pages from disk. If the page is too large, a large portion of the page may not be used.
+
+For hard disk, it takes a considerable amount of time to locate data on the disk. But once located, the data can be transferred at a rate of several MB per second.
+
+If pages are too large, it is possible that a substantial portion of a page is not used, but it will occupy valuable space in the main memory.
+
+An area in the main memory that can hold one page is called a page frame. The processor generates virtual addresses. The MS (high-order) bits are the virtual page number, and the LS (low-order) bits are the offset.
+
+Information about where each page is stored is maintained in a data structure in the main memory called the page table. The starting address of the page table is stored in a page table base register. The address in physical memory is obtained by indexing the virtual page number from the page table base register.
