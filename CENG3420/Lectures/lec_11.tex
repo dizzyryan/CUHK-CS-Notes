@@ -3,7 +3,9 @@
 \section{Performance}
 The goal of understanding performance is to identify the factors in the architecture that contribute to overall system performance, as well as the relative importance (and cost) of these factors.
 
-Here, we consider two performance metrics. The first is \textbf{Response Time} (execution time), which is the time between the start and completion of a task. This metric is important to individual users. The second is \textbf{Throughput} (bandwidth), which is the total amount of work done in a given time. This is important to data center managers.
+Here, we consider two performance metrics. 
+
+The first is \textbf{Response Time} (execution time), which is the time between the start and completion of a task. This metric is important to individual users. The second is \textbf{Throughput} (bandwidth), which is the total amount of work done in a given time. This is important to data center managers.
 
 To maximize performance, we need to minimize the execution time.
 \[
@@ -15,9 +17,12 @@ If \(X\) is \(n\) times faster than \(Y\), then
   \dfrac{\text{performance}_X}{\text{performance}_Y} = \dfrac{\text{execution time}_Y}{\text{execution time}_X} = n
 \]
 
+Notice that decreasing response time almost always improves throughput.
+
+\section{Performance Factors}
 There are several performance factors that need to be considered. The CPU execution time (CPU time) is the time that the CPU spends working on a task. It doesn't include the time spent waiting for I/O or running other programs.
 \[
-  \text{CPU execution time} = \text{number of CPU clock cycles} \times \text{clock cycle time} = \dfrac{\text{number of CPU clock cycles}}{\text{clock rate}}
+  \text{CPU execution time} = \text{\# CPU clock cycles} \times \text{clock cycle time} = \dfrac{\text{\# CPU clock cycles}}{\text{clock rate}}
 \]
 
 Then, we can improve performance by reducing the length of the clock cycle or the number of clock cycles required for a program.
@@ -31,7 +36,7 @@ Then, we can improve performance by reducing the length of the clock cycle or th
 
 However, note that not all instructions take the same amount of time to execute. One way to think about execution time is that it equals the number of instructions executed multiplied by the average time per instruction.
 \[
-  \text{CPU clock cycles} = \text{number of instructions} \times \text{clock cycles per instruction}
+  \text{CPU clock cycles} = \text{\# instructions} \times \text{clock cycles per instruction}
 \]
 
 The average number of clock cycles each instruction takes to execute is the clock cycles per instruction. This is a way to compare two implementations of the same ISA.
@@ -46,19 +51,19 @@ Computing the overall effective CPI is done by considering the different types o
 
 We also have a basic performance equation:
 \[
-  \text{CPU time} = \text{Instruction count} \times \text{CPI} \times \text{clock cycle time}
-\]
-\[
-  \text{CPU time} = \dfrac{\text{Instruction count} \times \text{CPI}}{\text{clock rate}}
+\begin{aligned}
+  \text{CPU time} &= \text{Instruction count} \times \text{CPI} \times \text{clock cycle time} \\
+  &= \dfrac{\text{Instruction count} \times \text{CPI}}{\text{clock rate}}
+\end{aligned}
 \]
 Here, the instruction count can be measured using profilers or simulators without knowing all of the implementation details. The CPI again varies by instruction type and ISA implementation, for which we must know the implementation details. The clock rate is usually given.
 
 \section{Workloads and Benchmarks}
-A set of programs that form a "workload" specifically chosen to measure performance is called a benchmark. The SPEC (System Performance Evaluation Cooperative) creates standard sets of benchmarks, starting with SPEC89.
+A set of programs that form a \textit{workload} specifically chosen to measure performance is called a benchmark. The SPEC (System Performance Evaluation Cooperative) creates standard sets of benchmarks, starting with SPEC89.
 
 To summarize the performance with a single number, we can use the SPEC ratio. They are averaged using the geometric mean (GM): 
 \[
   \text{GM} = n \cdot \sqrt{\sum_{i = 1}^n \text{SPEC ratio}_i} 
 \]
 
-There are also other performance metrics. For example, we can use power consumption, especially in the embedded market where battery life is important. However, for power-limited applications, the most important metric is energy efficiency.
+There are  other performance metrics. For example, we can use power consumption, especially in the embedded market where battery life is important. However, for power-limited applications, the most important metric is energy efficiency.
