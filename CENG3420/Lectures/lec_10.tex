@@ -13,7 +13,7 @@ The first type is the Read After Write (RAW) data hazard. This occurs when an in
   \includegraphics[width=0.8\textwidth]{Figure/pipeline_raw.png}
 \end{center}
 
-The second type is the Load-Use data hazard. This occurs when an instruction needs to use data that is being loaded from memory by a previous instruction, but the load (\verb|lw|) operation will only complete at the final pipeline stage. As shown below, the \verb|sub| instruction depends on the result of the \verb|lw| instruction, leading to a data hazard.
+The second type is the Load-Use data hazard. This occurs when an instruction needs to use data that is being loaded from memory by a previous instruction, but the load (\verb|lw|) operation will only complete at the final pipeline stage. As shown below, the \verb|and| instruction depends on the result of the \verb|lw| instruction, leading to a data hazard.
 
 \begin{center}
   \includegraphics[width=0.8\textwidth]{Figure/pipeline_load_use.png}
@@ -21,7 +21,7 @@ The second type is the Load-Use data hazard. This occurs when an instruction nee
 
 To solve this problem, there are two main methods:
 
-1. Insert NOP / Stall
+1. Insert NOP (no operation) / Stall
 
 One method is to insert NOPs or stall by waiting for the preceding instruction to complete. This can resolve the hazard, but it reduces the overall CPI (Cycles Per Instruction), which is not desirable.
 
@@ -47,6 +47,12 @@ As mentioned before, the combination of stalling and forwarding is required for 
   \includegraphics[width=\textwidth]{Figure/pipeline_stall_forw_2.png}
 \end{center}
 
+As shown in the diagram, data will only be written to the register at the \verb|REG| stage. We cannot do data forwarding directly, since the register read process occurs earlier than the register write in the pipeline. Thus, we need to stall one instruction. After that, we can perform data forwarding directly. 
+
+Note that we prefer the data from the newer instruction; thus, it is sometimes necessary to add a stall to avoid forwarding the outdated data.
+
+For the \verb|or| instruction, it works fine since the register reading and writing are done simultaneously.
+
 \section{Control Hazards}
 The next type is the control hazard. Control hazards occur when the flow of instruction addresses is not sequential, arising from the need to make a decision based on the results of one instruction while others are still executing. They happen due to changes in the flow of instructions, such as:
 
@@ -56,65 +62,70 @@ The next type is the control hazard. Control hazards occur when the flow of inst
 
 3. Exceptions
 
-\subsection{Pipeline Stalls}
+Again, to put it simply, this happens because we cannot determine whether to proceed with the next instruction after a branch instruction. This is due to the fact that the branch condition may or may not be satisfied, potentially resulting in a jump to a different instruction.
+
+However, control hazards occur less frequently than data hazards, and there is nothing as effective against control hazards as forwarding is against data hazards. Therefore, we will take a look on a few possible strategies. 
+
 Control hazards can be mitigated by stalling, moving the decision point as early as possible in the pipeline, delaying the decision, or using prediction techniques.
 
-However, control hazards occur less frequently than data hazards, and there is nothing as effective against control hazards as forwarding is against data hazards.
-
+\subsection{Pipeline Stalls}
 First, we can take a look at how control hazards occur.
 
 In jump instructions, the instruction is not decoded until the ID stage. This means that the pipeline might execute sequential instructions before determining whether the jump is taken, causing incorrect instructions to be processed due to the pipeline's nature. This results in a control hazard, and it's undesirable because the pipeline has already committed to the wrong instructions. We can fix this issue by using a single stall. 
 
 Fortunately, jumps are relatively infrequent, reducing their impact on performance.
 
+However, branches introduce a more complicated case.
+
 For branch instructions, control hazards occur due to the need to resolve the condition (e.g., whether the branch is taken or not) before proceeding with the correct instructions. This delay in knowing the outcome of the branch results in pipeline hazards, often requiring mechanisms like branch prediction to mitigate the impact.
 
-To solve this problem, we can again use stalls. This would easily fix the issue. However, as with data hazards, it still affects the overall CPI.
+To solve this problem, we can again use stalls. By flushing three instructions, we can easily fix the issue. However, as with data hazards, this still affects the overall CPI.
 
 \begin{remark}
-  There are two types of stalls. A \textbf{NOP} instruction is inserted between two instructions in the pipeline. It prevents the instructions earlier in the pipeline from progressing down the pipeline for a cycle. A \textbf{flush} occurs when an instruction in the pipeline is replaced with a NOP instruction.
+  There are two types of stalls. A \textbf{NOP} instruction is inserted between two instructions in the pipeline. It prevents the instructions earlier in the pipeline from progressing down the pipeline for a cycle. A \textbf{flush} discard instructions in a pipeline, usually due to an unexpected event. The key difference is that a \verb|NOP| is determined at the compilation stage, while a flush is determined during runtime.
 \end{remark}
 
 \subsection{Delayed Branching}
-Another method to solve this problem is by moving the branch decision hardware as early in the pipeline as possible, i.e., during the decode cycle. This will help reduce the delay of branch instructions.
+Another method to solve this problem is by moving the branch decision hardware as early in the pipeline as possible, i.e., during the decode (\verb|ID|) cycle. This helps reduce the delay caused by branch instructions.
 
-To reduce the stalls, we can move the branch decision hardware back to the EX stage. This would reduce the number of stall cycles to two. Additionally, we can add hardware to compute the branch target address and evaluate the branch decision during the ID stage.
+To reduce stalls, we can move the branch decision hardware back to the execute (\verb|EX|) stage, which reduces the number of stall cycles to two.
 
-If the branch hardware is moved to the ID stage, we can eliminate all branch stalls with delayed branches. Delayed branches are defined as always executing the next sequential instruction after the branch instruction — the branch takes effect after that next instruction.
+Additionally, we can add hardware to compute the branch target address and evaluate the branch decision during the \verb|ID| stage. This will reduce the number of stalls to one. The branch target computation can be done in parallel with register file read.
 
-- The compiler moves an instruction that is not affected by the branch (a safe instruction) immediately after the branch, thereby hiding the branch delay.
+Notice that if there is an instruction right before a branch that produces one of the branch source operands, then a stall must be inserted. This is because the \texttt{EX} stage ALU operation is occurring at the same time as the \texttt{ID} stage branch compare operation.
 
-- With deeper pipelines, the branch delay grows, requiring more than one delay slot.
+If the branch hardware is moved to the \texttt{ID} stage, we can eliminate all branch stalls using delayed branches. Delayed branches are defined as always executing the next sequential instruction after the branch instruction — the branch takes effect only after that instruction.
 
+To achieve this, the compiler moves an instruction that is not affected by the branch (a safe instruction) immediately after the branch, thereby hiding the branch delay. With deeper pipelines, the branch delay increases, potentially requiring more than one delay slot.
 
-- Delayed branches have lost popularity compared to more expensive but more flexible (dynamic) hardware branch prediction.
+For the compiler or software, we can schedule the branch delay slots as shown below.
 
-- The growth in available transistors has made hardware branch prediction relatively cheaper.
-
-For the compiler or software, we can schedule the branch delay slots as shown below. 
-
-Here, (a) is the best choice, as it fills the delay slot with the instruction, which reduces the IC (Instructions Count). In (b) and (c), the subtraction instruction may need to be duplicated, which increases the IC. However, they must be able to execute the subtraction when the branch fails.
+Here, (a) is the best choice, as it fills the delay slot with an instruction, which reduces the instruction count (IC). In (b) and (c), the subtraction instruction may need to be duplicated, increasing the IC. However, they still must be able to execute the subtraction if the branch is not taken.
 
 \begin{center}
   \includegraphics[width=0.7\textwidth]{Figure/branch_delay_schedule.png}
 \end{center}
 
+\begin{remark}
+  A \textbf{branch delay slot} is the slot directly after a delayed branch instruction. In the MIPS architecture, it is filled by an instruction that does not affect the branch.
+\end{remark}
+
 \subsection{Branch Prediction}
-We can also use branch prediction to resolve the branch delay by assuming a given outcome and proceeding without waiting to see the actual branch outcome.
+We can also use \textbf{branch prediction} to resolve the branch delay by assuming a given outcome and proceeding without waiting for the actual branch result. Although branch prediction is more expensive than using delayed branching, the increasing number of available transistors has made it a more feasible and cost-effective solution in modern processors.
 
 \subsubsection*{Static Branch Prediction}
-One prediction we can make is "branch not taken". In this case, we always predict that branches will not be taken and continue fetching from the sequential instruction stream. Only when the branch is taken does the pipeline stall. If it is taken, we flush the instructions after the branch and restart the pipeline at the branch destination.
+One prediction we can make is \textit{branch not taken}. In this case, we always predict that branches will not be taken and continue fetching from the sequential instruction stream. Only when the branch is taken does the pipeline stall. If it is taken (the prediction is wrong), we flush the instructions after the branch and restart the pipeline at the branch destination.
 
-"Predict not taken" works well for "top of the loop" branching structures, but such loops have jumps at the bottom to return to the top, incurring the jump stall overhead. Additionally, prediction "not taken" does not work well for "bottom of the loop" branching structures.
+\textit{Predict not taken} works well for \textit{top of the loop} branching structures, but such loops have jumps at the bottom to return to the top, incurring the jump stall overhead. Additionally, prediction \textit{not taken} does not work well for \textit{bottom of the loop} (do-while loop) branching structures.
 
-Another prediction we could make is "branch taken." This always incurs one stall cycle. As the branch penalty increases, a simple static prediction scheme will hurt performance. With more hardware, it is possible to predict branch behavior dynamically during program execution.
+Another prediction we could make is \textit{branch taken}. This always incurs one stall cycle. As the branch penalty increases, a simple static prediction scheme will hurt performance. With more hardware, it is possible to predict branch behavior dynamically during program execution.
 
 \subsubsection*{Dynamic Branch Prediction}
 We can also use dynamic branch prediction, where we predict branches at run-time using run-time information. This uses historical information to make more accurate predictions.
 
 A branch prediction buffer (also known as a Branch History Table (BHT)) in the IF stage is addressed by the lower bits of the PC. It contains a bit (or bits) passed to the ID stage through the IF/ID pipeline register, indicating whether the branch was taken the last time it was executed.
 
-The prediction bit may be incorrect (it could be a wrong prediction for this branch iteration or from a different branch with the same low-order PC bits), but this does not affect correctness—only performance.
+The prediction bit may be incorrect (it could be a wrong prediction for this branch iteration or from a different branch with the same low-order PC bits), but this does not affect correctness, only performance.
 
 The branch decision occurs in the ID stage after determining that the fetched instruction is a branch and checking the prediction bit(s).
 
@@ -122,11 +133,13 @@ If the prediction is wrong, we flush the incorrect instruction(s) in the pipelin
 
 If the prediction is correct, stalls can be avoided no matter which direction they go.
 
-We also have two types of predictor. 
+We also need a \textbf{Branch Target Buffer (BTB)}, which caches the target addresses of previously executed branch instructions.
+
+We have two types of predictor. 
 
 A 1-bit predictor will be incorrect twice when not taken:
 \begin{itemize}
-  \item Assume \texttt{predict bit} = 0 to start (indicating branch not taken) and loop control is at the bottom of the loop code.
+  \item Assume \texttt{predict bit} = 0 to start (branch not taken) and loop control is at the bottom of the loop code.
   \item The first time through the loop, the predictor mispredicts the branch since the branch is taken back to the top of the loop. The prediction bit is inverted (\texttt{predict bit} = 1).
   \item As long as the branch is taken (looping), the prediction is correct.
   \item Exiting the loop, the predictor again mispredicts the branch, since this time the branch is not taken (falling out of the loop). The prediction bit is inverted (\texttt{predict bit} = 0).
@@ -137,6 +150,7 @@ A 2-bit scheme can give 90\% accuracy since a prediction must be wrong twice bef
 \begin{center}
   \includegraphics[width=0.5\textwidth]{Figure/branch_prediction.png}
 \end{center}
+\newpage
 
 \section{Exceptions}
 Exceptions (also known as interrupts) are just another form of control hazard. Exceptions arise from:
@@ -157,3 +171,5 @@ The second type is Traps, which are synchronous to program execution. These are 
 To put it simply, it's just a bug occurring in the code, and the compiler aborts. Traps are exceptions like division by zero, accessing invalid memory, etc., which are called synchronous. Interrupts are external events, like network devices needing attention, or pressing keyboard while compiling.
 
 Notice that multiple exceptions can occur simultaneously in a single clock cycle.
+
+In pipelined execution, arithmetic overflow (in the \verb|EX| stage), undefined instruction (in the \verb|ID| stage), and page fault (in the \verb|IF| or \verb|MEM| stage) are examples of \textbf{synchronous exceptions}, while I/O service requests and hardware malfunctions can occur in any stage and are classified as \textbf{asynchronous exceptions}.
