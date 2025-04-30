@@ -7,13 +7,20 @@ Cache-Main Memory mapping is a way to record which part of the Main Memory is cu
 
 Then, we must answer two questions: how do we know if a data item is in the cache? If it is, how do we find it?
 
-Cache size is much smaller than the Main Memory size. Thus, a block in the Main Memory maps to a block in the Cache, which is called the many-to-one mapping.
+Cache size is much smaller than the main memory size. Thus, a block in the main memory maps to a block in the cache, where both are constructed from many blocks. Since the number of blocks in the cache is smaller than in the main memory, this relationship is called a \textbf{many-to-one mapping}.
 
 \section{Direct Mapping}
-As mentioned in previous chapters, the Main Memory address takes up 16 bits. It is divided into three fields. The first field is the Cache tag, which occupies 5 bits. The second field is the Cache Block Number, which takes up 7 bits. The last field is the Byte Address within the block, which takes up 4 bits.
+One way to perform the mapping is called \textbf{direct mapping}. Here, we consider a main memory address that is 16 bits wide. It is divided into three fields:
+\begin{itemize}
+  \item \textbf{Cache tag}: occupies 5 bits (values from 0 to 31)
+  \item \textbf{Cache block number}: occupies 7 bits (values from 0 to 127)
+  \item \textbf{Byte address within the block}: occupies 4 bits
+\end{itemize}
+
+Thus, there are in total \(2^4 = 16\) bytes in a block, \(2^7 = 128\) Cache blocks, and \(2^{(7 + 5)} = 4096\) Main Memory blocks.
 
 \begin{minipage}{0.45\textwidth}
-The Cache tag is used to track which \textbf{specific} block from Main Memory is stored in the cache. This is important because many Main Memory blocks can map to the same position in the cache. The Cache Block Number determines the position of the block in the cache, which is used to identify where the block is placed.
+The \textbf{Cache tag} is used to identify which \textbf{specific} block from main memory is currently stored in the cache. This is important because many main memory blocks can map to the same position in the cache. The \textbf{Cache Block Number} determines the location of the block in the cache and is used to index the cache. The last few bits of the address select the target word within the block.
 \end{minipage}\quad
 \begin{minipage}{0.5\textwidth}
   \begin{center}
@@ -21,15 +28,15 @@ The Cache tag is used to track which \textbf{specific} block from Main Memory is
   \end{center}
 \end{minipage}
 
-Thus, there are in total \(2^4 = 16\) bytes in a block, \(2^7 = 128\) Cache blocks, and \(2^{(7 + 5)} = 4096\) Main Memory blocks.
-
 For example, for a block \(j\) of Main Memory, it maps to Block \((j \mod 128)\) of the Cache. A cache hit occurs if the tag matches the desired address. 
+
+One way to understand this is by using a \textbf{hash table} analogy. Many values can hash to the same index. If the desired value is found in the corresponding cache block, it is considered a \textbf{hit}; otherwise, it is a \textbf{miss}.
 
 For a given address \verb|t, b, w|, we can check if it is already in cache by comparing \verb|t| with the tag in block \verb|b|. If the tags do not match, it results in a cache miss. In that case, we replace the current block at \verb|b| with a new one from Memory block \verb|t, b|.
 
 For example, if the CPU is looking for \verb|A7B4|, where MAR = \verb|1010011110110100|, it goes to cache block \verb|1111011| and checks if the tag is \verb|10100|. If so, it's a cache hit. Otherwise, the block is fetched into cache row \verb|1111011|.
 
-In direct mapping, a block in main memory is always mapped to the same cache location. If there is a conflict in address, at most one, and only one, of them can be mapped to the cache. If a cache block is not mapped, its \texttt{valid} bit is set to 0.
+In direct mapping, a block in main memory is always mapped to the same cache location. If there is a conflict in address, at most one of them can be mapped to the cache. If a cache block is not mapped, its \texttt{valid} bit is set to 0.
 
 The number of bits includes both the storage for data and for the tags. For a direct-mapped cache with \(2^n\) blocks, \(n\) bits are used for the index. For a block size of \(2^m\) words (\(2^{m+2}\) bytes), \(m\) bits are used to address the word within the block.
 
@@ -44,8 +51,19 @@ The total number of bits in a direct-mapped cache is:
   2^n \times (\text{block size} + \text{tag field size} + \text{valid field size})
 \]
 
+The \textbf{Cache tag} is used to identify which \textbf{specific} block from main memory is currently stored in the cache. This is important because many main memory blocks can map to the same position in the cache. The \textbf{Cache Block Number} determines the location of the block in the cache and is used to index the cache. The last few bits of the address select the target word within the block.
+
+Then, for the total number of bits in a direct-mapped cache, we have
+\[
+  2^{10} \times (4 \times 32 + (32 - 10 - 2 - 2) + 1) = 147\,\text{Kbits}
+\]
+
+\begin{remark}
+  1 word = 4 bytes = 32 bits
+\end{remark}
+
 \section{Associative Mapping}
-A Main Memory block can be in an arbitrary Cache block location. For example, we can divide the field into two parts, with the tag occupying 12 bits, and the byte address occupying 4 bits. Then, all 128 tag entries must be compared with the address tag in parallel.
+A Main Memory block can also be in an arbitrary Cache block location. For example, we can divide the 16-bit main memory address into two parts, with the tag occupying 12 bits, and the byte address occupying 4 bits. Then, all 128 tag entries must be compared with the address tag in parallel.
 
 For example, if the CPU is looking for \verb|A7B4|, where MAR = \verb|1010011110110100|, it will check if the tag \verb|101001111011| matches one of the 128 cache tags. If yes, then it's a cache hit. Otherwise, we will load the block into the BINGO cache row.
 
@@ -64,7 +82,11 @@ Here, we consider only the case when cache write hits. There are two cases:
 
 The first one is \textbf{write-through}, where the cache and memory must remain consistent, and we always write the data into both the cache block and the next level in the memory hierarchy. We can use a write-buffer and stall only when the buffer is full to speed up the process. Notice that memory updates can be handled by the buffer, which operates independently of the processor pipeline.
 
-Another case is \textbf{write-back}. In this method, we write the data only into the cache block, and update the memory hierarchy only when that cache block is \textit{evicted}. Thus, we need a \textbf{dirty bit} for each data cache block.
+Another case is \textbf{write-back}. In this method, we write the data only into the cache block, and update the memory hierarchy only when that cache block is \textit{evicted} (replaced). Thus, we need a \textbf{dirty bit} for each data cache block.
+
+\begin{remark}
+  A \textbf{dirty bit} is a flag used in cache memory management to track whether the data in a cache block has been modified (written to) since it was last loaded from main memory.
+\end{remark}
 
 Here we return to the mapping techniques discussed in the previous sections. For \textbf{direct mapping}, the position of each block is fixed. Whenever replacement is needed (i.e., a cache miss leading to a new block being loaded), the choice is obvious, and thus no replacement algorithm is needed.
 
