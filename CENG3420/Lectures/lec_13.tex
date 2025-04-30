@@ -42,7 +42,7 @@ The number of bits includes both the storage for data and for the tags. For a di
 
 2 bits are used to address the byte within the word.
 
-We can also calculate the size of the tag field as follows:
+We can also calculate the size of the tag field as follows (for the case that it uses a 32-bit address):
 \[
   \text{Tag size} = 32 - (n + m + 2)
 \]
