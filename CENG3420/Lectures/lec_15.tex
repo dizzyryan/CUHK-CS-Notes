@@ -1,10 +1,11 @@
 \chapter{Virtual Memory}
 
-Physical memory may not be as large as the "possible address space" spanned by a processor. For example, a processor can address 4 GB with a 32-bit address. However, the installed main memory may only be 1 GB. How can we run many programs simultaneously when their total memory consumption exceeds the installed main memory capacity?
-
+\section{Overview}
 First, we introduce some terminology. A running program is called a process or a thread. The operating system (OS) controls the processes.
 
-We can use main memory as a "cache" for the secondary memory. Each program is then compiled into its own virtual address space. This approach relies on the principle of locality.
+Physical memory may not be as large as the ``possible address space'' spanned by a processor. For example, a processor can address 4 GB with a 32-bit address. However, the installed main memory may only be 1 GB. How can we run many programs simultaneously when their total memory consumption exceeds the installed main memory capacity?
+
+We can use main memory as a ``cache'' for the secondary memory. Each program is then compiled into its own virtual address space. This approach relies on the principle of locality.
 
 In virtual memory, a virtual address is translated to a physical address during runtime. It enables efficient and safe sharing of memory among multiple programs, the ability to run programs larger than the size of physical memory, and code relocation, meaning that code can be loaded anywhere in main memory.
 
@@ -12,12 +13,50 @@ To share physical memory, a program's address space is divided into pages (fixed
 
 In Virtual Memory, part of the process(es) are stored temporarily on the hard disk and brought into main memory as needed. This is done automatically by the operating system; the application program does not need to be aware of the existence of virtual memory (VM). The memory management unit (MMU) translates virtual addresses to physical addresses.
 
-In address translation, memory is divided into pages of size ranging from 2KB to 16KB. If the page is too small, too much time is spent getting pages from disk. If the page is too large, a large portion of the page may not be used.
+\section{Virtual Memory}
+In address translation, memory is divided into pages of size ranging from 2 KB to 16 KB. If the page is too small, too much time is spent getting pages from disk. If the page is too large, a large portion of the page may not be used, but it will occupy valuable space in the main memory. This is similar to the issue we face when dealing with cache block size. 
 
 For hard disk, it takes a considerable amount of time to locate data on the disk. But once located, the data can be transferred at a rate of several MB per second.
 
-If pages are too large, it is possible that a substantial portion of a page is not used, but it will occupy valuable space in the main memory.
-
 An area in the main memory that can hold one page is called a page frame. The processor generates virtual addresses. The MS (high-order) bits are the virtual page number, and the LS (low-order) bits are the offset.
 
-Information about where each page is stored is maintained in a data structure in the main memory called the page table. The starting address of the page table is stored in a page table base register. The address in physical memory is obtained by indexing the virtual page number from the page table base register.
+Information about where each page is stored is maintained in a data structure in the main memory called the \textbf{page table}. The starting address of the page table is stored in a page table base register. The address in physical memory is obtained by indexing the virtual page number from the page table base register. 
+
+By a combination of hardware and software, we can translate a virtual address into a physical address. For each memory request, the first step is address translation. As mentioned before, a virtual address consists of a \textbf{virtual page number (VPN)} and a \textbf{page offset}. The virtual page number is translated into a \textbf{physical page number (PPN)}, while the offset remains unchanged.
+
+To perform this translation, we use the \textbf{page table}, which stores the mapping between virtual and physical pages. The page table is typically stored in \textbf{main memory}. However, the use of a page table to translate addresses introduces one extra memory access. Thus, recent translations may be cached in the \textbf{Translation Lookaside Buffer (TLB)} for faster access.
+
+This is a small cache that keeps track of recently used address mappings. Since it avoids accessing the slower main memory, it speeds up the address translation process. However, on a TLB miss, the system still needs to access the page table in main memory to perform the translation. The number of memory accesses ranges from 0 (if the translation is already cached in the TLB and the data is also in cache) to 2 (one for the page table lookup and one for the actual memory access).
+
+In the TLB, there is a dirty bit, which indicates whether the page has been written to, and a reference bit, which indicates whether a page has been accessed.
+
+If the required page is not in main memory (a \textbf{page fault} occurs), the operating system loads the required page from \textbf{secondary storage (disk)} into RAM and updates the page table accordingly.
+
+Moreover, in the TLB, the organization can be fully associative, set-associative, or direct-mapped. The access time is faster than that of the cache due to its smaller size.
+
+There are a few combinations: 
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c}
+      \toprule
+      TLB & Page Table & Cache & Possibility  \\
+    \midrule
+      Hit & Hit & Hit & Best case  \\
+      Hit & Hit & Miss & Page table won't be checked  \\
+      Miss & Hit & Hit & TLB miss, handled by Page table  \\
+      Miss & Hit & Miss & TLB miss, handled by Page table, while data not found  \\
+      Miss & Miss & Miss & Page fault  \\
+      Hit & Miss & Miss / Hit & TLB translation is not possible if page is not in memory  \\
+      Miss & Miss & Hit & Data is not allowed in cache if page is not in memory  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{remark}
+  We do not access cache using virtual addresses because two programs may share data with different virtual addresses but the same physical address.
+\end{remark}
+
+In the virtual memory address, the high-order bits are used to access the TLB, while the low-order bits are used as the index into the cache. The set number is in the page offset. Therefore, before we perform the translation using the page table, we can locate one set in the cache. Cache access and address translation can be carried out at the same time.
+
+Notice that the TLB, which caches recent translations, is managed by hardware. Its access time is part of the cache hit time, and it may require an additional stage in the pipeline. The page table stores fault detection and updates, which are handled by both hardware and software: the dirty bit and reference bit are maintained by hardware, while page faults result in interrupts that are handled by software. Finally, disk placement is managed by software.
