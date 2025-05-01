@@ -80,7 +80,7 @@ When finding a block in the cache, if there is a read hit, that is desirable. Ho
 
 Here, we consider only the case when cache write hits. There are two cases:
 
-The first one is \textbf{write-through}, where the cache and memory must remain consistent, and we always write the data into both the cache block and the next level in the memory hierarchy. We can use a write-buffer and stall only when the buffer is full to speed up the process. Notice that memory updates can be handled by the buffer, which operates independently of the processor pipeline.
+The first one is \textbf{write-through}, where the cache and memory must remain consistent, and we always write the data into both the cache block and the next level in the memory hierarchy. We can use a write-buffer and stall only when the buffer is full to speed up the process. Notice that memory updates can be handled by the buffer, which operates independently of the processor pipeline. This method is easier to implement. Notice that read misses don't result in writes. 
 
 Another case is \textbf{write-back}. In this method, we write the data only into the cache block, and update the memory hierarchy only when that cache block is \textit{evicted} (replaced). Thus, we need a \textbf{dirty bit} for each data cache block.
 
