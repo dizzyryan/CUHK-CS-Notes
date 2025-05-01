@@ -1,1 +1,210 @@
 \section{More on Cache}
+In this section, we take a look on three examples. 
+
+\begin{eg}[Example 1 - Analysis]
+Consider the following code. 
+
+\begin{verbatim}
+  short A[10][4];
+  int sum = 0;
+  int j, i;
+  double mean;
+
+  for (j = 0; j <= 9; j++)  // forward loop
+    sum += A[j][0];
+  mean = sum / 10.0;
+  for (i = 9; i >= 0; i--)  // backward loop
+    A[i][0] = A[i][0]/mean;
+\end{verbatim}
+
+Here we consider only the data, with the cache having space for 8 blocks. \verb|A[10][4]| is an array of words located at addresses \verb|7A00 - 7A27| in row-major order.
+
+With direct mapping, after the first loop loads data into the cache, we will only have two hits since all data in the first loop maps to block 0 and block 4, leading to constant replacements in the cache.
+
+We can use associative mapping, where we apply the LRU (Least Recently Used) replacement rule. In this case, all the blocks in the cache will be utilized, and we will have cache hits for \(i = 9, 8, \dots, 2\). However, if the second loop is also a forward loop, there will be no hits.
+
+Another mapping technique we can use is set-associative mapping. However, all the accessed blocks have even addresses, leading to a situation where only half of the cache blocks will be used. We again use the LRU rule for replacement, and only \(i = 9, 8, 7, 6\) will result in cache hits. Again, if it is a forward loop, there will be no hits. Thus, in this case, random replacement would yield better average performance.
+\end{eg}
+
+In this example, associative mapping performs the best. However, in practice, it is rare for such low hit rates to occur. Typically, set-associative mapping with an LRU replacement scheme is used.
+
+\begin{eg}[Total Bits Calculation]
+How many total bits are required for a direct-mapped cache with 16 KiB of data and 4-word blocks, assuming a 32-bit address? What about an associative-mapped cache?
+
+1. Direct Mapping 
+
+For a direct-mapped cache with 16 KiB of data and 4-word blocks, we have \( \frac{16}{4 \times 4} = 1 \) K blocks (1024 blocks).
+
+Using the formula as before, we have 
+\[
+\begin{aligned}
+  \text{Total number of bits} &= 2^n \times (\text{block size} + \text{tag field size} + \text{valid field size}) \\
+  &= 2^{10} \times (4 \times 4 \times 8 + (32 - 10 - 2 - 2) + 1) \\
+  &= 2^{10} \times 147 \text{bits} 
+\end{aligned}
+\]
+Thus, the total number of bits in the cache is about \(\frac{147}{32 \times 4} \approx 1.15\) times as many as needed just for the storage of the data.
+
+2. Associative Mapping
+
+Again, for a cache with 16 KiB of data and 4-word blocks, we have \( \frac{16}{4 \times 4} = 1 \) K blocks (1024 blocks).
+Using the formula as before, we have 
+\[
+\begin{aligned}
+  \text{Total number of bits} &= 2^n \times (\text{block size} + \text{tag field size} + \text{valid field size}) \\
+  &= 2^{10} \times (4 \times 4 \times 8 + (32 - 2 - 2) \text{ (without block ID)} + 1)\\
+  &= 2^{10} \times 157 \text{bits} 
+\end{aligned}
+\] 
+Thus, the total number of bits in the cache is about \(\frac{157}{32 \times 4} \approx 1.27\) times as many as needed just for the storage of the data.
+\end{eg}
+
+\begin{eg}
+We have designed a 64-bit address direct-mapped cache, and the bits of the address used to access the cache are shown below: 
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c}
+      \toprule
+      Tag & Index & Offset  \\
+    \midrule
+      63-10 & 9-5 & 4-0  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+1. What is the block size of the cache in words? 
+
+\textbf{Solution:} Since the offset is 5 bits, the block size = \(2^5 = 32\) bytes. 
+
+Thus, the block size in words is \(32 / 8 = 4\) words. 
+
+2. Find the ratio between total bits required for such a cache design implementation over the data storage bits.
+
+\textbf{Solution:} Since the index is 5 bits, we have \(2^5 = 32\)blocks. 
+
+Thus, the cache stores \(32 \times 4 \times 8 \times 8 = 8192\) bits. 
+
+Since each line contains 54 bits of tag and 1 bit of valid bit, the total bits required is \(8192 + 54 \times 32 + 1 \times 32 = 9952\) bits.
+
+3. Beginning from power-on, the following byte-addressed cache references are recorded as shown below. Find the hit ratio.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c|c}
+      \toprule
+      Hex  & 00 & 04 & 10 & 84 & E8 & A0 & 400 & 1E & 8C & C1C & B4 & 884  \\
+    \midrule
+      Dec  & 0 & 4 & 16 & 132 & 232 & 160 & 1024 & 30 & 140 & 3100 & 180 & 2180  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Solution:} 
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c|c|c}
+      \toprule
+      Byte Address & Binary Address & Tag & Index & Offset & Hit / Miss  \\
+    \midrule
+      \verb|0X00| & \verb|0000 0000 0000| & \verb|00| & \verb|00000| & \verb|00000| & M  \\
+      \verb|0X04| & \verb|0000 0000 0100| & \verb|00| & \verb|00000| & \verb|00100| & H  \\
+      \verb|0X10| & \verb|0000 0001 0000| & \verb|00| & \verb|00000| & \verb|10000| & H  \\
+      \verb|0X84| & \verb|0000 1000 0100| & \verb|00| & \verb|00100| & \verb|00100| & M  \\
+      \verb|0XE8| & \verb|0000 1110 1000| & \verb|00| & \verb|00111| & \verb|01000| & M  \\
+      \verb|0XA0| & \verb|0000 1010 0000| & \verb|00| & \verb|00101| & \verb|00000| & M  \\
+      \verb|0X400| & \verb|0100 0000 0000| & \verb|01| & \verb|00000| & \verb|00000| & M  \\
+      \verb|0X1E| & \verb|0000 0001 1110| & \verb|00| & \verb|00000| & \verb|11110| & M  \\
+      \verb|0X8C| & \verb|0000 1000 1100| & \verb|00| & \verb|00100| & \verb|01100| & H  \\
+      \verb|0XC1C| & \verb|1100 0001 1100| & \verb|11| & \verb|00000| & \verb|11100| & M  \\
+      \verb|0XB4| & \verb|0000 1011 0100| & \verb|00| & \verb|00101| & \verb|10100| & H  \\
+      \verb|0X884| & \verb|1000 1000 0100| & \verb|10| & \verb|00100| & \verb|00100| & M  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+Thus, the hit ratio is \(\frac{4}{12} \times 100\% = 33\%\). 
+\end{eg}
+
+\section{Performance}
+We summarize a bit about where a block is placed in the upper level and how it can be found.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c}
+      \toprule
+      Scheme name & Number of sets & Blocks per set  \\
+    \midrule
+      Direct mapping & \# of blocks & 1  \\
+      Set associative & \(\frac{\text{\# of blocks}}{\text{Associativity}}\) & Associativity  \\
+      Fully associative & 1 & \# of blocks  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c}
+      \toprule
+      Scheme name & Location method & \# of comparisons  \\
+    \midrule
+      Direct mapping & Index & 1  \\
+      Set associative & Index the set; compare its tag & Degree of associativity  \\
+      Fully associative & Compare all tags & \# of blocks  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+When a cache miss happens, for direct mapping, we have only one choice. However, for set-associative or fully associative caches, the choice is either random or follows the LRU rule. For higher levels of associativity, however, LRU is too costly.
+
+Now, we consider the performance for different settings. Performance tells us how fast machine instructions can be brought into the processor and how fast they can be executed. Two key factors are performance and cost.
+
+However, for a hierarchical memory system with cache, the processor is able to access instructions and data more quickly when the data needed are in the cache. Therefore, the impact of a cache on performance depends on the hit and miss rates.
+
+A high hit rate of over 0.9 is essential for high-performance computers. A penalty is incurred because extra time is needed to bring a block of data from a slower unit to a faster one in the hierarchy. During this time, the processor is stalled. The waiting time depends on the details of the cache operation.
+
+\begin{remark}
+  Miss Penalty refers to the total access time experienced by the processor when a miss occurs.
+\end{remark}
+
+For example, consider a computer where the access times to the cache and the main memory are \(t\) and \(10t\), respectively. When a cache miss occurs, a block of 8 words is transferred from the main memory to the cache. It takes \(10t\) to transfer the first word of the block, and the remaining 7 words are transferred at a rate of one word per \(t\) seconds.
+
+The miss penalty then becomes:
+\[
+t + 10t + 7t + t = 19t
+\]
+Here, the first \(t\) is the initial cache access that results in a miss, \(10t\) is the time to transfer the first word from main memory, \(7t\) accounts for the transfer of the remaining 7 words, and the final \(t\) is the time to move the required word from the cache to the processor.
+
+We can use one formula to compute the average memory access time:
+\[
+\text{Average Memory Access Time} = h \times C + (1 - h) \times M
+\]
+where \(h\) is the hit rate, \(C\) is the cache access time, and \(M\) is the miss penalty.
+
+\begin{eg}
+Assume we need 8 cycles to read a single memory word, and 15 cycles to load an 8-word block from main memory. The cache access time is 1 cycle. For every 100 instructions, statistically, 30 instructions are data read or write. For instruction fetch, we assume a 0.95 hit rate for 100 memory accesses. For the 30 memory accesses for data read or write, we assume a hit rate of 0.9.
+
+1. What are the execution cycles without cache?
+
+\textbf{Solution:} 
+\[
+  \text{Execution cycle} = (100 + 30) \times 8 = 1040
+\]
+
+2. What are the execution cycles with cache?
+
+\textbf{Solution:} 
+\[
+  \text{Execution cycle} = 100 \times [0.95 \times 1 + 0.05 \times (1 + 15 + 1)] + 30 \times [0.9 \times 1 + 0.1 \times (1 + 15 + 1)] = 258
+\]  
+\end{eg}
+
+In high-performance processors, two levels of caches are normally used: L1 and L2. L1 must be very fast, as it determines the memory access time seen by the processor. L2 cache can be slower, but it should be much larger than the L1 cache to ensure a high hit rate. Its speed is less critical because it only affects the miss penalty of the L1 cache.
+
+For the average access time in such a system, we have:
+\[
+  h_1 \times C_1 + (1 - h_1) \times \left[h_2 \times C_2 + (1 - h_2) \times M \right]
+\]
+Here, \(h_1\) and \(h_2\) are the hit rates, \(C_1\) is the cache access time, \(C_2\) is the miss penalty to transfer data from L2 cache to L1, and \(M\) is the miss penalty to transfer data from main memory to L2 and then to L1.
+
+Before we talk about the two types of locality, we can first consider spatial locality. If all items in a larger block are needed in a computation, it is better to load these items into the cache in a single miss. However, larger blocks are effective only up to a certain size, beyond which too many items will remain unused before the block is replaced. Larger blocks also take longer to transfer and thus increase the miss penalty. Therefore, block sizes of 16 to 128 bytes are most popular.
+
+The miss rate increases if the block size becomes a significant fraction of the cache size, because the number of blocks that can be held in the same cache is smaller, leading to more capacity misses.
