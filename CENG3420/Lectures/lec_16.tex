@@ -1,1 +1,199 @@
-\chapter{Instruction-Level Parallelism}
+\chapter{Instruction Level Parallelism}
+
+\section{Introduction}
+Here we again introduce some terminology.
+
+We talked about pipeline before, which can be used to improve performance. To further improve performance, we use \textbf{superpipelining}, which increases the depth of the pipeline (breaking each task into smaller pieces) to raise the clock rate. However, adding more stages to the pipeline requires more forwarding or hazard-handling hardware and introduces greater pipeline latch overhead—i.e., the pipeline latch accounts for a larger and larger percentage of the clock cycle time.
+
+Therefore, instead of just one instruction entering the pipeline per cycle, we allow multiple instructions to enter and be processed in parallel. If we fetch and execute more than one instruction at a time by expanding every pipeline stage to accommodate multiple instructions, this is called \textbf{Multiple-Issue}.
+
+Since the instruction execution rate, i.e., cycles per instruction (CPI), can be less than 1 in this case, we instead use \textbf{instructions per cycle (IPC)}. For example, a 3GHz four-way multiple-issue processor can execute at a peak rate of 12 billion instructions per second, with a best-case CPI of 0.24 or a best-case IPC of 4.
+
+Thus, we have \textbf{instruction-level parallelism (ILP)}, which is a measure of the average number of instructions in a program that a processor might be able to execute at the same time. This is mostly determined by the number of true data dependencies and procedural control dependencies in relation to the number of other instructions. 
+
+We also have \textbf{machine parallelism}, which is a measure of the ability of the processor to take advantage of the ILP of the program. This is determined by the number of instructions that can be fetched and executed at the same time.
+
+In short, ILP is about what the program allows, while machine parallelism is about what the machine can do. To achieve high performance, we need both ILP and Machine Parallelism. 
+
+There are two different architectural approaches to exploiting instruction-level parallelism. One is called the \textbf{static multiple-issue processor} (VLIW), where compiler decides which instructions can run in parallel. Another style is the \textbf{dynamic multiple-issue processor} (superscalar), where the hardware (CPU) decides at runtime which instructions can run in parallel.
+
+The static style has a faster runtime, but its performance is limited. For the dynamic style, there is a hardware penalty, and it requires complete knowledge of the program.
+
+\section{Dependencies}
+In chapter 9 and 10, we discuss three types of hazards. Structural hazards are caused by resource conflicts. A superscalar or VLIW processor has a much larger number of potential resource conflicts, where functional units may have to arbitrate for result buses and register-file write ports. However, resource conflicts can be eliminated by duplicating the resource or by pipelining the resource.
+
+The second hazard is data hazards, which are caused by storage dependencies. The limitation is more severe in a superscalar or VLIW processor due to the low ILP.
+
+The last hazard is the control hazard, which is caused by procedural dependencies. This is similar to data hazards, but even more severe. Thus, we need to use dynamic branch prediction to help resolve the ILP issue, which requires the combination of hardware and software.
+
+We first take a look at data hazards.
+
+For data hazards, there are three types. The first one is called \textbf{True Dependency (Read After Write - RAW)}. This happens when a later instruction uses a value that is not yet produced by an earlier instruction. The second one is called \textbf{Anti-dependency (Write After Read - WAR)}. This happens because the later instruction produces a data value that overwrites a data value used as a source in an earlier instruction that will be executed later. The last one is called \textbf{Output Dependency (Write After Write - WAW)}, where two instructions write to the same register or memory location.
+
+
+\begin{remark}~
+
+  \texttt{\textcolor{blue}{R3} := \textcolor{red}{R3} * R5} (RAW: Read After Write);
+  
+  \texttt{R4 := \textcolor{blue}{R3} + 1} (WAR: Write After Read); 
+  
+  \texttt{\textcolor{red}{R3} := R5 + 1} (WAW: Write After Write).
+\end{remark}
+
+For example, in the following instruction sequence:
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+  ADD R1, R2, R1
+  LW  R2, 0(R1)
+  LW  R1, 4(R1)
+  OR  R3, R1, R2
+\end{Verbatim}
+
+There are a few data dependency issues.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c}
+      \toprule
+       & RAW & WAR & WAW  \\
+    \midrule
+      \verb|R1| & \verb|I1 -> I2 ; I1 -> I3; I3 -> I4| & \verb|I1 -> I3 ; I2 -> I3| & \verb|I1 -> I3|  \\
+      \verb|R2| & \verb|I2 -> I4| & \verb|I1 -> I2| & N/A  \\
+      \verb|R3| & N/A & N/A & N/A  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+True dependencies represent the flow of data and information through a program. Antidependencies and output dependencies arise because of the limited number of registers, since programmers reuse registers for different computations, leading to storage conflicts.
+
+Storage conflicts can be reduced by increasing or duplicating the troublesome resources. We can also provide additional registers (in more powerful CPUs) that are used to re-establish the correspondence between registers and values. Alternatively, registers can be allocated dynamically by the hardware in superscalar processors.
+
+Register renaming is also a strategy. The processor renames the original register identifier in the instruction to a new register, which is not part of the visible register set. The hardware that performs renaming assigns a ``replacement'' register from a pool of free registers. It will later be released back to the pool when its value is superseded and there are no outstanding references to it.
+
+For example, we have 
+\begin{verbatim}
+  R3 := R3 * R5               R3b := R3a * R5a
+  R4 := R3 + 1       ==>      R4a := R3b + 1
+  R3 := R5 + 1                R3c := R5a + 1
+\end{verbatim}
+
+To resolve control dependencies, we use speculation, which allows the execution of future instructions that may depend on the speculated instruction. We can speculate on the outcome of a conditional branch (branch prediction) or speculate that a store (for which we don't yet know the address) that precedes a load does not refer to the same address, allowing the load to be scheduled before the store (load speculation).
+
+Thus, we must have hardware and software mechanisms for checking if the guess is correct, and recovering from the effects of the instructions that were executed speculatively if the guess was wrong.
+
+We ignore exceptions caused by speculatively executed instructions until it is clear that they should actually occur.
+
+\section{VLIW}
+Static multiple-issue processors use the compiler to statically decide which instructions to issue and execute simultaneously. We have an \textit{issue packet}, which is the set of instructions that are bundled together and issued in one clock cycle. It can be thought of as one large instruction with multiple operations (thus the name \textbf{Very Long Instruction Word}, or VLIW). 
+
+The mix of instructions in the packet is usually restricted, forming a single ``instruction'' with several predefined fields. The compiler performs static branch prediction and code scheduling to reduce or eliminate hazards.
+
+VLIW processors have multiple functional units, multi-ported register files, and a wide program bus.
+
+For example, consider a 2-issue RISC-V processor with a 2-instruction bundle. Each instruction bundle is now 64 bits, with the first half being an ALU operation or a branch, and the second half being a load or store instruction. Instructions are always fetched, decoded, and issued in pairs. If one instruction of the pair cannot be used, it is replaced with a \texttt{noop}. 
+
+Since there are two instructions issued per cycle, the processor requires four read ports, two write ports, and a separate memory address adder.
+
+To expose ILP, we use (1) instruction scheduling, and (2) loop unrolling.
+
+\textbf{(1) Instruction scheduling }
+
+Consider the following loop code: 
+\begin{verbatim}
+  lp:   lw    $t0, 0($s1)     # $t0=array element
+        addu  $t0, $t0, $s2   # add scalar in $s2
+        sw    $t0, 0($s1)     # store result
+        addi  $s1, $s1, -4    # decrement pointer
+        bne   $s1, $0, lp     # branch if $s1 != 0
+\end{verbatim}
+
+We must schedule the instructions to avoid pipeline stalls. Instructions in one bundle must be independent, and we must separate load-use instructions from their loads by one cycle. Notice that the first two instructions have a load-use dependency; the next two and last two have data dependencies. Here, we assume that branches are perfectly predicted by the hardware. Then we can reschedule the instructions as follows:
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c}
+      \toprule
+       & ALU or branch & Data transfer & CC  \\
+    \midrule
+      \verb|lp:| &  & \verb|lw  $t0, 0($s1)| & 1  \\
+       & \verb|addi  $s1, $s1, -4| &  & 2  \\
+       & \verb|addu  $t0, $t0, $s2| &  & 3  \\
+       & \verb|bne   $s1, $0, lp| & \verb|sw  $t0, 0($s1)| & 4  \\
+       &  &  & 5  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+Here, we can use only four clock cycles to execute five instructions. The CPI is \(4 / 5 = 0.8\), and the IPC is \(5 / 4 = 1.25\). Notice that \verb|noop|s do not count towards performance.
+
+\textbf{(2) Loop Unrolling}
+
+We can also perform loop unrolling, where multiple copies of the loop body are made and instructions from different iterations are scheduled together as a way to increase ILP. After applying loop unrolling, we can schedule the resulting code. This helps to eliminate unnecessary loop overhead instructions, and scheduling helps to avoid load-use hazards. During unrolling, the compiler applies register renaming to eliminate all data dependencies that are not true data dependencies.
+
+For example, consider the following loop: 
+\begin{verbatim}
+  lp: lw    $t0, 0($s1)     # $t0=array element
+      lw    $t1, -4($s1)    # $t1=array element
+      lw    $t2, -8($s1)    # $t2=array element
+      lw    $t3, -12($s1)   # $t3=array element
+      addu  $t0, $t0, $s2   # add scalar in $s2
+      addu  $t1, $t1, $s2   # add scalar in $s2
+      addu  $t2, $t2, $s2   # add scalar in $s2
+      addu  $t3, $t3, $s2   # add scalar in $s2
+      sw    $t0, 0($s1)     # store result
+      sw    $t1, -4($s1)    # store result
+      sw    $t2, -8($s1)    # store result
+      sw    $t3, -12($s1)   # store result
+      addi  $s1, $s1, -16   # decrement pointer
+      bne   $s1, $0, lp     # branch if s1 != 0
+\end{verbatim}
+
+After scheduling and unrolling, we have:
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|l|l|c}
+      \toprule
+       & \qquad ALU or branch &\qquad Data transfer & CC  \\
+    \midrule
+      \verb|lp:| & \verb|addi  $s1, $s1, -16| & \verb|lw   $t0, 0($s1)| & 1  \\
+       &  & \verb|lw   $t1, -4($s1)| & 2  \\
+       & \verb|addu  $t0, $t0, $s2| & \verb|lw   $t2, -8($s1)| & 3  \\
+       & \verb|addu  $t1, $t1, $s2| & \verb|lw   $t3, -12($s1)| & 4  \\
+       & \verb|addu  $t2, $t2, $s2| & \verb|sw   $t0, 0($s1)| & 5  \\
+       & \verb|addu  $t3, $t3, $s2| & \verb|sw   $t1, -4($s1)| & 6  \\
+       &  & \verb|sw   $t2, -8($s1)| & 7  \\
+       & \verb|bne   $s1, $0, lp| & \verb|sw   $t3, -12($s1)| & 8  \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+Here, we use 8 clock cycles to execute 14 instructions. The CPI is \(8 / 14 \approx 0.57\), and the IPC is \(14 / 8 \approx 1.8\).
+
+The compiler also supports VLIW processors. It packs groups of independent instructions into bundles, which is achieved through code reordering. The compiler uses loop unrolling to expose more ILP and applies register renaming to resolve name dependencies and avoid load-use hazards. While superscalar processors rely on dynamic prediction, VLIW processors primarily depend on the compiler for branch prediction. Loop unrolling reduces the number of conditional branches, and predication eliminates if-else branch structures by replacing them with predicated instructions. The compiler also predicts memory bank references to help minimize memory bank conflicts.
+
+\section{Superscalar}
+Dynamic multiple-issue processors use hardware at runtime to dynamically decide which instructions to issue and execute simultaneously. 
+
+We can have \textbf{Instruction Fetch and Issue}, where instructions are fetched, decoded, and issued to a functional unit to wait for execution. We define the \textbf{Instruction Lookahead Capability} as the ability to examine instructions beyond the current one. As soon as the source operands and the functional units are ready, the result can be calculated. We also define the \textbf{Processor Lookahead Capability} as the ability to complete execution of issued instructions beyond the current instruction, i.e., the processor can continue executing later instructions even if earlier ones are not yet finished, as long as it's safe to do so. 
+
+After an instruction is done executing, when it is safe to write back results to the register file or change the machine state, we perform \textbf{Instruction Commit}.
+
+The \textbf{Instruction Fetch and Decode Units} are required to issue instructions in order so that dependencies can be tracked. The \textbf{Commit Unit} is responsible for writing results to registers and memory in the program fetch order.
+
+If exceptions occur, only the registers updated by instructions before the one causing the exception will be modified. If branches are mispredicted, the instructions executed after the mispredicted branch do not change the machine state, since the commit unit ensures that incorrect speculation is corrected.
+
+Although the frontend (fetch, decode, and issue) and backend (commit) of the pipeline run in order, the functional units are free to initiate execution whenever the required data is available. This is known as out-of-order execution. It allows instructions to be executed out of order, thereby increasing the amount of instruction-level parallelism (ILP).
+
+With out-of-order execution, a later instruction may execute before a previous instruction, so the hardware needs to resolve both write-after-read (WAR) and write-after-write (WAW) data hazards.
+
+\begin{verbatim}
+  lw    $t0, 0($s1)
+  addu  $t0, $t1, $s2
+  ... 
+  sub   $t2, $t0, $s2
+\end{verbatim}
+
+For example, as shown in the code above, if the \verb|lw| write to \verb|$t0| occurs after the \verb|addu| write, then the \verb|sub| gets an incorrect value for \verb|$t0|. The \verb|addu| has an output dependency on the \verb|lw|, which is a WAW (write-after-write) hazard. The issuing of the \verb|addu| might have to be stalled if its result could later be overwritten by a previous instruction that takes longer to complete.
+
+In summary, although ILP works, it is not as effective as we would like it to be. Some dependencies are hard to eliminate, and some parallelism is difficult to expose. However, speculation can help if done well.
+
+To achieve high performance, we need both machine parallelism and instruction-level parallelism through techniques such as superpipelining, VLIW, and superscalar architectures. A processor's instruction issue and execution policies impact the available ILP, and register renaming can help resolve storage dependencies.
