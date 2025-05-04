@@ -275,7 +275,7 @@ The main problem with this algorithm is that it uses an extra array. Thus, the m
   \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Figure/HeapSort8.pdf}
-    \caption*{97, 53, 59, 26, 41, 58, 31}
+    \caption*{26, 31, 41, 53, 58, 59, 97}
   \end{figure}
 \end{minipage}
 \end{center}
@@ -318,6 +318,126 @@ It is clear from the tree that the total length of the lists on each level is pr
 \end{proof}
 
 \section{Quick Sort}
+\subsection{Operation}
+Quicksort is a divide-and-conquer algorithm used for sorting a subarray \(A[p \ldots r]\). The array is first partitioned (rearranged) into two nonempty subarrays \(A[p \ldots q]\) and \(A[q + 1 \ldots r]\), such that every element in \(A[p \ldots q]\) is less than or equal to every element in \(A[q + 1 \ldots r]\). The index \(q\) is computed as part of this partitioning procedure.
 
+Then, the two subarrays \(A[p \ldots q]\) and \(A[q + 1 \ldots r]\) are sorted recursively using quicksort. Since the subarrays are sorted in place, no additional work is required to combine them—thus, the entire array becomes sorted.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c}
+      \toprule
+      R1 & R2 & R3 & R4 & R5 & R6 & R7 & R8 & R9 & R10 & m & n  \\
+    \midrule
+      \([\)26 & 5 & 37 & 1 & 61 & 11 & 59 & 15 & 48 & 19\(]\)  & 1 & 10  \\
+      \([\)11 & 5 & 19 & 1 & 15\(]\) & \textcolor{cyan}{26} & \([\)59 & 61 & 48 & 37\(]\) & 1 & 5  \\
+      \([\)1 & 5\(]\) & \textcolor{cyan}{11} & \([\)19 & 15\(]\) & 26 & \([\)59 & 61 & 48 & 37\(]\) & 1 & 2  \\
+      1 & 5 & 11 & \([\)19 & 15\(]\) & 26 & \([\)59 & 61 & 48 & 37\(]\) & 4 & 5  \\
+      1 & 5 & 11 & 15 & 19 & 26 & \([\)59 & 61 & 48 & 37\(]\) & 7 & 10  \\
+      1 & 5 & 11 & 15 & 19 & 26 & \([\)48 & 37\(]\) & \textcolor{cyan}{59} & [61] & 7 & 8  \\
+      1 & 5 & 11 & 15 & 19 & 26 & 37 & 48 & 59 & [61] & 10 & 10  \\
+      1 & 5 & 11 & 15 & 19 & 26 & 37 & 48 & 59 & 61 &  &   \\
+      \bottomrule
+  \end{tabular}
+\end{table}
+
+In Quicksort, we choose a pivot, where elements to the left of the pivot are smaller, and elements to the right are larger. As shown above, since we choose the first element as the pivot, we first swap it with the middle element. Then, we rearrange the array so that all elements smaller than 26 are placed to the left, and all elements larger than 26 are placed to the right.
+
+\subsection{Analysis}
+The number of comparisons of keys that will have been made in the call to \texttt{partition} is \(n - 1\), since every entry in the list is compared to the pivot, except for the pivot entry itself.
+
+Let us denote by \(C(n)\) the average number of comparisons done by Quicksort on a list of length \(n\), and by \(C(n, p)\) the average number of comparisons on a list of length \(n\) where the pivot for the first partition turns out to be the \(p\)th smallest element. The remaining work is then \(C(p - 1)\) and \(C(n - p)\) comparisons for the sublists. So, for \(n \geq 2\), we have:
+\[
+  C(n, p) = (n - 1) + C(p - 1) + C(n - p)
+\]
+Assuming every pivot is equally likely, we can average this over \(p = 1\) to \(n\), giving:
+\[
+  C(n) = \frac{1}{n} \sum_{p = 1}^n \left[(n - 1) + C(p - 1) + C(n - p)\right] = (n - 1) + \frac{1}{n} \sum_{p = 1}^n \left[C(p - 1) + C(n - p)\right]
+\]
+Since \(p\) goes from 1 to \(n\), both \(p - 1\) and \(n - p\) range from 0 to \(n - 1\). This symmetry gives:
+\[
+  C(n) = (n - 1) + \frac{2}{n} \sum_{k = 0}^{n - 1} C(k)
+\]
+
+The average time is then:
+\[
+  C(n) = (n - 1) + \frac{2}{n} \sum_{k = 0}^{n - 1} C(k)
+\]
+For a list of length \(n - 1\), we have:
+\[
+  C(n - 1) = (n - 2) + \frac{2}{n - 1} \sum_{k = 0}^{n - 2} C(k)
+\]
+Multiplying the first expression by \(n\), and the second by \(n - 1\), and subtracting them, we obtain:
+\[
+  nC(n) - (n - 1)C(n - 1) = n(n - 1) - (n - 1)(n - 2) + 2C(n - 1)
+\]
+which can be rearranged as:
+\[
+\begin{aligned}
+  \frac{C(n) - 2}{n + 1} &= \frac{C(n - 1) - 2}{n} + \frac{2}{n + 1} \\
+  &= \frac{C(n - 2) - 2}{n - 1} + \frac{2}{n + 1} + \frac{2}{n} \\
+  &= \frac{C(n - 3) - 2}{n - 2} + \frac{2}{n + 1} + \frac{2}{n} + \frac{2}{n - 1} \\
+  &= \frac{C(2) - 2}{3} + \frac{2}{n + 1} + \frac{2}{n} + \frac{2}{n - 1} + \cdots + \frac{2}{4} \\
+  &= \frac{C(1) - 2}{2} + \frac{2}{n + 1} + \frac{2}{n} + \frac{2}{n - 1} + \cdots + \frac{2}{4} + \frac{2}{3} \\
+  &= -1 + 2\left(\frac{1}{n + 1} + \frac{1}{n} + \frac{1}{n - 1} + \cdots + \frac{1}{4} + \frac{1}{3}\right)
+\end{aligned}
+\]
+We introduce the harmonic numbers \(H(n) = 1 + \frac{1}{2} + \cdots + \frac{1}{n}\). Approximating this sum using an integral, we evaluate:
+\[
+  \int_{\frac{1}{2}}^{n + \frac{1}{2}} \frac{1}{x} \, dx = \log \left(n + \frac{1}{2} \right) - \log \left( \frac{1}{2} \right) \approx \log n + 0.7,
+\]
+which shows that:
+\[
+  H(n) = \log n + O(1).
+\]
+By substitution into the recurrence for the average number of comparisons in Quicksort, we find:
+\[
+  \frac{C(n) - 2}{n + 1} = 2 \log n + O(1) \quad \Longrightarrow \quad C(n) = 2n \log n + O(n).
+\]
+Thus, in the average case, Quicksort performs \(C(n) = 2n \log n + O(n)\) comparisons of keys to sort a list of \(n\) entries.
+
+We can choose any entry we wish as the pivot and swap it with the first entry before beginning the loop that partitions the list. The first entry is often a poor choice: if the list is already sorted, then the first key will have no others less than it, and one of the sublists will be empty. Hence, it may be better to select an entry near the center of the list in the hope that the pivot will partition the keys so that approximately half fall on each side.
+
+One method we can use is to select three random elements from the list and choose the median of these three as the pivot. This increases the likelihood that the pivot will divide the list more evenly, ensuring that neither sublist is empty. By selecting more elements and choosing the median among them, the quality of the pivot can be further improved, reducing the chance of highly unbalanced partitions.
 
 \section{Radix Sort}
+This is also called \textbf{bucket sort} or \textbf{postman sort}.
+
+In some special cases, sorting can be performed in linear time. The idea is to consider the key one character at a time and to divide the items not into two sublists, but into as many sublists as there are possible values for the current character. For example, if the keys are alphabetic strings, we divide the list into 26 sublists at each stage—one for each letter of the alphabet. That is, we set up a table of 26 lists and distribute the items into these lists according to one of the characters in their keys.
+
+The time used by radix sort is proportional to \(nk\), where \(n\) is the number of items being sorted, and \(k\) is the number of characters in a key. The time for other sorting methods depends on \(n\) but not directly on the length of the key. For instance, the best time among comparison-based sorts was achieved by mergesort, which takes \(n \log n + O(n)\) time.
+
+The relative performance of the sorting methods therefore depends on the relationship between \(nk\) and \(n \log n\). If the keys are long (large \(k\)) but there are relatively few of them (small \(n\)), then comparison-based methods such as mergesort will likely outperform radix sort.
+
+However, if \(k\) is small and there are many keys (large \(n\)), then radix sort can be faster than any of the comparison-based methods we have studied.
+
+\section{More on Sorting}
+When sorting large structures, it is often impractical to store all the information of each record directly in an array. This is because such records can be large, making data movement expensive and swapping inefficient. 
+
+A practical solution is to let the input array contain \textbf{pointers} to the actual structures rather than the structures themselves. We can then perform the sort by comparing the keys that the pointers reference and swapping the pointers when necessary. In this way, all data movement is essentially the same as if we were sorting integers.
+
+This technique is known as \textbf{indirect sorting}, or \textbf{sorting by address}. It can be applied to most of the data structures we have described and is especially useful when dealing with large datasets.
+
+When performing sorting, we often care about \textbf{stability}. A sorting function is called \textbf{stable} if, whenever two items have equal keys, they remain in the same relative order in the output as they were in the input. 
+
+Stability is especially important when a list has already been sorted by one key and is now being sorted by another key. In such cases, preserving the original ordering as much as possible is desirable.
+
+Formally, an algorithm is stable if for all records \(i\) and \(j\) such that \(k[i] = k[j]\), if \(r[i]\) precedes \(r[j]\) in the original file, then \(r[i]\) also precedes \(r[j]\) in the sorted file. That is, a stable sort keeps records with the same key in the same relative order as before the sort.
+
+For example, consider the input list:
+\[
+(a, 1),\ (b, 2),\ (c, 3),\ (a, 4),\ (a, 5),\ (b, 6),\ (c, 7)
+\]
+A stable sort on the first element yields:
+\[
+(a, 1),\ (a, 4),\ (a, 5),\ (b, 2),\ (b, 6),\ (c, 3),\ (c, 7)
+\]
+However, if we use an unstable algorithm such as insertion sort (in a naive implementation), we might get:
+\[
+(a, 5),\ (a, 4),\ (a, 1),\ (b, 6),\ (b, 2),\ (c, 7),\ (c, 3)
+\]
+which is not stable.
+
+\begin{remark}
+By definition, Shell sort is not stable.
+\end{remark}
