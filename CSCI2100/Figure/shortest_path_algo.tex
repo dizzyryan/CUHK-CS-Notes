@@ -1,0 +1,45 @@
+\documentclass[preview]{standalone}
+\usepackage{pgfplots}
+\begin{document}
+\begin{tikzpicture}[node distance={15mm}, main/.style = {draw, circle}]
+\tikzstyle{vertex}=[circle,draw=black,fill=white,minimum size=20pt, inner sep=0pt]
+\node[vertex] (A) at (0, 0) {\(v_1\)};
+\node[vertex] (B) at (3, 0) {\(v_2\)};
+\node[vertex] (C) at (-1.5, -1.5) {\(v_3\)};
+\node[vertex] (D) at (1.5, -1.5) {\(v_4\)};
+\node[vertex] (E) at (4.5, -1.5) {\(v_5\)};
+\node[vertex] (F) at (0, -3) {\(v_6\)};
+\node[vertex] (G) at (3, -3) {\(v_7\)};
+\path[->]
+(A) edge node[above]{2} (B)
+(A) edge node[above]{1} (D)
+(B) edge node[above]{3} (D)
+(B) edge node[above]{10} (E)
+(C) edge node[above]{4} (A)
+(C) edge node[above]{5} (F)
+(D) edge node[above]{2} (C)
+(D) edge node[above]{2} (E)
+(D) edge node[above]{8} (F)
+(D) edge node[above]{4} (G)
+(E) edge node[above]{6} (G)
+(G) edge node[above]{1} (F)
+;
+% (B) -- node[above]{8} (C)
+% (C) -- node[above]{7} (D)
+% (D) -- node[anchor=south west]{9} (E)
+% (E) -- node[anchor=north west]{10} (F)
+% (A) -- node[anchor=north east]{8} (H)
+% (B) -- node[left]{11} (H)
+% (D) -- node[right]{14} (F)
+% (H) -- node[anchor=south east]{7} (I)
+% (I) -- node[anchor=south west]{6} (G)
+% ;
+% \draw[ultra thick,red]
+% (G) -- node[below]{1} (H)
+% (I) -- node[anchor=south east]{2} (C)
+% (F) -- node[below]{2} (G)
+% (C) -- node[anchor=south west]{4} (F)
+% (A) -- node[anchor=south east]{4} (B)
+% ;
+\end{tikzpicture}
+\end{document}
