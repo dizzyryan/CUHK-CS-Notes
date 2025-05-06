@@ -24,7 +24,7 @@ Hashing is a technique used to perform insertions, deletions, and lookups in con
 
 3. Collision resolution: to resolve conflicts when two keys hash to the same index. 
 
-A hash table is an abstract data type that allows storing and retrieving elements in constant time, \(O(1)\). This is true when the indices are known and the value at the target index of a store operation can be discarded. Without a complete set of items, we cannot determine the index of an element in a sorted list.
+A hash table is an abstract data type that allows storing and retrieving elements in \(O(1)\) time. This is true when the indices are known and the value at the target index of a store operation can be discarded. Without a complete set of items, we cannot determine the index of an element in a sorted list.
 
 To solve this problem, we use the item as a key and convert it into unique integers that can be used as array indices. Since the index integer is not known at the entry of an item, it would be helpful if the item itself could be used as a key to index the cell where it will be stored. For example, to store names in an array, rather than assigning arbitrary indices, we can sum the ASCII values of each character in the key (e.g., \(\text{a} = 1, \text{b} = 2, \dots\)).
 
@@ -43,7 +43,7 @@ There are several important issues that need to be addressed, which will be disc
 
 3. Handling deletions.
 
-\section{Hash Table}
+\subsection{Hash Table}
 The idea of a hash table is to allow many of the different possible keys that might occur to be mapped to the same location in an array under the action of the index function. This is sometimes referred to as scatter-storage or key-transformation.
 
 A hash function takes a key and maps it to an index in the array. However, two or more records may be mapped to the same location, leading to a collision. Therefore, a collision resolution procedure must be devised to handle this situation.
@@ -67,7 +67,7 @@ We can also partition the key into several parts and combine the parts in a conv
 \subsection{Modular Arithmetic}
 We can use modular arithmetic to convert the key into the index that we want. We can simply use the ASCII values of all the characters in the string, and then return the \verb|result mod H_SIZE|. 
 
-For example, 'abcd' mod \(100 = (64 + 65 + 66 + 67) \% 100 = 62\). 
+For example, `abcd' mod \(100 = (64 + 65 + 66 + 67) \% 100 = 62\). 
 
 We can also take only 3 characters and use \verb|hash_val = key[0] + 27*key[1] + 729*key[2]|, and then again return the \verb|hash_val mod H_SIZE|, assuming that the key has at least two characters plus the NULL terminator. If the three characters are random, and the table size is 10007, then we would have a reasonably equitable distribution. However, since English is not random, the percentage of the table being hashed to could be less than expected. 
 
@@ -86,10 +86,10 @@ Though a hash table is an efficient data structure, there could be cases where d
 The first strategy, commonly known as open hashing or separate chaining, is to keep a list of all elements that hash to the same value.
 
 \begin{minipage}{0.7\textwidth}
-To illustrate, we assume that the keys are the first 10 perfect squares, where the hashing function is given by \(\text{hash}(x) = x \mod 10\).\\[3pt]
-In open hashing, each node contains a linked list, allowing multiple elements to be stored at the same index.\\[3pt]
-We can perform \textbf{find} in open hashing by using the hash function to determine which list to traverse. Then, we traverse this list in the normal manner, returning the position where the item is found.\\[3pt]
-To perform \textbf{insertion}, we first traverse the list to check whether the element is already present. If it is a new element, it is inserted either at the front or the end of the list. Often, new elements are inserted at the front, as this is convenient and because recently inserted elements are frequently the most likely to be accessed again soon.\\[3pt]
+To illustrate, we assume that the keys are the first 10 perfect squares, where the hashing function is given by \(\text{hash}(x) = x \mod 10\).\\[5pt]
+In open hashing, each node contains a linked list, allowing multiple elements to be stored at the same index.\\[5pt]
+We can perform \textbf{find} in open hashing by using the hash function to determine which list to traverse. Then, we traverse this list in the normal manner, returning the position where the item is found.\\[5pt]
+To perform \textbf{insertion}, we first traverse the list to check whether the element is already present. If it is a new element, it is inserted either at the front or the end of the list. Often, new elements are inserted at the front, as this is convenient and because recently inserted elements are frequently the most likely to be accessed again soon.\\[5pt]
 The \textbf{deletion} routine is straightforward, similar to linked lists. After performing a find operation, we delete the item as we would in a linked list.
 \end{minipage}
 \begin{minipage}{0.3\textwidth}
@@ -135,10 +135,9 @@ What we haven't discussed yet is the way to resolve collisions. In general, ther
 \subsubsection{Linear Probing}
 This is the simplest method to resolve a collision. Starting with the hash address where the collision happens, do a sequential search for the desired key or an empty location. 
 
-However, data could become clustered in this method. That is, records start to appear in long strings of adjacent positions with gaps between the strings.
-
 \begin{minipage}{0.5\textwidth}
-For example, given \(x = 89, 18, 49, 58, 69\), with \(\text{hash}(x) = x \mod 10\), we can perform insertion as shown on the right.\\[3pt]
+However, data could become clustered in this method. That is, records start to appear in long strings of adjacent positions with gaps between the strings.\\[5pt]
+For example, given \(x = 89, 18, 49, 58, 69\), with \(\text{hash}(x) = x \mod 10\), we can perform insertion as shown on the right.\\[5pt]
 For values 89 and 18, they can be inserted directly since the corresponding cell for the address is empty. However, when inserting 49, the key value 9 is repeated. Then it finds the next available cell, which in this case would be at position 0. The same applies to 58 and 69.
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
@@ -186,11 +185,9 @@ Thus, we have quadratic probing.
 \subsubsection{Quadratic Probing}
 Quadratic probing avoids the primary clustering problem of linear probing. If there is a collision at hash address \(H\), the method called quadratic probing looks in the table at locations \(h + 0, h + 1, h + 4, h + 9, \cdots\), that is, at location \(h + i^2\) for \(i = 0, 1, 2, \cdots\).
 
-This reduces clustering, but it is obvious that it will not probe all locations in the table. The idea is that if quadratic probing is used and the table size is prime, then a new element can always be inserted if the table is at least half empty.
-
 \begin{minipage}{0.5\textwidth}
-Here we use the same example. Now we use quadratic probing instead. After 18 and 89 being inserted, for 49, it goes to \((9 + 1^2) \mod 10 = 0\) since location 9 is occupied, for 58, it goes to \((8 + 2^2) \mod 10 = 2\), and for 69 it goes to \((9 + 2^2) \mod 10 = 3\). 
-
+This reduces clustering, but it is obvious that it will not probe all locations in the table. The idea is that if quadratic probing is used and the table size is prime, then a new element can always be inserted if the table is at least half empty. \\[5pt]
+Here we use the same example. Now we use quadratic probing instead. After 18 and 89 being inserted, for 49, it goes to \((9 + 1^2) \mod 10 = 0\) since location 9 is occupied, for 58, it goes to \((8 + 2^2) \mod 10 = 2\), and for 69 it goes to \((9 + 2^2) \mod 10 = 3\). \\[5pt]
 Note that if the table is even more than half full, insertion could fail. It is also crucial that the table size is a prime number. Otherwise, the number of alternate locations can be severely reduced.
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
@@ -235,11 +232,10 @@ For instance, the obvious choice \(h_2(x) = x \mod 9\) would not help if 99 were
 \[
 h_2(x) = R - (x \mod R),
 \]
-with \(R\) being a prime number smaller than H\_SIZE, works well. One may also perform triple hashing, and so on.
 
 \begin{minipage}{0.5\textwidth}
-Again, we perform insertion for \(x = 89, 18, 49, 58, 69\) using double hashing. Here, we have \(h_2(x) = R - (x \mod R)\), with \(R = 7\). 
-
+with \(R\) being a prime number smaller than H\_SIZE, works well. One may also perform triple hashing, and so on. \\[5pt]
+Again, we perform insertion for \(x = 89, 18, 49, 58, 69\) using double hashing. Here, we have \(h_2(x) = R - (x \mod R)\), with \(R = 7\). \\[5pt]
 After inserting 89 and 18, 49 causes a collision. Then we use \(h_2(49) = 7 - (49 \mod 7) = 7\), so it goes to \((7 + 49) \mod 10 = 6\). Inserting 58 also causes a collision, then we have \(h_2(58) = 7 - (58 \mod 7) = 5\), so it goes to \((5 + 58) \mod 10 = 3\). 
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
@@ -266,12 +262,9 @@ After inserting 89 and 18, 49 causes a collision. Then we use \(h_2(49) = 7 - (4
 
 \subsection{Rehashing}
 \begin{minipage}{0.55\textwidth}
-There could be cases where the hash table becomes too full, causing the running time for operations to deteriorate, especially when there are too many deletions intermixed with insertions.
-
-To solve this issue, we can build another table that is about twice as large with an associated new hash function. Then, we scan the entire original hash table, compute the new hash value for each element, and insert it into the new table. This process is known as rehashing.
-
-For example, for a table of size 7, let \(h(x) = x \mod 7\). After inserting \(x = 13, 15, 24, 6\), we insert 23, which makes the table now 70\% full. Thus, we create a new table with size 17. The new hash function is then \(h(x) = x \mod 17\). The old table is scanned, and elements 6, 23, 24, 13, and 15 are then inserted sequentially. 
-
+There could be cases where the hash table becomes too full, causing the running time for operations to deteriorate, especially when there are too many deletions intermixed with insertions. \\[5pt]
+To solve this issue, we can build another table that is about twice as large with an associated new hash function. Then, we scan the entire original hash table, compute the new hash value for each element, and insert it into the new table. This process is known as rehashing. \\[5pt]
+For example, for a table of size 7, let \(h(x) = x \mod 7\). After inserting \(x = 13, 15, 24, 6\), we insert 23, which makes the table now 70\% full. Thus, we create a new table with size 17. The new hash function is then \(h(x) = x \mod 17\). The old table is scanned, and elements 6, 23, 24, 13, and 15 are then inserted sequentially. \\[5pt]
 The running time is \(O(n)\), which is expensive. Therefore, it should not be done too frequently. This leads us to the concept of extendible hashing.
 \end{minipage}
 \begin{minipage}{0.15\textwidth}

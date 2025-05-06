@@ -30,12 +30,12 @@ To implement a tree, we could store both the data and a pointer to each child in
 Suppose we have a directory that includes files and subdirectories. How do we list the names of all the files?
 
 \begin{minipage}{0.6\textwidth}
-We can use a technique called tree traversal. To traverse a data structure means to process every node in the data structure exactly once, in whatever way you choose. It is possible to pass the same node multiple times, but it would only be processed once.\\[3pt]
-There are three main traversal orders: preorder, inorder, and postorder traversal. However, as long as the traversal follows a systematic way of processing data, it is valid.\\[3pt]
-For example, in the graph on the right, we have:\\[3pt]
-- Preorder: 013425786  \\[3pt]
-- Inorder: 314075826  \\[3pt]
-- Postorder: 341785620  \\[3pt]
+We can use a technique called tree traversal. To traverse a data structure means to process every node in the data structure exactly once, in whatever way you choose. It is possible to pass the same node multiple times, but it would only be processed once.\\[5pt]
+There are three main traversal orders: preorder, inorder, and postorder traversal. However, as long as the traversal follows a systematic way of processing data, it is valid.\\[5pt]
+For example, in the graph on the right, we have:\\[5pt]
+- Preorder: 013425786  \\[5pt]
+- Inorder: 314075826  \\[5pt]
+- Postorder: 341785620  \\[5pt]
 - Level-order: 012345678
 \end{minipage}
 \begin{minipage}{0.4\textwidth}
@@ -92,7 +92,7 @@ We can also implement a node using two pointers: one pointing to its left child 
 
 \section{Expression Tree}
 \begin{minipage}{0.6\textwidth}
-An expression tree is also a binary tree, which is used to calculate the result of an expression. For example, we can express the expression \(((9 - (2 + 3)) * (7 - 1))\) using the  expression tree on the right.\\[3pt]
+An expression tree is also a binary tree, which is used to calculate the result of an expression. For example, we can express the expression \(((9 - (2 + 3)) * (7 - 1))\) using the  expression tree on the right.\\[5pt]
 In an expression tree, the leaves represent operands, and the internal nodes represent operators. By using inorder traversal, we can recover the original expression. From the binary tree, using postorder traversal, we can obtain the postfix notation. With the use of a stack, we can implement a calculator, as shown in the previous chapter.
 \end{minipage}
 \begin{minipage}{0.4\textwidth}
@@ -123,7 +123,7 @@ For the \verb|Find| operation, it generally requires returning a pointer to the 
 
 For the \verb|Find_min| and \verb|Find_max| operations, these routines return the position of the smallest and largest elements in the tree, respectively. To perform \verb|Find_min|, start at the root and go left as long as there is a left child. The stopping point is the smallest element. The \verb|Find_max| routine is the same, except that branching is to the right child.
 
-For insertion, we proceed down the tree. If \(x\) is found, we do nothing (or "update" something). Otherwise, we insert \(x\) at the last spot on the path traversed. Duplicates can be handled by keeping an extra field in the node record that indicates the frequency of occurrence.
+For insertion, we proceed down the tree. If \(x\) is found, we do nothing (or ``update'' something). Otherwise, we insert \(x\) at the last spot on the path traversed. Duplicates can be handled by keeping an extra field in the node record that indicates the frequency of occurrence.
 
 However, for deletion, it is more difficult since we need to consider several possibilities. If the node is a leaf, it can be deleted immediately. If the node has one child, the node can be deleted after its parent adjusts a pointer to bypass the node. The complicated case is when we need to delete a node with two children. The general idea is to replace the key of the node with the smallest (leftmost) key of the right subtree and recursively delete the node.
 
@@ -154,8 +154,8 @@ Another thing to notice is that for the deletion operation, it favors the left s
 \section{AVL Tree}
 \subsection{Definition}
 \begin{minipage}{0.7\textwidth}
-An AVL (Adelson-Velskii and Landis) tree is a binary search tree with a balancing condition. It is identical to a binary search tree, having the same physical and ordering properties. However, for every node in the AVL tree, the heights of the left and right subtrees can differ by at most 1.\\[3pt]
-With an AVL tree, all tree operations, except insertion, can be performed in \(O(\log n)\) time.\\[3pt]
+An AVL (Adelson-Velskii and Landis) tree is a binary search tree with a balancing condition. It is identical to a binary search tree, having the same physical and ordering properties. However, for every node in the AVL tree, the heights of the left and right subtrees can differ by at most 1.\\[5pt]
+With an AVL tree, all tree operations, except insertion, can be performed in \(O(\log n)\) time.\\[5pt]
 To construct the smallest AVL tree of height \(n\), we can use the two smallest AVL subtrees of heights \(n-1\) and \(n-2\). By doing so recursively, we can find the smallest AVL tree.
 \end{minipage}
 \begin{minipage}{0.3\textwidth}

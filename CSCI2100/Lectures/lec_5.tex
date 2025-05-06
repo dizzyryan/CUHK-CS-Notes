@@ -5,8 +5,8 @@
 A trie, also called a digital tree, radix tree, or prefix tree, is a special type of tree used to store associative data structures. The name trie comes from its use for re\textbf{trie}val, because the trie can find a single word in a dictionary with only a prefix of the word. 
 
 \begin{minipage}{0.5\textwidth}
-For example, strings are stored in a top-to-bottom manner based on their prefixes in a trie. All prefixes of length 1 are stored at level 1, all prefixes of length 2 are stored at level 2, and so on. For the string set \( S = \{ \text{bear}, \text{bell}, \text{bid}, \text{bull}, \text{but}, \text{sell}, \text{stock}, \text{stop} \} \), we can have the tree structure as shown on the right. \\[3pt]
-This figure shows how the strings are stored in the trie. Inserting and deleting words in this tree is straightforward. For example, when typing "belt," it can be inserted in the subtree starting from \verb|b -> e -> l|. \\[3pt]
+For example, strings are stored in a top-to-bottom manner based on their prefixes in a trie. All prefixes of length 1 are stored at level 1, all prefixes of length 2 are stored at level 2, and so on. For the string set \( S = \{ \text{bear}, \text{bell}, \text{bid}, \text{bull}, \text{but}, \text{sell}, \text{stock}, \text{stop} \} \), we can have the tree structure as shown on the right. \\[5pt]
+This figure shows how the strings are stored in the trie. Inserting and deleting words in this tree is straightforward. For example, when typing ``belt'' it can be inserted in the subtree starting from \verb|b -> e -> l|. \\[5pt]
 Unlike a binary search tree, no node in a trie stores the key associated with that node; instead, its position in the tree defines the key with which it is associated.
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
@@ -16,8 +16,6 @@ Unlike a binary search tree, no node in a trie stores the key associated with th
   \caption{Tries}
 \end{figure}
 \end{minipage}
-
- 
 
 All the descendants of a node share a common prefix in the string associated with that node, and the root is associated with the empty string.
 
