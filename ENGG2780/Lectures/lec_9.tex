@@ -1,3 +1,394 @@
 \chapter{Composite Hypothesis}
 
-We talked about binary hypothesis in the previous chapter
+\section{Overview}
+We talked about binary hypothesis in the previous chapter. However, in real-world settings, hypothesis testing problems do not always involve two well-specified parameters as alternatives. We still have two disjoint hypotheses, but they are not as well-specified as in the binary case.
+
+In the previous chapter, we discussed simple hypotheses, where the distribution or the parameters are completely specified. For example, we have a drug that is either effective or not, giving us \(H_0 = 0\) and \(H_1 = 1\). However, for composite hypotheses, the distribution or the parameters are not completely specified.
+
+For example, consider the claim that the average monthly income of residents of a city is more than or equal to 20,000 dollars. Now we have \(H_0: \mu \geq 20,000\), while \(H_1: \mu < 20,000\) is not completely specified.
+
+Therefore, we need a more general statistical test of hypothesis. To do this, we first specify the null hypothesis \(H_0\) and complement \(H_1\). We then choose a test statistic based on the random samples for the parameter in the hypotheses. For example, we can choose \(\overline{X}\) as a test statistic for \(\mu\). 
+
+Then, assuming \(H_0\) is true, we look for evidence from observations to support \(H_1\). We make a conclusion: either reject \(H_0\) if there is strong evidence from the test that indicates the assumption \(H_0\) is true does not hold, or accept \(H_0\) if there is no strong statistical evidence from observations to refute the assumption.
+
+\section{Composite Hypothesis on Population Mean}
+Here we consider the composite hypothesis on population mean \(\mu\).
+
+There are two categories. The first one is the two-sided test, where we have
+\[
+  H_0: \mu = \mu_0 \quad \text{and} \quad H_1: \mu \neq \mu_0
+\]
+The second category is the one-sided test, where we have 
+\[
+  \text{Right-sided: } H_0: \mu \leq \mu_0 \quad \text{and} \quad H_1: \mu > \mu_0
+\]
+or
+\[
+  \text{Left-sided: } H_0: \mu \geq \mu_0 \quad \text{and} \quad H_1: \mu < \mu_0
+\]
+
+In the critical value approach, we define a significance level \(\alpha\), which is the largest false rejection probability we can accept. Then we find the rejection region of \(H_0\) such that \(\alpha = \mathbb{P}(H_1 \vert H_0)\). We estimate the sample mean \(\overline{x}\) from the observed data. If \(\overline{x}\) is in the rejection region, then we consider there is strong statistical evidence to reject \(H_0\). Otherwise, we accept \(H_0\).
+
+\subsection{Two-Sided test}
+When \(n \geq 30\), we can have the two-sided test of \(\mu\). Suppose \(X_1, \cdots, X_n\) are independent samples with the same PDF or PMF (\(\mu, \sigma^2\), etc.). We assume that \(H_0: \mu = \mu_0\) is true, and we have the test statistic, which is the sample mean \(\overline{X}\). The rejection region will then be \(\vert \overline{X} - \mu_0 \vert \geq \xi\), where \(\xi > 0\). \(\xi\) is determined by solving \(\alpha = \mathbb{P}(H_1 \vert H_0)\), then we have 
+\[
+  \alpha = \mathbb{P}(\vert \overline{X} - \mu_0 \vert \geq \xi \vert \mu = \mu_0)
+\]
+
+\begin{remark}
+  The further away the sample mean \(\overline{X}\) is from \(\mu_0\), the stronger the evidence points toward \(H_1: \mu \neq \mu_0\).
+\end{remark}
+
+Then, based on the central limit theorem, assuming \(H_0\) is true, as \(n\) is large, we have
+\[
+  \overline{X} \sim \mathcal{N} \left(\mu, \frac{\sigma^2}{n}\right) \Longrightarrow \frac{\overline{X} - \mu_0}{\sigma / \sqrt{n}} \sim \mathcal{N} (0, 1)
+\]
+\[
+  \alpha = \mathbb{P} \left( \vert \overline{X} - \mu_0 \vert \geq \xi \right) = \mathbb{P} \left( \vert Z \vert \geq \frac{\xi}{\sigma / \sqrt{n}} \right) = \mathbb{P} \left( \vert Z \vert \geq z_{\alpha / 2} \right)
+\]
+Then, when \(\sigma\) is known, given a specific estimate \(\overline{x}\), if 
+\[
+  \frac{\vert \overline{x} - \mu_0 \vert}{\sigma / \sqrt{n}} \geq z_{\alpha / 2}, 
+\]
+we reject \(H_0\). Otherwise, we accept it.
+
+When \(\sigma\) is unknown, we approximate \(\mu\) with \(s\). Given a specific estimate \(\overline{x}\), if 
+\[
+  \frac{\vert \overline{x} - \mu_0 \vert}{s / \sqrt{n}} \geq z_{\alpha / 2},
+\]
+we again reject \(H_0\). Otherwise, we accept it.
+
+However, when \(n < 30\), as \(n\) is small, CLT is not applicable here. But if \(X_1, \cdots, X_n \sim \mathcal{N}(\mu, \sigma^2)\), then we still have 
+\[
+  \overline{X} \sim \mathcal{N} \left( \mu, \frac{\sigma^2}{n} \right).
+\]
+Then, when \(\sigma\) is known, we have 
+\[
+  Z = \dfrac{\overline{X} - \mu_0}{\sigma / \sqrt{n}} \sim \mathcal{N}(0, 1)
+\]
+When \(\sigma\) is unknown, we have 
+\[
+  T = \dfrac{\overline{X} - \mu_0}{S / \sqrt{n}} \sim t(n - 1)
+\]
+Then, from the same formula, we have 
+\[
+  \alpha = \mathbb{P} \left( \vert \overline{X} - \mu_0 \vert \geq \xi \right) = \mathbb{P} \left( \vert T \vert \geq \frac{\xi}{S / \sqrt{n}} \right) = \mathbb{P} \left( \vert T \vert \geq t_{\alpha / 2} \right)
+\]
+Given a specific estimate \(\overline{x}\), if 
+\[
+  \frac{\vert \overline{x} - \mu_0 \vert}{s / \sqrt{n}} \geq t_{\alpha / 2},
+\]
+then we reject \(H_0\); otherwise, we accept it.
+
+\begin{eg}
+  The average temperature of Hong Kong in February is \(18^\circ\text{C}\). Has this year been unusual? Assume temperature in February follows \(\mathcal{N}(\mu, \sigma^2)\) and \(\sigma = 3^\circ\text{C}\). Suppose \(\alpha = 0.05\). 
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c}
+      \toprule
+      Day & 1 & 6 & 11 & 16 & 21 & 26 \\
+      \midrule
+      Temp \((^\circ\text{C})\) & 15 & 15 & 19 & 18 & 8 & 17 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \textbf{Solution:}  
+  Here we have \(H_0: \mu = 18\), \(H_1: \mu \neq 18\).  
+  \[
+    Z = \dfrac{\overline{X} - \mu_0}{\sigma / \sqrt{n}} \sim \mathcal{N}(0, 1)
+  \]
+  By calculation, we have
+  \[
+    \overline{x} = \dfrac{15 + 15 + 19 + 18 + 8 + 17}{6} = 15.33, \quad \mu_0 = 18
+  \]
+  Then,
+  \[
+    \dfrac{\vert \overline{x} - \mu_0 \vert}{\sigma / \sqrt{n}} = \dfrac{\vert 15.33 - 18 \vert}{3 / \sqrt{6}} \approx 2.18 > z_{0.025} = 1.96
+  \]
+  Thus, we reject \(H_0\).
+
+  However, if \(\sigma\) is unknown, we have
+  \[
+    s^2 = \dfrac{(15 - 15.33)^2 + \cdots + (17 - 15.33)^2}{6 - 1} \approx 15.47, \quad s \approx 3.93
+  \]
+  Then,
+  \[
+    \dfrac{\vert \overline{x} - \mu_0 \vert}{s / \sqrt{n}} = \dfrac{\vert 15.33 - 18 \vert}{3.93 / \sqrt{6}} \approx 1.71 < t_{0.025} \approx 2.57
+  \]
+  Thus, we accept \(H_0\).
+\end{eg}
+
+\subsection{One-Sided Test}
+In category II, we have one-sided tests, where
+\[
+  \text{Right-sided: } H_0: \mu \leq \mu_0 \quad \text{and} \quad H_1: \mu > \mu_0
+\]
+or
+\[
+  \text{Left-sided: } H_0: \mu \geq \mu_0 \quad \text{and} \quad H_1: \mu < \mu_0
+\]
+
+We can transform these hypotheses as  
+\[
+  \text{Right-sided: } H_0: \mu = \mu_0 \quad \text{and} \quad H_1: \mu > \mu_0
+\]
+or
+\[
+  \text{Left-sided: } H_0: \mu = \mu_0 \quad \text{and} \quad H_1: \mu < \mu_0
+\]
+
+After transformation, \(H_0: \mu = \mu_0\) is rejected only if there is strong evidence to support \(H_1: \mu > \mu_0\). In this case, we also reject \(H_0: \mu \leq \mu_0\).  
+\(H_0: \mu = \mu_0\) is not rejected only if there is no strong evidence to support \(H_1: \mu > \mu_0\). In this case, \(H_0: \mu \leq \mu_0\) should not be rejected either.
+
+We can apply the same approach by assuming \(H_0\) is true, and then setting the false rejection probability \(\alpha\) to find the rejection region for \(H_0\). Then we have 
+\[
+  \alpha = \mathbb{P}(H_1 \vert H_0: \mu = \mu_0) \geq \mathbb{P}(H_1 \vert H_0: \mu \leq \mu_0)
+\]
+
+\subsubsection{Right-Sided Test}
+For a right-sided test of \(\mu\), we have 
+\[
+  H_0: \mu = \mu_0 \quad \text{and} \quad H_1: \mu > \mu_0
+\]
+Here we set
+\[
+  \alpha = \mathbb{P} (\overline{X} - \mu_0 \geq \xi \vert \mu = \mu_0)
+\]
+When \(n \geq 30\), based on the CLT and assuming \(H_0\) is true, we have 
+\[
+  \overline{X} \sim \mathcal{N} \left(\mu, \frac{\sigma^2}{n}\right) \Longrightarrow Z = \frac{\overline{X} - \mu_0}{\sigma / \sqrt{n}} \sim \mathcal{N} (0, 1)
+\]
+\[
+  \alpha = \mathbb{P} \left(\overline{X} - \mu_0 \geq \xi \vert \mu = \mu_0 \right) = \mathbb{P} \left(Z \geq \frac{\xi}{\sigma / \sqrt{n}} \right) = \mathbb{P} \left(Z \geq z_{\alpha} \right)
+\]
+Same as before, when \(\sigma\) is known, given a specific estimate \(\overline{x}\), if 
+\[
+  \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \geq z_{\alpha}, 
+\]
+we reject \(H_0\); otherwise, we accept it.
+
+When \(\sigma\) is unknown, we approximate \(\sigma\) with \(s\). Given a specific estimate \(\overline{x}\), if 
+\[
+  \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \geq z_{\alpha},
+\]
+we reject \(H_0\); otherwise, we accept it.
+
+When \(n < 30\), since the sample size is small, the CLT is not applicable. But if \(X_1, \cdots, X_n \sim \mathcal{N}(\mu, \sigma^2)\), then we still have 
+\[
+  \overline{X} \sim \mathcal{N} \left( \mu, \frac{\sigma^2}{n} \right)
+\]
+Then, when \(\sigma\) is known, we have 
+\[
+  Z = \dfrac{\overline{X} - \mu_0}{\sigma / \sqrt{n}} \sim \mathcal{N}(0, 1)
+\]
+When \(\sigma\) is unknown, we have 
+\[
+  T = \dfrac{\overline{X} - \mu_0}{S / \sqrt{n}} \sim t(n - 1)
+\]
+Then, given a specific estimate \(\overline{x}\), if 
+\[
+  \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \geq z_{\alpha}
+\quad \text{or} \quad
+  \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \geq t_{\alpha},
+\]
+then we reject \(H_0\); otherwise, we accept it.
+
+\subsubsection{Left-Sided Test}
+For a left-sided test of \(\mu\), we have 
+\[
+  H_0: \mu = \mu_0 \quad \text{and} \quad H_1: \mu < \mu_0
+\]
+Here we set
+\[
+  \alpha = \mathbb{P} (\overline{X} - \mu_0 \leq \xi \vert \mu = \mu_0)
+\]
+When \(n \geq 30\) and \(\sigma\) is known, given a specific estimate \(\overline{x}\), if 
+\[
+  \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \leq -z_{\alpha}, 
+\]
+we reject \(H_0\); otherwise, we accept it.
+
+When \(\sigma\) is unknown, we approximate it with \(s\). If 
+\[
+  \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \leq -z_{\alpha},
+\]
+we reject \(H_0\); otherwise, we accept it.
+
+When \(n < 30\), if \(X_1, \cdots, X_n \sim \mathcal{N}(\mu, \sigma^2)\), and \(\sigma\) is known, then if 
+\[
+  \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \leq -z_{\alpha}
+\quad \text{or} \quad
+  \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \leq -t_{\alpha},
+\]
+we reject \(H_0\); otherwise, we accept it.
+
+
+\begin{eg}
+  The average temperature of Hong Kong in February is \(18^\circ\text{C}\). Has this year been colder? Assume temperature in February follows \(\mathcal{N}(\mu, \sigma^2)\) and \(\sigma = 3^\circ\text{C}\). Suppose \(\alpha = 0.05\). 
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c}
+      \toprule
+      Day & 1 & 6 & 11 & 16 & 21 & 26 \\
+      \midrule
+      Temp \((^\circ\text{C})\) & 15 & 15 & 19 & 18 & 8 & 17 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \textbf{Solution:}  
+  Here we have \(H_0: \mu = 18\), \(H_1: \mu \neq 18\).  
+  \[
+    Z = \dfrac{\overline{X} - \mu_0}{\sigma / \sqrt{n}} \sim \mathcal{N}(0, 1)
+  \]
+  By calculation, we have
+  \[
+    \overline{x} = \dfrac{15 + 15 + 19 + 18 + 8 + 17}{6} = 15.33, \quad \mu_0 = 18
+  \]
+  Then,
+  \[
+    \dfrac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} = \dfrac{15.33 - 18}{3 / \sqrt{6}}  \approx -2.18 < -z_{0.05} \approx -1.645
+  \]
+  Thus, we reject \(H_0\).
+
+  However, if \(\sigma\) is unknown, we have
+  \[
+    s^2 = \dfrac{(15 - 15.33)^2 + \cdots + (17 - 15.33)^2}{6 - 1} \approx 15.47, \quad s \approx 3.93
+  \]
+  Then,
+  \[
+    \dfrac{\overline{x} - \mu_0}{s / \sqrt{n}} = \dfrac{15.33 - 18}{3.93 / \sqrt{6}} \approx -1.71 > -t_{0.05} \approx -2.015
+  \]
+  Thus, we accept \(H_0\).
+\end{eg}
+
+\section{The \(p\)-value}
+The \(p\)-value is the smallest probability of committing a type I error for which the null hypothesis \(H_0\) would be rejected, given a specific test statistic. Consider the two-sided hypothesis test:
+\[
+  H_0: \mu = \mu_0 \quad \text{vs.} \quad H_1: \mu \neq \mu_0,
+\]
+where
+\[
+  \alpha = \mathbb{P}(\overline{X} \in R \mid \mu = \mu_0), \quad R = \left\{ \overline{X} \; \bigg| \; \left| \overline{X} - \mu_0 \right| \geq \xi \right\}.
+\]
+
+Given a specific observation \(\overline{x}\), we reject \(H_0\) if \(\left| \overline{x} - \mu_0 \right| \geq \xi\). However, instead of using a fixed rejection threshold \(\xi\), we aim to compute the smallest significance level \(\alpha\) for which \(H_0\) would be rejected—this is the \(p\)-value. A smaller \(\xi\) enlarges the rejection region \(R\), increasing \(\alpha\), while a larger \(\xi\) shrinks \(R\), decreasing \(\alpha\). Thus, the smallest possible rejection region consistent with the observed \(\overline{x}\) is:
+\[
+  R = \left\{ \overline{X} \; \bigg| \; \left| \overline{X} - \mu_0 \right| \geq \left| \overline{x} - \mu_0 \right| \right\},
+\]
+and the \(p\)-value is given by
+\[
+  \mathbb{P}\left( \left| \overline{X} - \mu_0 \right| \geq \left| \overline{x} - \mu_0 \right| \;\middle|\; \mu = \mu_0 \right).
+\]
+For large sample sizes (\(n \geq 30\)) and known \(\sigma\), the test statistic
+\[
+  Z = \frac{\overline{X} - \mu_0}{\sigma / \sqrt{n}}
+\]
+follows a standard normal distribution, so the \(p\)-value becomes
+\[
+  \mathbb{P}\left( \left| Z \right| \geq \left| \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right| \right) = \mathbb{P}\left( Z \geq \left| \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right| \right) + \mathbb{P}\left( Z \leq -\left| \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right| \right).
+\]
+
+If \(\sigma\) is unknown, we estimate it using the sample standard deviation \(s\), and approximate:
+\[
+  \mathbb{P}\left( \left| Z \right| \geq \left| \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \right| \right) \approx \mathbb{P}\left( Z \geq \left| \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \right| \right) + \mathbb{P}\left( Z \leq -\left| \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \right| \right).
+\]
+
+For a \textbf{right-tailed} test:
+\[
+  H_0: \mu = \mu_0 \quad \text{vs.} \quad H_1: \mu > \mu_0,
+\]
+we compute:
+\[
+  \mathbb{P}\left( \overline{X} - \mu_0 \geq \overline{x} - \mu_0 \;\middle|\; \mu = \mu_0 \right) = \underbrace{ \mathbb{P}\left( Z \geq \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right) }_{\text{\(\sigma\) known}} \approx \underbrace{ \mathbb{P}\left( Z \geq \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \right) }_{\text{\(\sigma\) unknown}}.
+\]
+
+For a \textbf{left-tailed} test:
+\[
+  H_0: \mu = \mu_0 \quad \text{vs.} \quad H_1: \mu < \mu_0,
+\]
+we compute:
+\[
+  \mathbb{P}\left( \overline{X} - \mu_0 \leq \overline{x} - \mu_0 \;\middle|\; \mu = \mu_0 \right) = \underbrace{ \mathbb{P}\left( Z \leq \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right) }_{\text{\(\sigma\) known}} \approx \underbrace{ \mathbb{P}\left( Z \leq \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \right) }_{\text{\(\sigma\) unknown}}.
+\]
+
+Now suppose \(X_1, \dots, X_n\) are i.i.d. normal random variables, and \(n < 30\). Then \(\overline{X}\) is normally distributed, and we proceed as follows:
+
+For the two-sided test:
+\[
+  H_0: \mu = \mu_0 \quad \text{vs.} \quad H_1: \mu \neq \mu_0,
+\]
+when \(\sigma\) is known:
+\[
+  \mathbb{P}\left( \left| Z \right| \geq \left| \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right| \right) = \mathbb{P}\left( Z \geq \left| \cdot \right| \right) + \mathbb{P}\left( Z \leq -\left| \cdot \right| \right).
+\]
+When \(\sigma\) is unknown, we instead use the \(t\)-distribution:
+\[
+  \mathbb{P}\left( \left| T \right| \geq \left| \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \right| \right) = \mathbb{P}\left( T \geq \left| \cdot \right| \right) + \mathbb{P}\left( T \leq -\left| \cdot \right| \right),
+\]
+where \(T \sim t_{n-1}\).
+
+For the one-sided tests with small \(n\):
+
+\textbf{Right-tailed}:
+\[
+  \mathbb{P}\left( \overline{X} - \mu_0 \geq \overline{x} - \mu_0 \;\middle|\; \mu = \mu_0 \right) = 
+  \underbrace{ \mathbb{P}\left( Z \geq \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right) }_{\sigma \text{ known}} 
+  \approx \underbrace{ \mathbb{P}\left( T \geq \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \right) }_{\sigma \text{ unknown}}.
+\]
+
+\textbf{Left-tailed}:
+\[
+  \mathbb{P}\left( \overline{X} - \mu_0 \leq \overline{x} - \mu_0 \;\middle|\; \mu = \mu_0 \right) = 
+  \underbrace{ \mathbb{P}\left( Z \leq \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right) }_{\sigma \text{ known}} 
+  \approx \underbrace{ \mathbb{P}\left( T \leq \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \right) }_{\sigma \text{ unknown}}.
+\]
+
+We can then use the \(p\)-value approach to conduct a statistical test. Assume that \(H_0\) is true. We estimate the sample mean \(\overline{x}\) from the observed data, compute the corresponding \(p\)-value, and compare it with a predefined significance level \(\alpha\). If the \(p\)-value is smaller than \(\alpha\), we reject \(H_0\); otherwise, we fail to reject \(H_0\).
+
+\begin{eg}
+  The average temperature of Hong Kong in February is \(18^\circ\text{C}\). Has this year been unusual? Has this year been colder (assume \(\sigma\) unknown)? Assume temperature in February follows \(\mathcal{N}(\mu, \sigma^2)\) and \(\sigma = 3^\circ\text{C}\). Suppose \(\alpha = 0.05\). 
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|c}
+      \toprule
+      Day & 1 & 6 & 11 & 16 & 21 & 26 \\
+      \midrule
+      Temp \((^\circ\text{C})\) & 15 & 15 & 19 & 18 & 8 & 17 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \textbf{Solution:}  
+  Here we have \(H_0: \mu = 18\), \(H_1: \mu \neq 18\).  
+  \[
+    Z = \dfrac{\overline{X} - \mu_0}{\sigma / \sqrt{n}} \sim \mathcal{N}(0, 1)
+  \]
+  By calculation, we have
+  \[
+    \dfrac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} = \dfrac{15.33 - 18}{3 / \sqrt{6}} \approx 2.18
+  \]
+  \[
+  \begin{aligned}
+    p\text{-value} &= \mathbb{P}\left( Z \geq \left| \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right| \right) + \mathbb{P}\left( Z \leq -\left| \frac{\overline{x} - \mu_0}{\sigma / \sqrt{n}} \right| \right) \\
+    &= \mathbb{P}(Z \geq 2.18) + \mathbb{P}(Z \leq -2.18) \\
+    &= (1 - 0.9854) + (1 - 0.9854) \\
+    &= 0.0292 \\
+    &< \alpha = 0.05
+  \end{aligned}
+  \]
+  Thus, we reject \(H_0\).
+
+  If \(\sigma\) is unknown, for \(H_0: \mu = 18\), \(H_1: \mu < 18\), we have
+  \[
+    s^2 = \dfrac{(15 - 15.33)^2 + \cdots + (17 - 15.33)^2}{6 - 1} \approx 15.47, \quad s \approx 3.93
+  \]
+  \[
+    \dfrac{\overline{x} - \mu_0}{s / \sqrt{n}} = \dfrac{15.33 - 18}{3.93 / \sqrt{6}} \approx -1.71
+  \]
+  \[
+    p\text{-value} = \mathbb{P}\left( T \leq \frac{\overline{x} - \mu_0}{s / \sqrt{n}} \right) = \mathbb{P} ( T > 1.71) = 0.07 > \alpha = 0.05
+  \]
+  Thus, we accept \(H_0\).
+\end{eg}
