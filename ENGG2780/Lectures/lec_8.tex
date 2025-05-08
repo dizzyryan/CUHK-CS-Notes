@@ -9,45 +9,184 @@ Before we dive into the context, we first define some terminology.
 
 Recall that in Bayesian statistics, we have a parameter \(\Theta\) that takes \(m\) possible values \(\theta_1, \theta_2, \dots, \theta_m\), and we use Bayesian inference to estimate the most likely value given observed data. Now, we consider a special case where \(\Theta\) can take only two values, 0 and 1. This scenario is known as binary hypothesis testing.
 
-We denote the hypothesis \(\Theta = 0\) by \(H_0\), called the null hypothesis, which is considered the default assumption.  
+We denote the hypothesis \(\Theta = 0\) by \(H_0\), called the null hypothesis, which is considered the default assumption. We denote the hypothesis \(\Theta = 1\) by \(H_1\), called the alternative hypothesis.  
 
-We denote the hypothesis \(\Theta = 1\) by \(H_1\), called the alternative hypothesis.  
+For example, we can claim that a new drug has no effect, which is the default claim \(H_0\), while the claim that "the new drug has an effect" corresponds to the alternative hypothesis \(H_1\).
 
 Note that under each hypothesis, the data follows a specific probability distribution. By default, we assume the sample follows the distribution defined by \(H_0\), and hypothesis testing determines whether there is sufficient evidence to reject \(H_0\) in favor of \(H_1\).
 
-After observing \(n\) independent samples \(X_1, \dots, X_n\) with the same PMF or PDF, which depends on the hypothesis, we denote by \(f_{X \mid \Theta}\) the PMF or PDF defined by the hypothesis.
+After observing \(n\) independent samples \(X_1, \dots, X_n\) with the same PMF or PDF, which depends on the hypothesis, we denote by \(f_{X \vert \Theta}\) the PMF or PDF defined by the hypothesis.
 
 A binary decision rule can be represented by two disjoint regions of all possible observations. We have \(R\), called the rejection region, where hypothesis \(H_0\) is rejected if the observed data fall within this region. Simply put, the samples suggest that the data follow the distribution under hypothesis \(H_1\).  
 
-The complement \(R^{\prime}\) is called the acceptance region, where hypothesis \(H_0\) is accepted if the observed data fall within this region. In other words, the data are consistent with the distribution under \(H_0\).
+The complement \(R^{c}\) is called the acceptance region, where hypothesis \(H_0\) is accepted if the observed data fall within this region. In other words, the data are consistent with the distribution under \(H_0\).
 
 For a particular choice of the rejection region, we have two types of errors.
 
-For a \textbf{Type I error}, also known as a false rejection or false positive, we reject hypothesis \(H_0\) even though \(H_0\) is true. In other words, the data suggest that it follows \(H_1\), while the actual distribution is \(H_0\).
-
-We define the probability of a Type I error as:  
+For a \textbf{Type I error}, also known as a false rejection or false positive, we reject hypothesis \(H_0\) even though \(H_0\) is true. In other words, the data suggest that it follows \(H_1\), while the actual distribution is \(H_0\). We define the probability of a Type I error as:  
 \[
-  \alpha (R) = \mathbb{P}(X \in R \mid H_0).
+  \alpha (R) = \mathbb{P}(X \in R \vert H_0).
 \]
 
-Similarly, we have a \textbf{Type II error}, also known as a false acceptance or false negative. This occurs when we accept hypothesis \(H_0\) even though \(H_0\) is false. In other words, the data suggest that it follows \(H_0\), while the actual distribution is \(H_1\).
-
-We define the probability of a Type II error as:  
+Similarly, we have a \textbf{Type II error}, also known as a false acceptance or false negative. This occurs when we accept hypothesis \(H_0\) even though \(H_0\) is false. In other words, the data suggest that it follows \(H_0\), while the actual distribution is \(H_1\). We define the probability of a Type II error as:  
 \[
-  \beta (R) = \mathbb{P}(X \notin R \mid H_1).
+  \beta (R) = \mathbb{P}(X \notin R \vert H_1).
 \]
 
 \section{Likelihood Ratio}
+\subsection{Likelihood Ratio Test}
 Now, let's look at an example. Suppose we have a coin that can either be fair (\(H_0\)) or loaded (\(H_1\)), where \(p_H = \frac{3}{4}\). If we decide that when the number of heads observed is greater than or equal to 14, we would conclude that it is more likely to be \(H_1\).  
 
 We can now calculate the error as follows:  
 \[
-  \mathbb{P}(H_1 \mid H_0) = \mathbb{P}(\text{Binomial}(20, 0.5) \geq 14) = 0.057
+  \mathbb{P}(H_1 \vert H_0) = \mathbb{P}(\text{Binomial}(20, 0.5) \geq 14) = 0.057
 \]  
 \[
-  \mathbb{P}(H_0 \mid H_1) = \mathbb{P}(\text{Binomial}(20, \frac{3}{4}) \leq 13) = 0.214
+  \mathbb{P}(H_0 \vert H_1) = \mathbb{P}(\text{Binomial}(20, \frac{3}{4}) \leq 13) = 0.214
+\]
+Note that here the Type I error is much smaller than the Type II error, which is desirable, since Type I errors are usually more costly.  
+
+One way to think about it is that the null hypothesis represents the default case, which we only reject if there is sufficient evidence. However, a Type I error means that even though the null hypothesis is true, we still reject it. This is not considered a ``safe'' decision, so we typically aim to minimize the Type I error, even though doing so may increase the Type II error.  
+
+That said, there are cases where a Type II error is more costly—for example, failing to detect a disease—but such cases are less common. But in general-purpose testing, Type I is treated more seriously because it’s the one we explicitly control.
+
+However, we still want to make a decision. So how can we ensure that the decision we make is optimal? One approach is to use the \textbf{Likelihood Ratio Test}.
+
+Suppose \(X_1, \cdots, X_n\) are independent random variables with the same PDF or PMF. Then we define the \textbf{likelihood ratio} as  
+\[
+  L(x_1, \cdots, x_n) = \dfrac{f_X(x_1, \cdots, x_n \vert H_1)}{f_X(x_1, \cdots, x_n \vert H_0)}.
+\]
+We use the following general decision rule: we accept \(H_1\) (\(\Theta = 1\)) if \(L(x_1, \cdots, x_n) > \xi\), where \(\xi > 0\) is a critical threshold. Otherwise, we accept \(H_0\) (\(\Theta = 0\)).
+
+\begin{remark}
+  Notice that in Bayesian statistics, we use the MAP (Maximum A Posteriori) rule, where the threshold is given by
+  \[
+    \xi = \dfrac{\mathbb{P}_{\Theta}(\theta = 0)}{\mathbb{P}_{\Theta}(\theta = 1)},
+  \]
+  and the posterior ratio becomes
+  \[
+    \dfrac{f_{\Theta \vert X}(1 \vert x)}{f_{\Theta \vert X}(0 \vert x)} 
+    = \dfrac{f_{X \vert \Theta}(x \vert 1)\mathbb{P}_{\Theta}(\theta = 1)}{f_{X \vert \Theta}(x \vert 0)\mathbb{P}_{\Theta}(\theta = 0)} > 1.
+  \]
+  In classical statistics, we use the likelihood ratio test without a prior:
+  \[
+    \dfrac{f_X(x \vert H_1)}{f_X(x \vert H_0)} > 1.
+  \]
+\end{remark}
+
+For example, given a six-sided die, there are two hypotheses: fair \((H_0)\) or loaded \((H_1)\), with the following PMFs: 
+\[
+  P_X(x \vert H_0) = \frac{1}{6} \quad \text{for } x = 1, \dots, 6
+\]
+\[
+  P_X(x \vert H_1) = 
+  \begin{dcases}
+    \frac{1}{4}, &\text{if } x = 1, 2 \\
+    \frac{1}{8}, &\text{if } x = 3, 4, 5, 6
+  \end{dcases}
 \]
 
-Note that 
+Given a single roll \(x\) of the die, consider the likelihood ratio:
+\[
+  L(x) = 
+  \begin{dcases}
+    \dfrac{\frac{1}{4}}{\frac{1}{6}} = \frac{3}{2}, &\text{if } x = 1, 2 \\
+    \dfrac{\frac{1}{8}}{\frac{1}{6}} = \frac{3}{4}, &\text{if } x = 3, 4, 5, 6
+  \end{dcases}
+\]
 
-But we normally want to make the decision, then how do we make sure that the decision we made is optimize? we could use the Likelihood ratio test. 
+There are three possibilities to consider for the critical threshold \(\xi\):
+\[
+  \begin{dcases}
+    \xi < \frac{3}{4}, &\text{Reject \(H_0\) for all \(x\)} \\
+    \frac{3}{4} < \xi < \frac{3}{2}, &\text{Reject \(H_0\) if \(x = 1, 2\); Accept \(H_0\) otherwise} \\
+    \xi > \frac{3}{2}, &\text{Accept \(H_0\) for all \(x\)}
+  \end{dcases}
+\]
+
+Then we can compute the probabilities of Type I and Type II errors:
+
+\textbf{Type I error (false positive):}
+\[
+  \alpha(\xi) = \mathbb{P}(x \in R \vert H_0) = 
+  \begin{dcases}
+    1, &\text{if } \xi < \frac{3}{4} \\
+    \frac{2}{6} = \frac{1}{3}, &\text{if } \frac{3}{4} < \xi < \frac{3}{2} \\
+    0, &\text{if } \xi > \frac{3}{2}
+  \end{dcases}
+\]
+
+\textbf{Type II error (false negative):}
+\[
+  \beta(\xi) = \mathbb{P}(x \notin R \vert H_1) = 
+  \begin{dcases}
+    0, &\text{if } \xi < \frac{3}{4} \\
+    \frac{4}{8} = \frac{1}{2}, &\text{if } \frac{3}{4} < \xi < \frac{3}{2} \\
+    1, &\text{if } \xi > \frac{3}{2}
+  \end{dcases}
+\]
+
+Also, as \(\xi\) increases, the rejection region becomes smaller. Thus, the probability of false rejection, \(\alpha(R)\), decreases, while the probability of false acceptance, \(\beta(R)\), increases.
+
+Then, how do we choose the trade-off threshold \(\xi\)? 
+
+One popular approach to choosing \(\xi\) is the \textbf{Likelihood Ratio Test}. We first specify a target value \(\alpha\) for the false rejection probability (Type I error). Then, we select a value of \(\xi\) such that the false rejection probability equals \(\alpha\), i.e.,
+\[
+  \mathbb{P}(L(x) > \xi \vert H_0) = \alpha.
+\]
+Once the value \(X = x\) is observed, we reject \(H_0\) if \(L(x) > \xi\).
+
+Here, \(\alpha\) is called the \emph{significance level}. Typical choices for \(\alpha\) are 0.01, 0.05, and 0.10.
+
+\begin{eg}
+  A car-jack detector \(X\) outputs \(\mathcal{N}(0, 1)\) if there is no intruder and \(\mathcal{N}(1, 1)\) if there is one. When should the alarm activate? How should we choose \(\xi\)?
+
+  \textbf{Solution:}  
+  Let \(H_0\) denote ``no intruder'' and \(H_1\) denote ``intruder present''. Then, the densities are:
+  \[
+    f_X(x \vert H_0) = \dfrac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}, \quad 
+    f_X(x \vert H_1) = \dfrac{1}{\sqrt{2\pi}} e^{-\frac{(x - 1)^2}{2}}.
+  \]
+  The likelihood ratio is:
+  \[
+    L(x) = \dfrac{f_X(x \vert H_1)}{f_X(x \vert H_0)} = 
+    \dfrac{e^{-\frac{(x - 1)^2}{2}}}{e^{-\frac{x^2}{2}}} = 
+    e^{\frac{2x - 1}{2}}.
+  \]
+
+  Suppose we set the significance level \(\alpha = 0.025\), the probability of a Type I error. Then we solve:
+  \[
+    \mathbb{P}(L(x) > \xi \vert H_0) = 0.025.
+  \]
+  Substituting the likelihood ratio:
+  \[
+    \mathbb{P}(e^{\frac{2X - 1}{2}} > \xi \vert H_0) = 0.025,
+  \]
+  where \(X \sim \mathcal{N}(0, 1)\). Taking logarithms:
+  \[
+    \mathbb{P}\left(X > \ln \xi + \frac{1}{2}\right) = 0.025.
+  \]
+  Using the standard normal quantile \(z_{0.975} = 1.96\), we solve:
+  \[
+    \ln \xi + \frac{1}{2} = 1.96 \quad \Longrightarrow \quad \ln \xi = 1.46 \quad \Longrightarrow \quad \xi = e^{1.46}.
+  \]
+\end{eg}
+
+\subsection{Neyman-Pearson Lemma}
+Consider a particular choice of \(\xi\) in the likelihood ratio test, which results in error probabilities 
+\[
+  \mathbb{P}(L(x) > \xi \mid H_0) = \alpha \quad \text{and} \quad \mathbb{P}(L(x) \leq \xi \mid H_1) = \beta.
+\]
+Suppose an alternative test with rejection region \(R'\) satisfies
+\[
+  \mathbb{P}(X \in R' \mid H_0) \leq \alpha,
+\]
+then we have
+\[
+  \mathbb{P}(X \notin R' \mid H_1) \geq \beta,
+\]
+with strict inequality
+\[
+  \mathbb{P}(X \notin R' \mid H_1) > \beta \quad \text{if} \quad \mathbb{P}(X \in R' \mid H_0) < \alpha.
+\]
+This lemma shows that no test exists such that \(\mathbb{P}(X \in R' \mid H_0) = \alpha\) while \(\mathbb{P}(X \notin R' \mid H_1) < \beta\).
