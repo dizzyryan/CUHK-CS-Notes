@@ -1,0 +1,204 @@
+\chapter{Comparing Population}
+
+Suppose we want to explore whether male and female college students have different driving behaviors in terms of the \textbf{mean fastest driving speed}. Based on a survey of 18 male students and 20 female students, we find that the mean fastest speeds driven by male and female students are 105 kph and 90 kph, respectively. Can we claim that the mean fastest speed driven by male college students is different from that of female college students? Or, more specifically, can we claim that the mean fastest speed driven by male students is \textbf{faster} than that of female students?
+
+This requires a different technique, which will be introduced in this chapter.
+
+Suppose \(X_1, \cdots, X_{n_x}\) are independent random variables with common mean \(\mu_x\) and variance \(\sigma_x^2\), and \(Y_1, \cdots, Y_{n_y}\) are independent with common mean \(\mu_y\) and variance \(\sigma_y^2\). We also assume that the \(X_i\)'s and \(Y_i\)'s are mutually independent.
+
+Suppose \(n_x, n_y \geq 30\), and we are testing at a significance level \(\alpha\). Then, as discussed in the previous chapter, we may consider:
+
+\textbf{Two-sided test:}
+\[
+  H_0: \mu_x = \mu_y \quad \text{vs.} \quad H_1: \mu_x \neq \mu_y
+\]
+
+\textbf{One-sided tests:}
+\[
+  \text{Right-sided: } H_0: \mu_x = \mu_y \quad \text{vs.} \quad H_1: \mu_x > \mu_y
+\]
+\[
+  \text{Left-sided: } H_0: \mu_x = \mu_y \quad \text{vs.} \quad H_1: \mu_x < \mu_y
+\]
+
+We can also rewrite these hypotheses in terms of the difference in means:
+\[
+  H_0: \mu_x - \mu_y = 0 \quad \text{vs.} \quad H_1: \mu_x - \mu_y \neq 0
+\]
+
+By the Central Limit Theorem (CLT), we have:
+\[
+  \overline{X} \sim \mathcal{N} \left( \mu_x, \frac{\sigma_x^2}{n_x} \right), \quad \overline{Y} \sim \mathcal{N} \left( \mu_y, \frac{\sigma_y^2}{n_y} \right) \Longrightarrow \overline{X} - \overline{Y} \sim \mathcal{N} \left( \mu_x - \mu_y, \frac{\sigma_x^2}{n_x} + \frac{\sigma_y^2}{n_y} \right)
+\]
+
+Assuming \(H_0: \mu_x - \mu_y = 0\) is true, then the test statistic is:
+\[
+  Z = \frac{(\overline{X} - \overline{Y}) - (\mu_x - \mu_y)}{\sigma_D} = \frac{\overline{X} - \overline{Y}}{\sigma_D} \sim \mathcal{N}(0, 1) \Longrightarrow \sigma_D = \sqrt{\frac{\sigma_x^2}{n_x} + \frac{\sigma_y^2}{n_y}}
+\]
+
+Then, we can proceed using the \(p\)-value approach or rejection region approach as before.
+
+\textbf{Critical Value Approach}
+\[
+  \alpha = \mathbb{P} \left( \left| \left( \overline{X} - \overline{Y} \right) - 0 \right| \geq \xi \right)
+  = \mathbb{P} \left( \left| \frac{\overline{X} - \overline{Y}}{\sigma_D} \right| \geq \frac{\xi}{\sigma_D} \right)
+  = \mathbb{P} \left( \left| Z \right| \geq z_{\frac{\alpha}{2}} \right)
+\]
+When \(\sigma_x\) and \(\sigma_y\) are known, and given observed sample means \(\overline{x}\) and \(\overline{y}\), if
+\[
+  \left| \frac{\overline{x} - \overline{y}}{\sigma_D} \right| \geq z_{\frac{\alpha}{2}},
+\]
+then we \textbf{reject} \(H_0\); otherwise, we \textbf{fail to reject} \(H_0\).
+
+When \(\sigma_x\) and \(\sigma_y\) are unknown, we approximate them with the sample standard deviations \(s_x\) and \(s_y\). If
+\[
+  \left| \frac{\overline{x} - \overline{y}}{s_D} \right| \geq z_{\frac{\alpha}{2}},
+\]
+then we \textbf{reject} \(H_0\); otherwise, we \textbf{fail to reject} it.
+
+Note that
+\[
+  s_D = \sqrt{ \frac{s_x^2}{n_x} + \frac{s_y^2}{n_y} }
+\]
+
+\textbf{\(p\)-Value Approach}
+
+Given specific values \(\overline{x}\) and \(\overline{y}\), the \(p\)-value is computed as
+\[
+  \mathbb{P}\left( \left| Z \right| \geq \left| \frac{\overline{x} - \overline{y}}{\sigma_D} \right| \right)
+  = \mathbb{P}\left( Z \geq \left| \frac{\overline{x} - \overline{y}}{\sigma_D} \right| \right)
+  + \mathbb{P}\left( Z \leq -\left| \frac{\overline{x} - \overline{y}}{\sigma_D} \right| \right).
+\]
+
+If \(\sigma\) is unknown, we estimate it using the sample standard deviations \(s_x\) and \(s_y\), and approximate:
+\[
+  \mathbb{P}\left( \left| Z \right| \geq \left| \frac{\overline{x} - \overline{y}}{s_D} \right| \right)
+  = \mathbb{P}\left( Z \geq \left| \frac{\overline{x} - \overline{y}}{s_D} \right| \right)
+  + \mathbb{P}\left( Z \leq -\left| \frac{\overline{x} - \overline{y}}{s_D} \right| \right).
+\]
+
+If the \(p\)-value is smaller than \(\alpha\), we reject \(H_0\); otherwise, we fail to reject \(H_0\).
+
+As in the previous chapter, we consider the case where \(n_x, n_y < 30\). If both \(X_i\) and \(Y_i\) are normally distributed and \(\sigma_x^2\), \(\sigma_y^2\) are known, then under \(H_0: \mu_x - \mu_y = 0\), we have:
+\[
+  \overline{X} \sim \mathcal{N} \left( \mu_x, \frac{\sigma_x^2}{n_x} \right), \quad
+  \overline{Y} \sim \mathcal{N} \left( \mu_y, \frac{\sigma_y^2}{n_y} \right)
+  \Rightarrow \overline{X} - \overline{Y} \sim \mathcal{N} \left( \mu_x - \mu_y, \frac{\sigma_x^2}{n_x} + \frac{\sigma_y^2}{n_y} \right)
+\]
+\[
+  Z = \frac{\overline{X} - \overline{Y}}{\sigma_D} \sim \mathcal{N}(0, 1),
+  \quad \text{where } \sigma_D = \sqrt{ \frac{\sigma_x^2}{n_x} + \frac{\sigma_y^2}{n_y} }
+\]
+
+Given specific \(\overline{x}\) and \(\overline{y}\), if
+\[
+  \left| \frac{\overline{x} - \overline{y}}{\sigma_D} \right| \geq z_{\frac{\alpha}{2}},
+\]
+then we reject \(H_0\); otherwise, we fail to reject it.
+
+Suppose \(X_1, \dots, X_{n_x} \sim \mathcal{N}(\mu_x, \sigma^2)\), and \(Y_1, \dots, Y_{n_y} \sim \mathcal{N}(\mu_y, \sigma^2)\), with mutually independent samples, and \(\sigma^2\) unknown but equal. For \(n_x, n_y < 30\), we have:
+\[
+  T = \frac{(\overline{X} - \overline{Y}) - (\mu_x - \mu_y)}{S_D \sqrt{ \frac{1}{n_x} + \frac{1}{n_y} }} \sim t(n_x + n_y - 2)
+\]
+where the pooled variance is given by:
+\[
+  S_D^2 = \frac{(n_x - 1) S_x^2 + (n_y - 1) S_y^2}{n_x + n_y - 2}
+\]
+and \(S_x^2\), \(S_y^2\) are the unbiased sample variances.
+
+Assuming \(H_0: \mu_x - \mu_y = 0\), we have:
+\[
+  \alpha = \mathbb{P} \left( \left| \overline{X} - \overline{Y} \right| \geq \xi \right)
+  = \mathbb{P} \left( |T| \geq \frac{\xi}{S_D \sqrt{ \frac{1}{n_x} + \frac{1}{n_y} }} \right)
+  = \mathbb{P} \left( |T| \geq t_{\frac{\alpha}{2}} \right)
+\]
+
+Given specific values \(\overline{x}\) and \(\overline{y}\), if
+\[
+  \frac{|\overline{x} - \overline{y}|}{S_D \sqrt{ \frac{1}{n_x} + \frac{1}{n_y} }} \geq t_{\frac{\alpha}{2}},
+\]
+then we reject \(H_0\); otherwise, we fail to reject \(H_0\).
+
+We also consider the one-sided case. Suppose \(X_1, \cdots, X_{n_x}\) are independent random variables with common mean \(\mu_x\) and variance \(\sigma_x^2\), and \(Y_1, \cdots, Y_{n_y}\) are independent with common mean \(\mu_y\) and variance \(\sigma_y^2\). We also assume that the \(X_i\)'s and \(Y_i\)'s are mutually independent. Consider the following:
+\[
+  \text{Right-sided: } H_0: \mu_x = \mu_y \quad \text{vs.} \quad H_1: \mu_x > \mu_y \Longrightarrow H_0: \mu_x - \mu_y = 0 \quad \text{vs.} \quad H_1: \mu_x - \mu_y > 0
+\]
+For large \(n_x, n_y \geq 30\) or \(n_x, n_y < 30\) with normal PDF and known \(\sigma_x, \sigma_y\), we can use the critical value \(z_\alpha\). That is, given specific \(\overline{x}\) and \(\overline{y}\), if 
+\[
+  \frac{\overline{x} - \overline{y}}{\sigma_D} \geq z_{\frac{\alpha}{2}},
+\]
+then we reject \(H_0\); otherwise, we fail to reject it. Here we have 
+\[
+  \sigma_D = \sqrt{ \frac{\sigma_x^2}{n_x} + \frac{\sigma_y^2}{n_y} }.
+\]
+If \(\sigma_x, \sigma_y\) are unknown, then they are replaced by \(s_x^2, s_y^2\).
+
+We can also use the \(p\)-value approach, where
+\[
+  p\text{-value} = \mathbb{P}\left( Z \geq \frac{\overline{x} - \overline{y}}{\sigma_D} \right).
+\]
+For \(n_x, n_y < 30\) with normal PDF, and unknown \(\sigma_x^2 = \sigma_y^2 = \sigma^2\), we use the critical value \(t_\alpha\). That is, given specific \(\overline{x}, \overline{y}\), if 
+\[
+  \frac{\overline{x} - \overline{y}}{S_D \sqrt{ \frac{1}{n_x} + \frac{1}{n_y} }} \geq t_{\frac{\alpha}{2}},
+\]
+then we reject \(H_0\); otherwise, we fail to reject \(H_0\).
+
+Here we have the \(p\)-value as
+\[
+  \mathbb{P} \left( T \geq \frac{\overline{x} - \overline{y}}{S_D \sqrt{ \frac{1}{n_x} + \frac{1}{n_y} }} \right),
+\]
+where 
+\[
+  T \sim t(n_x + n_y - 2).
+\]
+
+\begin{eg}
+  A thermometer reports readings: 
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c}
+        \toprule
+        Mon & 23.5 & 23.3 & 21.3 & 22.1 & 23.7  \\
+        \midrule
+        Tue & 22.8 & 24.5 & 23.7 &  &   \\
+        \bottomrule
+    \end{tabular}
+  \end{table}
+
+  Has the temperature increased? Suppose the readings follow \(\mathcal{N}(\mu_M, \sigma^2)\) on Monday and \(\mathcal{N}(\mu_T, \sigma^2)\) on Tuesday, and are independent, with \(\sigma = 1^\circ \text{C}\). Set \(\alpha = 0.05\), and use the \(p\)-value approach.
+
+  \textbf{Solution:} 
+  Consider 
+  \[
+    H_0: \mu_T - \mu_M = 0 \quad \text{vs.} \quad H_1: \mu_T - \mu_M > 0
+  \]
+  Denote by \(X_i\) the readings on Monday and \(Y_i\) the readings on Tuesday, where \(n_x = 5\), \(n_y = 3\), and the test statistic is \(\overline{Y} - \overline{X}\). Then we have 
+  \[
+    p\text{-value} = \mathbb{P}\left(Z \geq \dfrac{\overline{y} - \overline{x}}{\sigma_D}\right)
+  \]
+  where 
+  \[
+    \sigma_D = \sqrt{\frac{\sigma_x^2}{n_x} + \frac{\sigma_y^2}{n_y}}.
+  \]
+  Plugging in \(\overline{x} = 22.78\), \(\overline{y} = 23.67\), \(\sigma = 1\), \(n_x = 5\), \(n_y = 3\), we have 
+  \[
+    p\text{-value} = \mathbb{P}\left(Z \geq \dfrac{0.89}{0.73}\right) \approx \mathbb{P}(Z \geq 1.22) = 0.1112 > \alpha = 0.05
+  \]
+  Thus, we do not reject \(H_0\). 
+
+  However, if \(\sigma\) is unknown, we have 
+  \[
+    T \sim t(n_x + n_y - 2) = t(6).
+  \]
+  \[
+    S_D^2 = \frac{(n_x - 1) S_x^2 + (n_y - 1) S_y^2}{n_x + n_y - 2} = 0.98
+  \]
+  \[
+    \frac{\overline{y} - \overline{x}}{S_D \sqrt{ \frac{1}{n_x} + \frac{1}{n_y} }} \approx \dfrac{0.89}{0.98 \times 0.73} \approx 1.23 < t_{0.05}(6) = 1.94
+  \]
+  Again, we do not reject \(H_0\). 
+\end{eg}
+
+\begin{remark}
+  The content of paired \(t\) test is not covered here. 
+\end{remark}
