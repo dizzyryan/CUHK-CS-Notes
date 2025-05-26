@@ -87,9 +87,9 @@ _start:
         bne t0, t1, inst1
         addi a0, a0, 1
         beq t0, t1, inst2
-        inst1:  addi a0, a0, 2
+inst1:  addi a0, a0, 2
         bne t0, zero, end
-        inst2:  addi a0, a0, 3
+inst2:  addi a0, a0, 3
         end:    sub a0, a0, a1
 \end{Verbatim}
 \end{minipage}

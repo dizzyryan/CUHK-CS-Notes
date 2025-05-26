@@ -7,7 +7,7 @@ Cache-Main Memory mapping is a way to record which part of the Main Memory is cu
 
 Then, we must answer two questions: how do we know if a data item is in the cache? If it is, how do we find it?
 
-Cache size is much smaller than the main memory size. Thus, a block in the main memory maps to a block in the cache, where both are constructed from many blocks. Since the number of blocks in the cache is smaller than in the main memory, this relationship is called a \textbf{many-to-one mapping}.
+Cache size is much smaller than the main memory size. Thus, a block in the main memory maps to a block in the cache, where both are constructed from many blocks. Since the number of blocks in the cache is less than in the main memory, this relationship is called a \textbf{many-to-one mapping}.
 
 \section{Direct Mapping}
 One way to perform the mapping is called \textbf{direct mapping}. Here, we consider a main memory address that is 16 bits wide. It is divided into three fields:
@@ -51,8 +51,6 @@ The total number of bits in a direct-mapped cache is:
   2^n \times (\text{block size} + \text{tag field size} + \text{valid field size})
 \]
 
-The \textbf{Cache tag} is used to identify which \textbf{specific} block from main memory is currently stored in the cache. This is important because many main memory blocks can map to the same position in the cache. The \textbf{Cache Block Number} determines the location of the block in the cache and is used to index the cache. The last few bits of the address select the target word within the block.
-
 Then, for the total number of bits in a direct-mapped cache, we have
 \[
   2^{10} \times (4 \times 32 + (32 - 10 - 2 - 2) + 1) = 147\,\text{Kbits}
@@ -71,7 +69,7 @@ We can combine the Associative and direct mapping. We again divide the field int
 
 Again, if the CPU is looking for \verb|A7B4|, where MAR = \verb|1010011110110100|, it goes to check the set \verb|111011|. It will see if one of the two tags in the set \verb|111011| is \verb|101001|. If yes, then it is a cache hit. Otherwise, we will load the block into the BINGO cache row.
 
-For a fixed-size cache, the tag is used to perform tag comparison, the index is used to select the set, and the block offset is used to select the word within the block. For direct mapping, we have smaller tags, but for fully associative mapping, the tag consists of all the bits except the block and byte offsets. This is distinguished by a "freedom line" between the tag field and the index field.
+For a fixed-size cache, the tag is used to perform tag comparison, the index is used to select the set, and the block offset is used to select the word within the block. For direct mapping, we have smaller tags, but for fully associative mapping, the tag consists of all the bits except the block and byte offsets. This is distinguished by a ``freedom line'' between the tag field and the index field.
 
 We call it fully associative (with maximum freedom) when each block can be mapped to any location, and to find the block, we need to compare the tag each time we perform a lookup.
 

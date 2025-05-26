@@ -73,7 +73,7 @@ We can store one bit of information using a pair of inverters, which is stable. 
   S is set, R is reset. Thus, if \(S = 1\) and \(R = 0\), the latch is set, and the output will be 1.
 \end{remark}
 
-In SRAM cell, there are at least 6 transistors. This is used in most commercial chips, with a pair of weak cross-coupled inverters. Data is stored in the cross-coupled inverters, therefore, when power is applied, the data remains unchanged, making SRAM "static".
+In SRAM cell, there are at least 6 transistors. This is used in most commercial chips, with a pair of weak cross-coupled inverters. Data is stored in the cross-coupled inverters, therefore, when power is applied, the data remains unchanged, making SRAM ``static''.
 
 Since the data is stored in the cross-coupled inverters and doesn't need to be refreshed, it can be accessed quickly. However, SRAM cells require more transistors, which means they occupy more space on the chip.
 
@@ -113,7 +113,7 @@ SDRAM needs refreshing, but the refresh overhead is only less than 1 percent of 
 
 Again, as mentioned before, the processor and cache are fast, but the main memory is slow. Thus, we try to hide access latency by interleaving memory accesses across several memory modules. Each memory module has its own Address Buffer Register and Data Buffer Register, so they operate somewhat independently.
 
-To perform memory module interleaving, two or more compatible memory modules are used. Within a memory module, several chips are used in "parallel".
+To perform memory module interleaving, two or more compatible memory modules are used. Within a memory module, several chips are used in ``parallel''.
 
 For example, suppose we have a cache read miss and need to load from main memory. Assume a cache with an 8-word block, i.e., the cache line size is 8 words. Then, assume it takes one clock to send the address to DRAM memory and one clock to send the data back. In addition, DRAM has a 6-cycle latency for the first word, with each of the subsequent words in the same row taking only 4 cycles. Then for a single memory read, we have 
 \[
