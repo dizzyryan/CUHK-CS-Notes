@@ -1,0 +1,412 @@
+\section{Relational Algebra}
+Query languages are specialized languages used to ask questions or queries about data in a database. \textbf{Relational algebra} is a \textbf{procedural} query language, defined as a step-by-step procedure for computing the desired result. Its operators take one or two relations as input and produce a new relation as output. 
+
+Queries in relational algebra are composed of a collection of such operators. In this chapter, we will learn six basic operators:
+
+\begin{itemize}
+  \item \textbf{Select} \((\sigma)\) 
+  \item \textbf{Project} \((\Pi)\)
+  \item \textbf{Union} \((\cup)\) 
+  \item \textbf{Set difference} \((-)\) 
+  \item \textbf{Cartesian product} \((\times)\) 
+  \item \textbf{Rename} \((\rho)\) 
+\end{itemize}
+
+Before diving into relational algebra, we first review some fundamental set concepts.
+
+\subsection{Basic Set Concepts}
+Some basic set concepts:
+\begin{itemize}
+  \item \(S = \{a, b, c\}\) \hfill (A set \(S\) contains elements \(a\), \(b\), and \(c\).)
+  \item \(a \in S\) \hfill (\(a\) is an element of the set \(S\).)
+  \item \(a \notin S\) \hfill (\(a\) is not an element of the set \(S\).)
+  \item \(\{\ x \in S \mid P(x) \ \}\) \hfill (The set of all \(x\) in \(S\) such that \(P(x)\) is true.)
+\end{itemize}
+
+To describe relationships between sets \(A\) and \(B\): 
+\begin{itemize}
+  \item \(A\) is a \textbf{subset} of \(B\), denoted \(A \subseteq B\), if and only if every element of \(A\) is also an element of \(B\).
+  \item \(A\) is \textbf{not a subset} of \(B\), denoted \(A \nsubseteq B\), if there exists at least one element of \(A\) that is not an element of \(B\).
+  \item \(A\) is \textbf{equal} to \(B\), denoted \(A = B\), if and only if \(A \subseteq B\) and \(B \subseteq A\).
+\end{itemize}
+
+\subsection{Select Operation}
+For the \textbf{select} operation, we use the following notation: 
+\[
+  \sigma_P(r) = \{\ t \mid t \in r \land P(t) \ \}
+\] 
+where \(P\) is called the \textbf{selection predicate}. 
+
+This operation can be understood as: from relation \(r\), we select the tuples that satisfy the condition \(P\). 
+
+The selection predicate \(P\) is a Boolean expression, which can involve multiple conditions using logical connectives, i.e., terms connected by \(\land\) (AND), \(\lor\) (OR), and \(\lnot\) (NOT). Each term is of the form 
+\[
+  \texttt{<attribute1> op <attribute2>} \quad \text{or} \quad \texttt{<attribute> op <constant>},
+\]  
+where \(\text{op} \in \{=, \neq, >, \geq, <, \leq\}\). 
+
+In practice, the selection operation \(\sigma\) specifies the tuples to retain based on the selection predicate.
+
+\subsection{Project Operation}
+For the \textbf{project} operation, we use the following notation: 
+\[
+  \Pi_{A_1, A_2, \dots, A_k}(r)
+\]
+where \(A_1, A_2, \dots, A_k\) are attribute names. 
+
+This operation can be understood as: from relation \(r\), we extract only the columns \(A_1, A_2, \dots, A_k\), while all other columns are projected out. Duplicate rows are eliminated in the final result. 
+
+\begin{eg}
+Consider the following relation \textbf{Employee}:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{c|c|c|c|c|c|c}
+    \toprule
+    f\_name & l\_name & id & sex & salary & superid & dno  \\
+    \midrule
+    Joseph & Chan & 999999 & M & 29500 & 654321 & 4  \\
+    Victor & Wong & 001100 & M & 30000 & 888555 & 5  \\
+    Carrie & Kwan & 898989 & F & 26000 & 654321 & 4  \\
+    Joyce & Fong & 345345 & F & 12000 & 777888 & 4  \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item Find all employees who work in department 4 and whose salary is greater than 25000. 
+
+  \textbf{Solution:} 
+  \[
+    \sigma_{\text{dno} = 4 \land \text{salary} > 25000} (\text{Employee})
+  \]
+
+  \item Find the employee names and department numbers of all employees. 
+
+  \textbf{Solution:} 
+  \[
+    \Pi_{\text{f\_name, l\_name, dno}} (\text{Employee})
+  \]
+
+  \item Find the sex and department number of all employees. 
+
+  \textbf{Solution:} 
+  \[
+    \Pi_{\text{sex, dno}} (\text{Employee})
+  \]
+
+  \item Find the names of all employees who work in department 4 and whose salary is greater than 25000. 
+
+  \textbf{Solution:} 
+  \[
+    \Pi_{\text{f\_name, l\_name}} \big( \sigma_{\text{dno} = 4 \land \text{salary} > 25000} (\text{Employee}) \big)
+  \]
+\end{enumerate}
+\end{eg}
+
+\subsection{Union Operation}
+For the \textbf{union} operation, we use the following notation: 
+\[
+  r \cup s = \{\ t \mid t \in r \lor t \in s \ \}
+\]
+This operation returns a relation instance containing all tuples that occur in either relation \(R\) or relation \(S\) (or both). Duplicate tuples are eliminated in the result. 
+
+The schema of the result is identical to the schema of \(R\), and the attribute names are inherited from \(R\). 
+
+Intuitively, for \(R \cup S\) to be valid, \(R\) and \(S\) must have the same arity (the same number of attributes), and their corresponding attribute domains must be \textbf{union-compatible}. 
+
+In general, two or more relations are union-compatible if they have the same number of attributes and the corresponding attributes have the same domains.
+
+\begin{remark}
+  The union operation is \textbf{commutative}: \(R \cup S = S \cup R\). 
+\end{remark}
+
+\subsection{Set Difference Operation}
+For the \textbf{set difference} operation, we use the following notation: 
+\[
+  r - s = \{\ t \mid t \in r \land t \notin s \ \}
+\]
+This operation returns a relation instance containing all the tuples that occur in \(R\) but not in \(S\). 
+
+\begin{remark}
+  Set differences must be taken between \textbf{union-compatible} relations.
+\end{remark}
+
+Set difference is \textbf{not commutative}; in general, \(R - S \neq S - R\).
+
+\subsection{Cartesian Product}
+For the \textbf{Cartesian-Product} operation, we use the following notation: 
+\[
+  r \times s = \{\ pq \mid p \in r \land q \in s\ \}
+\]
+This operation returns a relation instance whose schema contains all the fields of \(R\) followed by all the fields of \(S\). The result contains one tuple \(\langle r, s \rangle\) (concatenation of tuples \(r\) and \(s\)) for each pair of tuples \(r \in R\), \(s \in S\).
+
+\begin{eg}
+We have two tables: 
+
+\textbf{EMPLOYEE:} f\_name, l\_name, id, bdate, addr, sex, salary, super\_id, dno 
+
+\textbf{DEPENDENT:} eid, dep\_name, sex, bdate, relationship (where eid is a foreign key referencing Employee)
+
+Retrieve, for each female employee, a list of the names of her dependents. 
+
+\textbf{Solution:} 
+\[
+  \text{Female\_emps} \leftarrow \sigma_{\text{sex = 'F'}}(\text{Employee})
+\] 
+\[
+  \text{Empnames} \leftarrow \Pi_{\text{f\_name, l\_name, id}}(\text{Female\_emps})
+\] 
+\[
+  \text{Emp\_dependents} \leftarrow \text{Empnames} \times \text{Dependent}
+\] 
+\[
+  \text{Actual\_dependents} \leftarrow \sigma_{\text{id} = \text{eid}} (\text{Emp\_dependents})
+\] 
+\[
+  \text{Result} \leftarrow \Pi_{\text{f\_name, l\_name, dep\_name}} (\text{Actual\_dependents})
+\]
+\end{eg} 
+
+In the above example, the operator \(\leftarrow\) is the \textbf{assignment operator}. The result of the expression on the right-hand side of \(\leftarrow\) is assigned to the relation variable on the left-hand side. 
+
+This operator provides a convenient way to express complex queries, allowing us to write a query as a sequential program consisting of a series of assignments, followed by an expression whose value is displayed as the query result. Assignment must always be made to a temporary relation variable.
+
+\subsection{Rename Operation}
+For the \textbf{rename} operation, we use the following notation:
+\[
+  \rho_X(E)
+\]
+This operation returns the expression \(E\) under the name \(X\).
+
+If a relational algebra expression \(E\) has arity \(n\), then
+\[
+  \rho_{X(A_1, A_2, \dots, A_n)}(E)
+\]
+returns the result of expression \(E\) under the name \(X\), with its attributes renamed to \(A_1, A_2, \dots, A_n\).
+
+When dealing with Cartesian products, it is often necessary to use renaming. 
+
+Notation \(w(W)\) implies that a relation \(w\) follows the schema \(W\). It is assumed that the attributes of \(r(R)\) and \(s(S)\) are disjoint, i.e., \(R \cap S = \varnothing\). If the attributes of \(r(R)\) and \(s(S)\) are not disjoint, then renaming \emph{must} be used.
+
+When attribute names are the same in different relations, such as \(r(A, B)\) and \(s(A, C)\), we use \textbf{dot-notation} to distinguish them:
+\[
+  r.A \text{ and } s.A
+\]
+This naming scheme avoids ambiguity during operations such as joins and products.
+
+\begin{remark}
+  The \textbf{rename} (\(\rho\)) operator is a \emph{basic} operator in relational algebra, while the \textbf{assignment} (\(\leftarrow\)) operator is not. 
+  Assignment simply allows us to store intermediate results under a temporary name for convenience — it does not modify the relations themselves or affect the algebraic computation.
+\end{remark}
+
+Now we look at some additional operations. 
+
+\subsection{Set-Intersection Operation}
+For the \textbf{set-intersection} operation, we use the following notation: 
+\[
+  r \cap s = \{\ t \mid t \in r \land t \in s\ \}
+\]
+This operation returns a relation instance containing all tuples that occur in both \(R\) and \(S\). The relations \(R\) and \(S\) must be \textbf{union-compatible}, and the schema of the result is defined to be identical to the schema of \(R\).
+
+The intersection operation can also be expressed using set difference: 
+\[
+  r \cap s = r - (r - s)
+\]
+
+\subsection{Natural Join}
+For the \textbf{natural join} operation, we use the following notation: 
+\[
+  r \Join s
+\]
+The natural join \(r \Join s\) is a relation on schema \(R \cup S\) obtained as follows. 
+
+Consider each pair of tuples \(t_r\) from \(r\) and \(t_s\) from \(s\). If \(t_r\) and \(t_s\) have the same values on each of the attributes in \(R \cap S\), add a tuple \(t\) to the result, where \(t\) has the same values as \(t_r\) on attributes from \(r\) and \(t\) has the same values as \(t_s\) on attributes from \(s\). 
+
+For example, let \(R = (A, B, C, D)\) and \(S = (E, B, D)\). Then, the result schema is \((A, B, C, D, E)\). The natural join can be expressed as: 
+\[
+  r \Join s = \Pi_{r.A, r.B, r.C, r.D, s.E} \big( \sigma_{r.B = s.B \land r.D = s.D} (r \times s) \big)
+\]
+
+\begin{remark} 
+  If the two relations have no attributes in common, then the natural join is simply the Cartesian product. The natural join operation is both \textbf{associative} and \textbf{commutative}.
+\end{remark}
+
+\subsection{Division Operation}
+\begin{minipage}{0.65\textwidth}
+  Consider two relations \(A\) and \(B\), where \(A\) has exactly two fields \(x\) and \(y\), and \(B\) has just one field \(y\), with the same domain as the \(y\) field in \(A\).
+
+  The division operation \(A / B\) returns the set of all \(x\) values (in the form of unary tuples) such that for every \(y\) value in a tuple of \(B\), there exists a tuple \(\langle x, y \rangle\) in \(A\).
+  
+  An analogy with integer division may help to understand this operation:
+  \begin{itemize}
+    \item For integers \(A\) and \(B\), \(A / B\) is the largest integer \(Q\) such that \(B \cdot Q \leq A\).
+    \item For relation instances \(A\) and \(B\), \(A / B\) is the largest relation instance \(Q\) such that \(Q \times B \subseteq A\).
+  \end{itemize}
+\end{minipage}\quad
+\begin{minipage}{0.1\textwidth}
+  \begin{table}[H]
+  \centering
+  \begin{tabular}{c|c}
+      \toprule
+      \(x\) & \(y\)  \\
+    \midrule
+      \(\alpha\) & \(1\)  \\
+      \(\alpha\) & \(2\)  \\
+      \(\alpha\) & \(3\)  \\
+      \(\beta\) & \(1\)  \\
+      \(\gamma\) & \(1\)  \\
+      \(\delta\) & \(1\)  \\
+      \(\delta\) & \(3\)  \\
+      \(\delta\) & \(4\)  \\
+      \(\varepsilon\) & \(1\)  \\
+      \(\varepsilon\) & \(2\)  \\
+      \bottomrule
+  \end{tabular}
+  \caption*{\(A\)}
+\end{table}
+\end{minipage}
+\begin{minipage}{0.1\textwidth}
+  \begin{table}[H]
+  \centering
+  \begin{tabular}{c}
+      \toprule
+      \(y\)  \\
+    \midrule
+      \(1\)  \\
+      \(2\)  \\
+      \bottomrule
+  \end{tabular}
+  \caption*{\(B\)}
+\end{table}
+\end{minipage}
+\begin{minipage}{0.1\textwidth}
+  \begin{table}[H]
+  \centering
+  \begin{tabular}{c}
+      \toprule
+      \(x\) \\
+    \midrule
+      \(\alpha\) \\
+      \(\beta\) \\
+      \bottomrule
+  \end{tabular}
+  \caption*{\(A / B\)}
+\end{table}
+\end{minipage}
+
+\textbf{Computation using relational algebra:} 
+\[
+A / B = \Pi_x(A) - \Pi_x\big( (\Pi_x(A) \times B) - A \big)
+\]
+
+Here \(\Pi_x(A)\) extracts all \(x\) values from \(A\). \((\Pi_x(A) \times B) - A\) finds all \(x\) values that do \emph{not} pair with every \(y\) in \(B\). Subtracting this from \(\Pi_x(A)\) gives the final result of \(A / B\). 
+
+\begin{eg}
+  We have two tables: 
+
+  \textbf{EMPLOYEE:} f\_name, l\_name, id, bdate, address, salary, sid, dno 
+
+  \textbf{WORKS\_ON:} id, pno 
+
+  Retrieve the names of employees who work on all the projects that \texttt{John Sung} works on.
+
+  \textbf{Solution:} 
+  \[
+  \text{Sung} \leftarrow \sigma_{\text{f\_name = 'John'} \land \text{l\_name = 'Sung'}}(\text{EMPLOYEE})
+  \]
+  \[
+  \text{Sung\_pnos} \leftarrow \Pi_{\text{pno}}(\text{WORKS\_ON} \Join \text{Sung})
+  \]
+  \[
+  \text{Result\_id} \leftarrow \text{WORKS\_ON} / \text{Sung\_pnos}
+  \]
+  \[
+  \text{Result} \leftarrow \Pi_{\text{f\_name, l\_name}}(\text{Result\_id} \Join \text{EMPLOYEE})
+  \]
+\end{eg}
+
+\begin{eg}
+  Consider the relational schemas below:
+
+  \textbf{Sailors}(sid, sname, age)
+  
+  \textbf{Boats}(bid, bname, color)
+  
+  \textbf{Reserves}(sid, bid, date)
+
+  \begin{enumerate}
+    \item Find the names of sailors who have reserved the boat with \(\text{bid} = 103\).
+    
+    \textbf{Solution:}
+    \[
+      \Pi_{\text{sname}} \big( (\sigma_{\text{bid} = 103} (\text{Reserves})) \Join \text{Sailors} \big)
+    \]
+
+    \item Find the names of sailors who have reserved at least one red boat.
+    
+    \textbf{Solution:}
+    \[
+      \Pi_{\text{sname}} \big( (\sigma_{\text{color} = \text{'red'}} (\text{Boats})) \Join \text{Reserves} \Join \text{Sailors} \big)
+    \]
+
+    \item Find the names of sailors who have reserved at least a red or a green boat.
+    
+    \textbf{Solution:}
+    \[
+      \rho_{\text{Tempboats}} \big( \sigma_{\text{color} = \text{'red'} \lor \text{color} = \text{'green'}} (\text{Boats}) \big)
+    \]
+    \[
+      \Pi_{\text{sname}} \big( \text{Tempboats} \Join \text{Reserves} \Join \text{Sailors} \big)
+    \]
+
+    \item Find the names of sailors who have reserved at least one red boat and at least one green boat.
+    
+    \textbf{Solution:}
+    \[
+      \rho_{\text{Tempred}} \big( \Pi_{\text{sid}} ( (\sigma_{\text{color} = \text{'red'}} (\text{Boats})) \Join \text{Reserves} ) \big)
+    \]
+    \[
+      \rho_{\text{Tempgreen}} \big( \Pi_{\text{sid}} ( (\sigma_{\text{color} = \text{'green'}} (\text{Boats})) \Join \text{Reserves} ) \big)
+    \]
+    \[
+      \Pi_{\text{sname}} \big( (\text{Tempred} \cap \text{Tempgreen}) \Join \text{Sailors} \big)
+    \]
+
+    \item Find the names of sailors who have reserved all boats.
+    
+    \textbf{Solution:}
+    \[
+      \rho_{\text{Tempsids}} \big( (\Pi_{\text{sid}, \text{bid}} (\text{Reserves})) / (\Pi_{\text{bid}} (\text{Boats})) \big)
+    \]
+    \[
+      \Pi_{\text{sname}} \big( \text{Tempsids} \Join \text{Sailors} \big)
+    \]
+
+    \item Find the names of sailors who have reserved all red boats.
+    
+    \textbf{Solution:}
+    \[
+      \rho_{\text{Tempsids}} \big( (\Pi_{\text{sid}, \text{bid}} (\text{Reserves})) / (\Pi_{\text{bid}} (\sigma_{\text{color} = \text{'red'}} (\text{Boats}))) \big)
+    \]
+    \[
+      \Pi_{\text{sname}} \big( \text{Tempsids} \Join \text{Sailors} \big)
+    \]
+  \end{enumerate}
+\end{eg}
+
+
+\subsection{Theta Join}
+For the \textbf{theta join} operation, we use the following notation:
+\[
+  r \Join_{\theta} s = \sigma_{\theta}(r \times s)
+\]
+The theta join is defined by combining a selection and a Cartesian product into a single operation. It is the most general form of the join operation, where the \emph{join condition} \(\theta\) is any valid selection condition.
+
+The comparison condition \(\theta\) can involve any of the standard comparison operators:
+\[
+  =, \ \neq, \ >, \ <, \ \geq, \ \leq
+\]
+When the join condition only involves equality (\(=\)), the operation is called an \textbf{equijoin}. 
+
+The \textbf{natural join} is a special case of the equijoin, in which equalities are specified on all attributes that have the same name in both relations \(R\) and \(S\). In this case, the join condition can be omitted. The resulting schema contains all attributes of \(R\), followed by the attributes of \(S\) that are not present in \(R\).

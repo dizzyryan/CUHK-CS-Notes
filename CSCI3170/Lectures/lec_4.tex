@@ -1,11 +1,10 @@
-\chapter{Logical Mapping}
+\chapter{Relation Model and Algebra}
 
-We have discussed the E-R diagram, which represents the \textbf{conceptual schema}. Once we have the E-R diagram, we can derive a \textbf{relational diagram}.  
+We have discussed the E-R diagram, which represents the \textbf{conceptual schema}. Once the E-R diagram is constructed, we can derive the \textbf{relational schema} (or relational diagram) from it. After examining the conversion process, we will then explore the fundamentals of \textbf{relational algebra}.
+
+Let us first take a look at the \textbf{relational model}. 
 
 \section{Relational Model}
-Let us first take a look at the \textbf{relational model}.  
-
-\subsection{Relation}
 A \textbf{relation} consists of a \textbf{relation schema} and its \textbf{relation instance}. One can think of a relation as an \emph{entity set}, where the relation instance is the set of records that populate the relation and corresponds to the entities in that set.  
 
 A \textbf{relation schema} describes the column headers for the table. It specifies the relation's name, the name of each field, and, if detailed, the domain of each field. 
@@ -107,11 +106,7 @@ First, we define the \texttt{NULL} value.
 
 A \textbf{foreign key} is an attribute (or a set of attributes) that stores the value of the primary key of another relation.  
 
-Formally, a set of attributes \(FK\) in a relation schema \(R_1\) may be a foreign key if:
-\begin{itemize}
-  \item The attributes of \(FK\) have the same domains as the attributes of the primary key in another relation schema \(R_2\), and
-  \item For every tuple \(t_1 \in R_1\), the value of \(FK\) either matches the value of the primary key in some tuple \(t_2 \in R_2\), or is \texttt{NULL}.
-\end{itemize}
+Formally, a set of attributes \(FK\) in a relation schema \(R_1\) is a foreign key if these attributes have the same domains as the attributes of the primary key in another relation schema \(R_2\), and for each tuple \(t_1 \in R_1\), the value of \(FK\) either matches the value of the primary key in some tuple \(t_2 \in R_2\), or is \texttt{NULL}.  
 
 For each new tuple (record), the insertion is valid if:
 \begin{enumerate}
@@ -123,11 +118,11 @@ Now, assuming our dataset is originally in a valid state, how can it become inva
 
 There are three important \textbf{integrity constraints} in the relational model:
 
-\begin{enumerate}
-  \item \textbf{Key constraint:} Candidate key values must be unique in every relation instance.  
-  \item \textbf{Entity integrity:} An attribute that is part of a primary key cannot be \texttt{NULL}.  
-  \item \textbf{Referential integrity:} Ensures that foreign key values in one relation correspond to existing primary key values in another relation.  
-\end{enumerate}
+1. \textbf{Key constraint:} Candidate key values must be unique in every relation instance.  
+
+2. \textbf{Entity integrity:} An attribute that is part of a primary key cannot be \texttt{NULL}.  
+
+3. \textbf{Referential integrity:} Ensures that foreign key values in one relation correspond to existing primary key values in another relation.  
 
 If any of these integrity constraints are violated, the dataset enters an invalid state.  
 
