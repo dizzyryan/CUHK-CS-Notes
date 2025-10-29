@@ -1,0 +1,9 @@
+1	CPU
+2	Motherboard
+3	Ram
+4	Storage
+5	Power Supply
+6	GPU
+7	Audio
+8	Network
+9	Notebook
