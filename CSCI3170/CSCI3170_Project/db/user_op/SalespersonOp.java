@@ -16,19 +16,21 @@ public class SalespersonOp {
     public void searchForParts(String searchCriterion, String keyword, String ordering) throws SQLException {
         if (searchCriterion.equals("p_name")) {
             try {
-                String sql = "SELECT p.p_id, p.p_name, m.m_name, c.c_name, p.p_quantity, p.p_warranty, p.p_price FROM part p JOIN manufacturer m ON p.m_id = m.m_id JOIN category c ON p.c_id = c.c_id WHERE INSTR(p.p_name, '"
-                        + keyword + "') > 0 ORDER BY p.p_price " + ordering;
+                String sql = "SELECT p.p_id, p.p_name, m.m_name, c.c_name, p.p_quantity, p.p_warranty, p.p_price FROM part p JOIN manufacturer m ON p.m_id = m.m_id JOIN category c ON p.c_id = c.c_id WHERE LOWER(p.p_name) LIKE LOWER(?) ORDER BY p.p_price "
+                        + ordering;
                 PreparedStatement pstmt = connection.prepareStatement(sql);
+                pstmt.setString(1, "%" + keyword + "%");
                 ResultSet rs = pstmt.executeQuery();
-                if (rs == null) {
+                if (!rs.isBeforeFirst()) {
                     System.out.println("No results found.");
                     return;
                 }
                 printTableHeader();
                 while (rs.next()) {
-                    System.out.println(rs.getString(1) + " | " + rs.getString(2) + " | " + rs.getString(3) + " | "
-                            + rs.getString(4) + " | " + rs.getString(5) + " | " + rs.getString(6) + " | "
-                            + rs.getString(7));
+                    System.out
+                            .println("| " + rs.getString(1) + " | " + rs.getString(2) + " | " + rs.getString(3) + " | "
+                                    + rs.getString(4) + " | " + rs.getString(5) + " | " + rs.getString(6) + " | "
+                                    + rs.getString(7) + " | ");
                 }
             } catch (SQLException e) {
                 System.out.println("[Error] " + e.getMessage() + "\n");
@@ -36,19 +38,21 @@ public class SalespersonOp {
 
         } else if (searchCriterion.equals("m_name")) {
             try {
-                String sql = "SELECT p.p_id, p.p_name, m.m_name, c.c_name, p.p_quantity, p.p_warranty, p.p_price FROM part p JOIN manufacturer m ON p.m_id = m.m_id JOIN category c ON p.c_id = c.c_id WHERE INSTR(m.m_name, '"
-                        + keyword + "') > 0 ORDER BY p.p_price " + ordering;
+                String sql = "SELECT p.p_id, p.p_name, m.m_name, c.c_name, p.p_quantity, p.p_warranty, p.p_price FROM part p JOIN manufacturer m ON p.m_id = m.m_id JOIN category c ON p.c_id = c.c_id WHERE LOWER(m.m_name) LIKE LOWER(?) ORDER BY p.p_price "
+                        + ordering;
                 PreparedStatement pstmt = connection.prepareStatement(sql);
+                pstmt.setString(1, "%" + keyword + "%");
                 ResultSet rs = pstmt.executeQuery();
-                if (rs == null) {
+                if (!rs.isBeforeFirst()) {
                     System.out.println("No results found.");
                     return;
                 }
                 printTableHeader();
                 while (rs.next()) {
-                    System.out.println(rs.getString(1) + " | " + rs.getString(2) + " | " + rs.getString(3) + " | "
-                            + rs.getString(4) + " | " + rs.getString(5) + " | " + rs.getString(6) + " | "
-                            + rs.getString(7));
+                    System.out
+                            .println("| " + rs.getString(1) + " | " + rs.getString(2) + " | " + rs.getString(3) + " | "
+                                    + rs.getString(4) + " | " + rs.getString(5) + " | " + rs.getString(6) + " | "
+                                    + rs.getString(7) + " | ");
                 }
             } catch (SQLException e) {
                 System.out.println("[Error] " + e.getMessage() + "\n");
@@ -61,13 +65,14 @@ public class SalespersonOp {
             PreparedStatement pstmtQC = connection.prepareStatement("SELECT p_quantity FROM part WHERE p_id = ?");
             pstmtQC.setInt(1, partID);
             ResultSet rs = pstmtQC.executeQuery();
-            if (!rs.next()) {
-                System.out.println("No results found.");
+            if (!rs.isBeforeFirst()) {
+                System.out.println("No results found.\n");
                 return;
             }
+            rs.next();
             int quantity = rs.getInt(1);
-            if (quantity == 0) {
-                System.out.println("Out of stock.");
+            if (quantity <= 0) {
+                System.out.println("Out of stock.\n");
                 return;
             } else {
                 int t_id = 1;
@@ -108,6 +113,7 @@ public class SalespersonOp {
                 int p_quantity = rsQty.getInt(1);
                 System.out
                         .println("Product: " + p_name + "(id: " + partID + ") " + "Remaining Quantity: " + p_quantity);
+                System.out.println();
             }
         } catch (SQLException e) {
             System.out.println("[Error] " + e.getMessage() + "\n");

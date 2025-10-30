@@ -30,12 +30,12 @@ public class HomeCLI implements CLIInterface {
                 case 1:
                     c = new AdminCLI(database, scanner);
                     break;
-                // case 2:
-                //     c = new SalespersonCLI(database, scanner);
-                //     break;
+                case 2:
+                    c = new SalespersonCLI(database, scanner);
+                    break;
                 // case 3:
-                //     c = new ManagerCLI(database, scanner);
-                //     break;
+                // c = new ManagerCLI(database, scanner);
+                // break;
                 case 4:
                     return;
                 default:
