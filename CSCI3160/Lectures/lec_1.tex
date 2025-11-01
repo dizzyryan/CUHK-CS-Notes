@@ -110,3 +110,77 @@ Let \(T\) be the random variable representing the running time of a randomized a
 
   For example, if we run for \(3\mu\) steps, then it will fail with probability \(\leq \frac{1}{3}\). Therefore, if we repeat it 3 times, we will succeed with probability \(1 - \left(\frac{1}{3}\right)^3 = 0.963\).
 \end{eg}
+
+\section{Efficiency of the Worst Input}
+By looking at the cost of an algorithm on the worst input, we are able to measure the speed of an algorithm.
+
+\begin{definition}
+  Define \(\mathcal{I}_n\), where \(n\) is an integer, to be the set of all inputs to a problem that have the same problem size \(n\). Given an input \(I \in \mathcal{I}_n\), the cost \(X_{\mathcal{A}}(I)\) of an algorithm \(\mathcal{A}\) is the length of its execution on \(I\). 
+
+  The worst-case cost of \(\mathcal{A}\) under the problem size \(n\) is the maximum \(X_{\mathcal{A}}(I)\) over all \(I \in \mathcal{I}_n\). 
+
+  The worst expected cost of \(\mathcal{A}\) under the problem size \(n\) is the maximum \(\mathbb{E}[X_{\mathcal{A}}(I)]\) over all \(I \in \mathcal{I}_n\). 
+\end{definition}
+
+\begin{eg}[Dictionary Search]
+  In memory, a set \(S\) of \(n\) integers has been arranged in ascending order in the memory cells from address 1 to \(n\). The value of \(n\) has been placed in Register 1 of the CPU. Another integer \(v\) has been placed in Register 2, where \(n\) is the problem size, and \(\mathcal{I}_n\) is the set of all possible \((S, v)\). 
+
+  We want to determine whether \(v\) exists in \(S\). 
+
+  The worst-case cost of the \href{https://www.ryanc.wtf/files/CSCI2100.pdf#page=16}{binary search algorithm} is \(\mathcal{O}(\log n)\). This means that on any input in \(\mathcal{I}_n\), the maximum number \(f(n)\) of atomic operations performed by the algorithm grows no faster than \(\log_2 n\). 
+\end{eg}
+
+\begin{eg}[Randomized Algorithm]
+  Consider the following randomized algorithm: 
+  
+  \begin{algorithm}[H]
+	\DontPrintSemicolon{}
+  \KwData{\(A\) is an array of size \(n\) that contains at least one 0}
+	\caption{Find a Zero}
+	\BlankLine
+	\While(){\(A[r] \neq 0\)}{
+		\(r = \) \texttt{RANDOM(0, n)}
+	}
+	\Return{\(r\)}\;
+  \end{algorithm}
+
+  The expected cost depends on the input array. For example, if all numbers in \(A\) are 0, then the algorithm finishes in \(\mathcal{O}(1)\). If it has only one 0, the algorithm will finish in \(\mathcal{O}(n)\) because each \(A[r]\) has a \(\frac{1}{n}\) probability of being 0, and we need to repeat \(n\) times in expectation to find the 0. 
+  
+  Thus, we have worst-case cost \(= \infty\) and worst expected cost \(= \mathcal{O}(n)\). 
+\end{eg}
+
+\begin{eg}[Find a Zero]
+  Let \(A\) be an array of \(n\) integers, among which half are 0. Design an algorithm to report an arbitrary position of \(A\) that contains a 0. 
+
+  \begin{algorithm}[H]
+	\DontPrintSemicolon{}
+	\caption{Find a Zero}
+	\BlankLine
+	\While(){\(A[r] \neq 0\)}{
+		\(r = \) \texttt{RANDOM(0, n)}
+	}
+	\Return{\(r\)}\;
+  \end{algorithm}
+
+  The algorithm finishes in \(\mathcal{O}(1)\) expected time on every input \(A\). 
+
+  \begin{proof}
+    Let \(X\) be the number of iterations until the algorithm picks a zero. Each iteration chooses \(r \in \{0,\dots, n\}\). 
+
+    Then we have 
+    \[
+      p = \mathbb{P}\left[A[r] = 0\right] = \dfrac{\text{\# of zeros}}{n} = \dfrac{\frac{n}{2}}{n} = \dfrac{1}{2}.
+    \]
+    Then \(X\) is a geometric random variable with success probability \(p = \frac{1}{2}\). 
+
+    For a geometric random variable, we have
+    \[
+      \mathbb{E}[X] = \dfrac{1}{p} = \dfrac{1}{\frac{1}{2}} = 2.
+    \]
+    Since each iteration takes \(\mathcal{O}(1)\) time to pick a random index, we need two such iterations in expectation. Thus, the expected running time is \(2 \times \mathcal{O}(1) = \mathcal{O}(1)\). 
+  \end{proof}
+
+  \begin{remark}
+    In contrast, any deterministic algorithm must probe at least \(\frac{n}{2}\) integers of \(A\) in the worst case. In other words, any deterministic algorithm must have a worst-case time of \(\Theta(n)\) — provably slower than the above randomized algorithm (in expectation).
+  \end{remark}
+\end{eg}
