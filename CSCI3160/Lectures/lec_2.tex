@@ -1,73 +1,108 @@
-\section{Efficiency of the Worst Input}
-By looking at the cost of an algorithm on the worst input, we are able to measure the speed of an algorithm.
+\section{Basic Techniques}
+In algorithm, there are three basic techniques we can utilize. 
 
-\begin{definition}
-  Define \(\mathcal{I}_n\), where \(n\) is an integer, to be the set of all inputs to a problem that have the same problem size \(n\). Given an input \(I \in \mathcal{I}_n\), the cost \(X_{\mathcal{A}}(I)\) of an algorithm \(\mathcal{A}\) is the length of its execution on \(I\). 
+\subsection{Recursion}
+When dealing with a sub-problem (the same problem but with a smaller input), consider it solved, and use the sub-problem’s output to continue the algorithm design.
 
-  The worst-case cost of \(\mathcal{A}\) under the problem size \(n\) is the maximum \(X_{\mathcal{A}}(I)\) over all \(I \in \mathcal{I}_n\). 
+\begin{eg}[The Hanoi Tower Problem]
+  There are 3 rods A, B, and C. On rod A, \(n\) disks of different sizes are stacked, such that no disk of a larger size is above a disk of a smaller size. The other two rods are empty. 
 
-  The worst expected cost of \(\mathcal{A}\) under the problem size \(n\) is the maximum \(\mathbb{E}[X_{\mathcal{A}}(I)]\) over all \(I \in \mathcal{I}_n\). 
+  It is allowed to move the top-most disk of a rod to another, while no disk of a larger size can be put above a disk of a smaller size. The goal is to design an algorithm to move all the disks to rod B.
+
+  To move the largest disk, i.e., the \(n\)-th disk, to rod B, we first need to move all disks above it to rod C. For all disks, we use this method; thus, if we ignore the last disk, the remaining problem is to move \(n - 1\) disks. This is the same problem with a smaller size. 
+
+  Suppose that the algorithm performs \(f(n)\) operations to solve a problem of size \(n\), where \(f(1) = 1\). By recursion, we have 
+  \[
+    f(n) \geq 1 + 2 \times f(n - 1).
+  \]
+  \href{https://www.ryanc.wtf/files/ENGG2440.pdf#page=14}{Solving} this gives 
+  \[
+    f(n) \geq 2^n - 1.
+  \]
+  Thus, the best time complexity for solving this problem is \(\Omega(2^n)\), where \(n\) is the number of disks. 
+\end{eg}
+
+\subsection{Repeating till Success}
+
+Given a set \(S\) of \(n\) integers in an array and an integer \(k \in [1, n]\), we want to find the \(k\)-th smallest integer of \(S\). 
+
+\begin{definition}[Rank]
+    The rank of an integer \(v \in S\) is the number of elements in \(S\) smaller than or equal to \(v\). 
 \end{definition}
 
-\begin{eg}[Dictionary Search]
-  In memory, a set \(S\) of \(n\) integers has been arranged in ascending order in the memory cells from address 1 to \(n\). The value of \(n\) has been placed in Register 1 of the CPU. Another integer \(v\) has been placed in Register 2, where \(n\) is the problem size, and \(\mathcal{I}_n\) is the set of all possible \((S, v)\). 
+For example, suppose that \(S = (53, 92, 85, 23, 35, 12, 68, 74)\), then the rank of 53 is 4. 
 
-  We want to determine whether \(v\) exists in \(S\). 
+We can obtain the rank of \(v\) in \(\mathcal{O}(|S|)\) time. 
 
-  The worst-case cost of the \href{https://www.ryanc.wtf/files/CSCI2100.pdf#page=16}{binary search algorithm} is \(\mathcal{O}(\log n)\). This means that on any input in \(\mathcal{I}_n\), the maximum number \(f(n)\) of atomic operations performed by the algorithm grows no faster than \(\log_2 n\). 
-\end{eg}
+\begin{eg}[Sub-problem of The \(k\)-Selection Problem]
+  Assume \(n\) is a multiple of 3. We want to obtain a subproblem of size at most \(\frac{2n}{3}\) with exactly the same result as the original problem. 
 
-\begin{eg}[Randomized Algorithm]
-  Consider the following randomized algorithm: 
-  
-  \begin{algorithm}[H]
-	\DontPrintSemicolon{}
-  \KwData{\(A\) is an array of size \(n\) that contains at least one 0}
-	\caption{Find a Zero}
-	\BlankLine
-	\While(){\(A[r] \neq 0\)}{
-		\(r = \) \texttt{RANDOM(0, n)}
-	}
-	\Return{\(r\)}\;
-  \end{algorithm}
+  Our goal is to produce a set \(S^{\prime}\) and an integer \(k^{\prime}\) such that \(|S^{\prime}| \leq \frac{2n}{3}\), \(k^{\prime} \in [1, |S^{\prime}|]\), and the element with rank \(k^{\prime}\) in \(S^{\prime}\) is the element with rank \(k\) in \(S\), where it is possible that \(k \neq k^{\prime}\). 
 
-  The expected cost depends on the input array. For example, if all numbers in \(A\) are 0, then the algorithm finishes in \(\mathcal{O}(1)\). If it has only one 0, the algorithm will finish in \(\mathcal{O}(n)\) because each \(A[r]\) has a \(\frac{1}{n}\) probability of being 0, and we need to repeat \(n\) times in expectation to find the 0. 
-  
-  Thus, we have worst-case cost \(= \infty\) and worst expected cost \(= \mathcal{O}(n)\). 
-\end{eg}
+  Consider the following algorithm \(A_{sub}\): 
 
-\begin{eg}[Find a Zero]
-  Let \(A\) be an array of \(n\) integers, among which half are 0. Design an algorithm to report an arbitrary position of \(A\) that contains a 0. 
+  We first take an element \(v \in S\) uniformly at random. Then we divide \(S\) into \(S_1\) and \(S_2\), where \(S_1\) is the set of elements in \(S\) that are less than or equal to \(v\), and \(S_2\) is the set of elements in \(S\) greater than \(v\). 
 
-  \begin{algorithm}[H]
-	\DontPrintSemicolon{}
-	\caption{Find a Zero}
-	\BlankLine
-	\While(){\(A[r] \neq 0\)}{
-		\(r = \) \texttt{RANDOM(0, n)}
-	}
-	\Return{\(r\)}\;
-  \end{algorithm}
+  If \(|S_1| \geq k\), then return \(S^{\prime} = S_1\) and \(k^{\prime} = k\). Otherwise, return \(S^{\prime} = S_2\) and \(k^{\prime} = k - |S_1|\). 
 
-  The algorithm finishes in \(\mathcal{O}(1)\) expected time on every input \(A\). 
+  This algorithm succeeds if \(|S^{\prime}| \leq \frac{2n}{3}\), and fails otherwise. 
+
+  We repeat this algorithm until it succeeds. 
+
+  \begin{lemma}
+    The algorithm succeeds with probability at least \(\frac{1}{3}\). 
+  \end{lemma}
 
   \begin{proof}
-    Let \(X\) be the number of iterations until the algorithm picks a zero. Each iteration chooses \(r \in \{0,\dots, n\}\). 
+    Let \(S\) be a set of size \(n\) and let \(v \in S\) be chosen uniformly at random. Let the rank of \(v\) in \(S\) be \(\text{rank}(v)\). 
 
+    Define \(S_1 = \{x \in S : x \leq v\}\), \(S_2 = \{x \in S : x > v\}\). If \(|S_1| \geq k\), return \(S^{\prime} = S_1\) and \(k^{\prime} = k\); otherwise \(S^{\prime} = S_2\) and \(k^{\prime} = k - |S_1|\). The sub-problem succeeds if \(|S^{\prime}| \leq \frac{2n}{3}\). 
+
+    If \(|S_1| \geq k\), then \(|S^{\prime}| = |S_1| = \text{rank}(v)\), and success requires
+    \[
+      \text{rank}(v) \leq \dfrac{2n}{3}. 
+    \]
+    If \(|S_1| < k\), then \(|S^{\prime}| = |S_2| = n - \text{rank}(v)\), and success requires
+    \[
+      n - \text{rank}(v) \leq \dfrac{2n}{3} \Longrightarrow \text{rank}(v) \geq \dfrac{n}{3}.
+    \]
     Then we have 
     \[
-      p = \mathbb{P}\left[A[r] = 0\right] = \dfrac{\text{\# of zeros}}{n} = \dfrac{\frac{n}{2}}{n} = \dfrac{1}{2}.
+      \text{rank}(v) \in \left[\dfrac{n}{3}, \dfrac{2n}{3}\right].
     \]
-    Then \(X\) is a geometric random variable with success probability \(p = \frac{1}{2}\). 
-
-    For a geometric random variable, we have
+    Since \(v\) is chosen uniformly at random, every rank is equally likely, and the number of ranks in the success range is at least \(\frac{2n}{3} - \frac{n}{3} = \frac{n}{3}\). Thus we have 
     \[
-      \mathbb{E}[X] = \dfrac{1}{p} = \dfrac{1}{\frac{1}{2}} = 2.
+      \mathbb{P}[\text{success}] \geq \dfrac{\frac{n}{3}}{n} = \dfrac{1}{3}.
     \]
-    Since each iteration takes \(\mathcal{O}(1)\) time to pick a random index, we need two such iterations in expectation. Thus, the expected running time is \(2 \times \mathcal{O}(1) = \mathcal{O}(1)\). 
   \end{proof}
 
   \begin{remark}
-    In contrast, any deterministic algorithm must probe at least \(\frac{n}{2}\) integers of \(A\) in the worst case. In other words, any deterministic algorithm must have a worst-case time of \(\Theta(n)\) — provably slower than the above randomized algorithm (in expectation).
+    Choosing \(\frac{2n}{3}\) is not mandatory, but rather a convenient threshold since it gives a smaller sub-problem. For example, if we say it succeeds when \(|S^{\prime}| \leq \frac{9n}{10}\), we have the range \([\frac{n}{10}, \frac{9n}{10}]\), giving the probability of success \(\frac{8}{10}\), which is high. However, this is simply because we have a larger range to choose from, making the sub-problem larger. 
   \end{remark}
 \end{eg}
+
+In general, if an algorithm succeeds with a probability at least \(c > 0\), then the number of repeats needed for the algorithm to succeed for the first time is at most \(\frac{1}{c}\) in expectation. 
+
+\subsection{Geometric Series}
+A geometric sequence is an infinite sequence of the form 
+\[
+  n, cn, c^2 n, c^3 n, \dots 
+\]
+where \(n\) is a positive number and \(c\) is a constant satisfying \(0 < c < 1\). It holds in general that 
+\[
+  \sum_{i = 0}^{\infty} c^i n = \lim_{i \to \infty} n \cdot \dfrac{1 - c^i}{1 - c} = \dfrac{n}{1 - c} = \mathcal{O}(n).
+\]
+The summation \(\sum_{i = 0}^{\infty} c^i n\) is called a geometric series. 
+
+Consider again the \(k\)-th selection problem. Using the previous repeating technique, we can convert the problem into a subproblem with size at most \(\lceil \frac{2n}{3} \rceil\) in \(\mathcal{O}(n)\) expected time. We can use the geometric series to find the expected running time: 
+\[
+  \begin{aligned}
+    a \cdot n + a \cdot \frac{2}{3} \cdot n + a \cdot \left(\frac{2}{3}\right)^2 \cdot n + \cdots &= a \cdot n + a \cdot \sum_{i = 1}^{\infty} \left(\frac{2}{3}\right)^i \cdot n \\
+    &= a \cdot n + a \cdot \mathcal{O}(n) \\
+    &= \mathcal{O}(n).
+  \end{aligned}
+\]
+
+Next, we analyze the running time of \(A_{\text{sub}}\). It takes \(\mathcal{O}(1)\) to select the element \(v\), and dividing \(S\) into \(S_1\) and \(S_2\) takes \(\mathcal{O}(n)\). Comparing \(|S_1|, |S_2|\), and \(k\) also takes \(\mathcal{O}(n)\). Thus, by the linearity of expectation, every conversion takes \(\mathcal{O}(n)\) running time in expectation. 
+
+By the previous lemma, we need to repeat the algorithm 3 times in expectation until it succeeds, and each execution takes \(\mathcal{O}(n)\) time. Therefore, the \(k\)-th selection algorithm takes \(\mathcal{O}(n)\) time in expectation.  

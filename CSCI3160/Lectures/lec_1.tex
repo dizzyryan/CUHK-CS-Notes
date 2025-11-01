@@ -139,7 +139,7 @@ By looking at the cost of an algorithm on the worst input, we are able to measur
 	\caption{Find a Zero}
 	\BlankLine
 	\While(){\(A[r] \neq 0\)}{
-		\(r = \) \texttt{RANDOM(0, n)}
+		\(r = \) \texttt{RANDOM(1, n)}
 	}
 	\Return{\(r\)}\;
   \end{algorithm}
@@ -157,7 +157,7 @@ By looking at the cost of an algorithm on the worst input, we are able to measur
 	\caption{Find a Zero}
 	\BlankLine
 	\While(){\(A[r] \neq 0\)}{
-		\(r = \) \texttt{RANDOM(0, n)}
+		\(r = \) \texttt{RANDOM(1, n)}
 	}
 	\Return{\(r\)}\;
   \end{algorithm}
@@ -165,7 +165,7 @@ By looking at the cost of an algorithm on the worst input, we are able to measur
   The algorithm finishes in \(\mathcal{O}(1)\) expected time on every input \(A\). 
 
   \begin{proof}
-    Let \(X\) be the number of iterations until the algorithm picks a zero. Each iteration chooses \(r \in \{0,\dots, n\}\). 
+    Let \(X\) be the number of iterations until the algorithm picks a zero. Each iteration chooses \(r \in \{1,\dots, n\}\). 
 
     Then we have 
     \[

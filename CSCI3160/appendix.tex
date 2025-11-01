@@ -1,0 +1,45 @@
+\chapter{Master Theorem}\label{mastertheorem}
+
+We can use the Master Theorem to solve recurrence problems. 
+
+Consider 
+\[
+	T(n) = aT\left(\dfrac{n}{b}\right) + f(n),\quad a \geq 1,\quad b > 1,
+\]
+where 
+\[
+	f(n) = \mathcal{O} (n^k \log^p n).
+\]
+
+Case 1: if \(\log_b a > k\), then 
+\[
+	\mathcal{O} (n^{\log_b a}).
+\]
+
+Case 2: if \(\log_b a = k\), then 
+\begin{itemize}
+	\item if \(p > -1\),
+	\[
+		\mathcal{O} (n^k \log^{p + 1} n),
+	\]
+	\item if \(p = -1\),
+	\[
+		\mathcal{O} (n^k \log \log n),
+	\]
+	\item if \(p < -1\),
+	\[
+		\mathcal{O} (n^k).
+	\]
+\end{itemize}
+
+Case 3: if \(\log_b a < k\), then 
+\begin{itemize}
+	\item if \(p \geq 0\),
+	\[
+		\mathcal{O} (n^k \log^p n),
+	\]
+	\item if \(p < 0\),
+	\[
+		\mathcal{O} (n^k).
+	\]
+\end{itemize}
