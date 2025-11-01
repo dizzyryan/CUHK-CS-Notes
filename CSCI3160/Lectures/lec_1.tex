@@ -1,73 +1,46 @@
 \chapter{Introduction}
 
-In mathematics, everything must be rigorous, including terms and symbols. As we say that computer science is a branch of mathematics, we can think of the same for computer science itself.
+Computer science is a subject where we first define a computation model, which is a simple yet accurate abstraction of a computing machine, and then we gradually build up a theory based on this model. 
 
-More specifically, computer science is a subject where we first define a computation model, which is a simple yet accurate abstraction of a computing machine, and then we slowly build up a theory based on this model.
+Thus, the first thing to do is to come up with a computation model. For the study of algorithms, we need to consider the following criteria: 
 
-However, since there isn’t a universally ideal model — different models serve different purposes — how do we choose one suitable for studying algorithms? We have three criteria:
+1. \textbf{Mechanically Implementable:} it can run real algorithms.
 
-1. Mechanically Implementable
+2. \textbf{Sufficiently General:} it can capture all the natural steps of problem-solving.
 
-This ensures that we can implement the algorithm to solve real-world problems.
+3. \textbf{Sensitive Enough:} it can distinguish differences in resource usage (time and space).
 
-2. Sufficiently General
-
-The model should be general enough to capture all natural steps involved in solving problems strategically.
-
-3. Sensitive Enough
-
-The model should be able to capture fine-grained differences in resource usage, such as time and space.
-
-Then, based on these criteria, we can choose a computation model suitable for studying algorithms: the Random Access Machine (RAM) model.
+We choose the \textbf{Random Access Machine (RAM)} as our model.
 
 \section{The RAM Model}
-\subsection{Overview}
-The RAM model is a machine that has a \textbf{memory} and a \textbf{CPU}. 
+The RAM model has a \textbf{memory} and a \textbf{CPU}. 
 
-Memory is defined as an infinite sequence of cells, each containing the same number of \(w\) bits. Every cell has an address: the first cell of memory has address 1, the second cell 2, and so on. 
-
-The CPU contains a fixed number of registers (we consider 8 throughout this course), each of which has \(w\) bits. 
+Memory is defined as an infinite sequence of cells, each containing the same number of \(w\) bits, with addresses 1, 2, and so on. The CPU contains a fixed number of registers, each of which has \(w\) bits. A word is a sequence of \(w\) bits, where \(w\) is called the word length. In other words, each memory cell and CPU register stores a word. 
 
 \subsection{Atomic Operations}
 We say that there are a few atomic operations that the CPU can perform. 
 
 1. \textbf{Register (Re-)Initialization} 
 
-We can set a register to a fixed value (e.g., 0, -1, 100, etc.) or to the content of another register. 
+We can set a register to a fixed value or to the content of another register. 
 
 2. \textbf{Arithmetic} 
 
-This operation takes the integers \(a, b\) stored in two registers. It calculates one of the following and stores the result in a register:
-\[
-  a + b, \ a - b,\ a \times b,\ a / b
-\]
-
-\begin{remark}
-  Here, \(a / b\) denotes integer division, where only the integer part of the quotient is returned.
-\end{remark}
+This operation takes two integers stored in two registers and performs basic arithmetic calculations. 
 
 3. \textbf{Comparison / Branching}
 
-This operation takes the integers \(a, b\) stored in two registers, compares them, and determines which of the following is true:
-\[
-  a > b, \ a = b,\ a < b
-\]
+This operation takes two integers stored in two registers, compares them, and determines the result of the comparison.
 
 4. \textbf{Memory Access}
 
-This operation takes a memory address \(A\) currently stored in a register, then performs one of the following:
-
-- Read the content of the memory cell with address \(A\) into a designated register (overwriting the bits there).
-
-- Write the content of a designated register into the memory cell with address \(A\) (overwriting the bits there).
+This operation takes a memory address that is currently stored in a register, then performs either reading (to register) or writing (to memory). 
 
 5. \textbf{Randomness} 
 
-The command \texttt{RANDOM(x, y)} returns an integer chosen uniformly at random in \([x, y]\), where \(x \leq y\). The resulting random integer is then placed in a register.
+\texttt{RANDOM(x, y)} returns an integer chosen \textbf{uniformly} at random in \([x, y]\), where \(x \leq y\). The resulting random integer is then placed in a register.
 
-We look at the atomic operations because an execution is a sequence of atomic operations. The cost of an execution (also called running time) is simply the length of the sequence, i.e., the number of atomic operations it requires. 
-
-A word is a sequence of \(w\) bits, where \(w\) is called the word length. In other words, each memory cell and CPU register stores a word. 
+An execution is defined as a sequence of atomic operations, where the cost (running time) of an execution is the length of such a sequence, i.e., the number of atomic operations it performs.
 
 \subsection{Algorithms}
 We first take a look at some terminologies. 
@@ -83,7 +56,7 @@ The space of an algorithm on an input is the largest memory address accessed by 
 We define an algorithm as \textbf{deterministic} if it never invokes the atomic operation \texttt{RANDOM}; otherwise, the algorithm is \textbf{randomized}. 
 
 \subsection{Expected Running Time}
-For the same input, the cost of a deterministic algorithm is a fixed integer, since it remains the same every time the algorithm is executed. However, the cost of a randomized algorithm is a random variable, since for each input the cost may change every time the algorithm is executed. 
+A deterministic algorithm has a fixed cost for the same input, whereas for a randomized algorithm, the cost is a random variable, since for each input the cost might change every time the algorithm is executed. 
 
 \begin{algorithm}[H]
 	\DontPrintSemicolon{}
@@ -95,19 +68,21 @@ For the same input, the cost of a deterministic algorithm is a fixed integer, si
 	\Return{\(r = 1\)}\;
 \end{algorithm}
 
-Here, we are not able to know how many times line 2 will be executed since each execution can produce a new sequence of atomic operations. It can even be executed an infinite number of times.
+Here, we cannot know how many times line 2 will be executed, as each execution can produce a new sequence of atomic operations.
 
-Thus, we can use the \textbf{expected cost} to evaluate the cost of a randomized algorithm. Let \(X\) be a random variable that represents the cost of an algorithm on an input. Then, the expected cost of the algorithm on that input is the expectation of \(X\). 
+Thus, we use the \textbf{expected cost} to evaluate the cost of a randomized algorithm. 
 
-We consider the expected running time a good metric for analyzing randomized algorithms for the following reasons. 
+\begin{definition}
+  Let \(X\) be a random variable that represents the cost of an algorithm on a given input. The expected cost of the algorithm on that input is the expectation of \(X\). 
+\end{definition}
 
-First, the expected running time is usually easier to compute and analyze than other probabilistic metrics. It provides a single, concrete number that summarizes the algorithm’s typical performance. 
+We use the expected running time, rather than other metrics, for the following reasons: 
 
-Second, we can make use of the \textbf{Linearity of Expectation}, which allows us to break a complex algorithm into smaller parts and sum their expected costs. 
+1. Ease of computation
 
-Lastly, if the running time of a randomized algorithm has very high variance, the expectation may be misleading; however, we can address this by utilizing concentration bounds. 
+2. Linearity of expectation: it allows us to break the analysis into smaller parts
 
-Here we look at one of the concentration bounds — the Markov inequality — as an example.
+3. Concentration bounds
 
 \begin{theorem}[Markov's Inequality]
   Suppose that a random variable \(X \geq 0\) only takes non-negative values. Then, for every \(t > 0\),
@@ -118,7 +93,7 @@ Here we look at one of the concentration bounds — the Markov inequality — as
 
 The theorem here shows that if the average value of \(X\) is small, then it is less likely that \(X\) is large. This provides an upper bound on the probability that a non-negative random variable is much larger than its expectation. 
 
-We can then use this theorem to analyze running time. Let \(T\) be the random variable representing the running time of a randomized algorithm, and suppose \(T \geq 0\) and \(\mathbb{E}[T] = \mu\). Then, for any \(c > 1\),
+Let \(T\) be the random variable representing the running time of a randomized algorithm, and suppose \(T \geq 0\) and \(\mathbb{E}[T] = \mu\). Then, for any \(c > 1\),
 \[
     \mathbb{P}(T \geq c \mu) \leq \dfrac{1}{c}.
 \]
