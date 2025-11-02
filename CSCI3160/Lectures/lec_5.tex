@@ -1,0 +1,45 @@
+\chapter{Greedy Algorithms}
+Greedy algorithms enforce a simple strategy, i.e. make the locally optimal decision at each step. 
+
+\section{Activity Selection}
+\textbf{Problem Statement} 
+
+Given a set \(S\) of \(n\) intervals of the form \([s, f]\) where \(s, f\) are integers, we want to output a subset \(T \subseteq S\) of disjoint intervals with the largest size \(\lvert T \rvert\). 
+
+\begin{remark}
+  One can think of \([s, f]\) as the duration of an activity, and consider the problem as picking the largest number of activities that do not have time conflicts. 
+\end{remark}
+
+\textbf{Greedy Algorithm} 
+
+The idea is to pick the earliest-finishing interval, keep it, and discard all intervals that overlap it. Repeat until none remain. 
+
+Algorithm: 
+
+Repeat until \(S\) becomes empty:
+\begin{itemize}
+  \item Add to \(T\) the interval \(\mathcal{I} \in S\) with the smallest finish time. 
+  \item Remove from \(S\) all intervals intersecting \(\mathcal{I}\) (including \(\mathcal{I}\)). 
+\end{itemize}
+
+The greedy algorithm picks the earliest finishing activity, leaving the most room for future choices. 
+
+\begin{proof}
+  Let \(G = \{g_1, g_2, \dots, g_k\}\) be the greedy solution, and \(O = \{o_1, o_2, \dots, o_m\}\) be an arbitrary optimal solution, where each \(g_i, o_i\) is an interval. 
+
+  Since there is no overlap, it holds that for each \(i\), \(f_{o_{i-1}} \leq s_{o_i}\). It must be \(k \leq m\); otherwise, \(O\) would not be an optimal solution. 
+
+  Assume \(g_1\) is the earliest finishing interval, as well as \(o_1\), which might be different. Then we have \(f_{g_1} \leq f_{o_1}\). 
+
+  We can replace \(o_1\) with \(g_1\) in \(O\). Since \(g_1\) finishes no later than \(o_1\), intervals in \(O\) remain disjoint. 
+
+  Repeating this process, assume \(k < m\). The replacement stops at
+  \[
+    O = \{g_1, g_2, \dots, g_k, o_{k + 1}, o_{k + 2}, \dots, o_m\}.
+  \]
+  Note that the finish time of \(g_k\) is earlier than the start time of all intervals \(o_{k + 1}, o_{k + 2}, \dots, o_m\), where disjointness still holds. Then the greedy algorithm would not stop at \(g_k\), because there are still intervals remaining in the original set \(S\). This leads to a contradiction. Thus, it must be \(k = m\), i.e. the greedy algorithm gives an optimal solution.
+\end{proof}
+
+\textbf{Analysis} 
+
+This algorithm can be implemented in \(\mathcal{O}(n \log n)\) time. 
