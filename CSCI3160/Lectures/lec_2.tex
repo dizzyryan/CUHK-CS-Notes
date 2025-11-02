@@ -84,15 +84,17 @@ We can obtain the rank of \(v\) in \(\mathcal{O}(|S|)\) time.
 In general, if an algorithm succeeds with a probability at least \(c > 0\), then the number of repeats needed for the algorithm to succeed for the first time is at most \(\frac{1}{c}\) in expectation. 
 
 \subsection{Geometric Series}
-A geometric sequence is an infinite sequence of the form 
-\[
-  n, cn, c^2 n, c^3 n, \dots 
-\]
-where \(n\) is a positive number and \(c\) is a constant satisfying \(0 < c < 1\). It holds in general that 
-\[
-  \sum_{i = 0}^{\infty} c^i n = \lim_{i \to \infty} n \cdot \dfrac{1 - c^i}{1 - c} = \dfrac{n}{1 - c} = \mathcal{O}(n).
-\]
-The summation \(\sum_{i = 0}^{\infty} c^i n\) is called a geometric series. 
+\begin{definition}[Geometric Series]
+  A geometric sequence is an infinite sequence of the form 
+  \[
+    n, cn, c^2 n, c^3 n, \dots 
+  \]
+  where \(n\) is a positive number and \(c\) is a constant satisfying \(0 < c < 1\). It holds in general that 
+  \[
+    \sum_{i = 0}^{\infty} c^i n = \lim_{i \to \infty} n \cdot \dfrac{1 - c^i}{1 - c} = \dfrac{n}{1 - c} = \mathcal{O}(n).
+  \]
+  The summation \(\sum_{i = 0}^{\infty} c^i n\) is called a geometric series. 
+\end{definition}
 
 Consider again the \(k\)-th selection problem. Using the previous repeating technique, we can convert the problem into a subproblem with size at most \(\lceil \frac{2n}{3} \rceil\) in \(\mathcal{O}(n)\) expected time. We can use the geometric series to find the expected running time: 
 \[
