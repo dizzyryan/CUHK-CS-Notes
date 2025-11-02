@@ -1,1 +1,99 @@
-\chapter{Greedy Algorithm}
+\section{Minimum Spanning Trees}
+Consider \(G = (V, E)\) an undirected graph, where \(w\) is a function that maps each edge \(e\) of \(G\) to a positive integer value \(w(e)\), which we call the weight of \(e\). 
+
+An undirected weighted graph is defined as a pair \((G, w)\). Assume \(G\) is connected, i.e. every pair of vertices has a path between them. 
+
+A tree is defined as a connected undirected acyclic graph. 
+
+\begin{definition}[Spanning Tree]
+  A spanning tree \(T\) of a connected undirected weighted graph \(G = (V, E)\) is a tree that spans \(G\) with vertex set \(V_T = V\) and edge set \(E_T \subseteq E\). 
+\end{definition}
+
+\begin{problem}[Minimum Spanning Tree]
+  Given a connected undirected weighted graph \((G, w)\) with \(G = (V, E)\), the goal of the minimum spanning tree (MST) problem is to find a spanning tree of the smallest cost.
+\end{problem}
+
+\begin{note}
+  MSTs may not be unique. 
+\end{note}
+
+\subsection{Prim's Algorithm}
+Choose an arbitrary vertex as the starting point. This algorithm grows a tree \(T\) by including one vertex at a time. At any moment, it divides the vertex set \(V\) into:
+
+1. the set \(S\) of vertices that are already in \(T\);
+
+2. the set of other vertices \(V \setminus S\). 
+
+If an edge connects a vertex in \(S\) and a vertex in \(V \setminus S\), we call it a cross edge. 
+
+\textbf{Greedy Algorithm} 
+
+The idea is to repeatedly take the lightest cross edge. 
+
+\begin{proposition}
+  If \(T = (E_T, V_T)\) is a tree and an edge \(e \notin E_T\) connects two vertices in \(V_T\), then the following graph 
+  \[
+    T^{\prime} \coloneqq (E_T \cup \{e\}, V_T)
+  \]
+  contains exactly one cycle. 
+\end{proposition}
+\begin{proof}
+  Since \(T\) is connected, there is already a unique path between the endpoints of \(e\). Adding \(e\) creates a cycle by joining the ends of this path. As trees are acyclic, this must be the only cycle. 
+\end{proof}
+\begin{proof}
+  By definition, \(T\) is a tree, so it is connected. Thus, there is a unique path in \(T\) such that 
+  \[
+    P_{u \to v} = u \to \cdots \to v
+  \]
+  and adding an edge \(e = (u, v)\) forms a closed loop. Hence, \(T^{\prime}\) contains at least one cycle. 
+
+  Suppose there exists another cycle \(C^{\prime}\) in \(T^{\prime}\). Then \(C^{\prime}\) must involve at least one edge not in \(T\) since \(T\) is acyclic. The only edge not in \(T\) is \(e\); therefore, \(C^{\prime}\) must also contain \(e\). Removing \(e\) from \(C^{\prime}\) gives a path between \(u\) and \(v\) which is different from \(P_{u \to v}\), yet \(T\) has only one unique path between \(u\) and \(v\), thus a contradiction. 
+\end{proof}
+
+\begin{proposition}
+  Let \(C\) be a set of edges that form a cycle in a connected graph. Removing any edge \(e\) from \(C\) keeps the graph connected. 
+\end{proposition}
+\begin{proof}
+  Since the removed edge was part of a cycle, there remains an alternative path between its endpoints. Thus, all vertices remain reachable from one another. 
+\end{proof}
+
+\begin{proposition}
+  Let \(G = (V, E)\) be an undirected graph, and let \(T\) be a sub-graph of \(G\). Then the following statements are equivalent:
+
+  1. \(T\) is a spanning tree of \(G\),  
+
+  2. \(T\) is connected and has exactly \(\vert V \vert - 1\) edges. 
+\end{proposition}
+\begin{proof}
+    Assume \(T\) is a spanning tree of \(G\). Then by definition, \(T\) is connected, acyclic, and spans all vertices in \(V\). Since any tree on \(\vert V \vert\) vertices has exactly \(\vert V \vert - 1\) edges, \(T\) is connected and has exactly \(\vert V \vert - 1\) edges. 
+
+    Conversely, assume \(T\) is connected and has exactly \(\vert V \vert - 1\) edges. \(T\) must be acyclic; otherwise, removing one edge from the cycle would not break connectivity. However, it is impossible to have a connected graph of \(\vert V \vert\) vertices with fewer than \(\vert V \vert - 1\) edges. \(T\) must also span all vertices; otherwise, \(T\) can contain at most \(\vert V \vert - 1\) vertices. Since \(T\) has exactly \(\vert V \vert - 1\) edges, these conditions imply that \(T\) would contain a cycle, contradicting the acyclic property above. 
+\end{proof}
+
+\begin{proof}[Prim's Algorithm]
+  Let \(G = (V, E)\) be a connected, undirected graph with edge weights. Let \(T\) be the tree built by Prim's algorithm, \(T^\star\) any MST of \(G\), \(E_k\) the first \(k\) edges selected by Prim, and \(S_k \subset V\) the set of vertices included so far. 
+
+  We maintain the invariant that in the \(k\)-th step, the tree formed by \(E_k\) is a subtree of some MST. 
+
+  Initially, \(E_0 = \varnothing\), and any MST contains \(E_0\). Thus, the invariant holds for the base case. 
+
+  Assume that after \(k\) steps the invariant is true. Let \(e = (u, v)\) be the next edge chosen by Prim, where \(u \in S_k, v \in V \setminus S_k\). Edge \(e\) is the minimum-weight edge crossing the cut. 
+
+  \textbf{Case 1:} \(e \in T^\star \Rightarrow E_{k + 1}\) is a subtree of \(T^\star\), so the invariant holds. 
+
+  \textbf{Case 2:} \(e \notin T^\star\). Since \(T^\star\) is a spanning tree, there is a unique path in \(T^\star\) between \(u\) and \(v\). This path must contain some edge \(f\) crossing the cut. Define
+  \[
+    T' \coloneqq T^\star + e - f,
+  \]
+  i.e., \(T'\) is obtained by adding edge \(e\) to \(T^\star\) and removing edge \(f\). 
+
+  It is clear that \(E_{k+1} = E_k \cup \{e\}\) is a sub-graph of \(T'\). By Proposition 3.2.1, \(T^\star + e\) contains a cycle; by Proposition 3.2.2, \(T'\) is connected. Since \(T^\star\) is an MST and has exactly \(\vert V \vert - 1\) edges (Proposition 3.2.3), \(T'\) also has \(\vert V \vert - 1\) edges, so by Proposition 3.2.3 it is a spanning tree. 
+
+  As \(e\) is the lightest edge across the cut, \(w(e) \leq w(f)\), so \(w(T') \leq w(T^\star)\). Hence, \(T'\) is an MST. 
+
+  After \(\vert V \vert - 1\) steps, Prim has selected \(\vert V \vert - 1\) edges. By induction, this set of edges \(P\) forms a subtree of some MST, denoted \(T_{\text{final}}\). By Proposition 3.2.3, \(T_{\text{final}}\) has exactly \(\vert V \vert - 1\) edges, so \(P = T_{\text{final}}\). 
+\end{proof}
+
+\textbf{Analysis}
+
+This algorithm can be implemented in \(\mathcal{O} ((\vert V \vert + \vert E \vert) \cdot \log \vert V \vert)\) time. 

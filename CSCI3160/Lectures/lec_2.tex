@@ -27,7 +27,7 @@ When dealing with a sub-problem (the same problem but with a smaller input), con
 Given a set \(S\) of \(n\) integers in an array and an integer \(k \in [1, n]\), we want to find the \(k\)-th smallest integer of \(S\). 
 
 \begin{definition}[Rank]
-    The rank of an integer \(v \in S\) is the number of elements in \(S\) smaller than or equal to \(v\). 
+  The rank of an integer \(v \in S\) is the number of elements in \(S\) smaller than or equal to \(v\). 
 \end{definition}
 
 For example, suppose that \(S = (53, 92, 85, 23, 35, 12, 68, 74)\), then the rank of 53 is 4. 
@@ -48,38 +48,35 @@ We can obtain the rank of \(v\) in \(\mathcal{O}(|S|)\) time.
   This algorithm succeeds if \(|S^{\prime}| \leq \frac{2n}{3}\), and fails otherwise. 
 
   We repeat this algorithm until it succeeds. 
-
-  \begin{lemma}
-    The algorithm succeeds with probability at least \(\frac{1}{3}\). 
-  \end{lemma}
-
-  \begin{proof}
-    Let \(S\) be a set of size \(n\) and let \(v \in S\) be chosen uniformly at random. Let the rank of \(v\) in \(S\) be \(\text{rank}(v)\). 
-
-    Define \(S_1 = \{x \in S : x \leq v\}\), \(S_2 = \{x \in S : x > v\}\). If \(|S_1| \geq k\), return \(S^{\prime} = S_1\) and \(k^{\prime} = k\); otherwise \(S^{\prime} = S_2\) and \(k^{\prime} = k - |S_1|\). The sub-problem succeeds if \(|S^{\prime}| \leq \frac{2n}{3}\). 
-
-    If \(|S_1| \geq k\), then \(|S^{\prime}| = |S_1| = \text{rank}(v)\), and success requires
-    \[
-      \text{rank}(v) \leq \dfrac{2n}{3}. 
-    \]
-    If \(|S_1| < k\), then \(|S^{\prime}| = |S_2| = n - \text{rank}(v)\), and success requires
-    \[
-      n - \text{rank}(v) \leq \dfrac{2n}{3} \Longrightarrow \text{rank}(v) \geq \dfrac{n}{3}.
-    \]
-    Then we have 
-    \[
-      \text{rank}(v) \in \left[\dfrac{n}{3}, \dfrac{2n}{3}\right].
-    \]
-    Since \(v\) is chosen uniformly at random, every rank is equally likely, and the number of ranks in the success range is at least \(\frac{2n}{3} - \frac{n}{3} = \frac{n}{3}\). Thus we have 
-    \[
-      \mathbb{P}[\text{success}] \geq \dfrac{\frac{n}{3}}{n} = \dfrac{1}{3}.
-    \]
-  \end{proof}
-
-  \begin{remark}
-    Choosing \(\frac{2n}{3}\) is not mandatory, but rather a convenient threshold since it gives a smaller sub-problem. For example, if we say it succeeds when \(|S^{\prime}| \leq \frac{9n}{10}\), we have the range \([\frac{n}{10}, \frac{9n}{10}]\), giving the probability of success \(\frac{8}{10}\), which is high. However, this is simply because we have a larger range to choose from, making the sub-problem larger. 
-  \end{remark}
 \end{eg}
+\begin{lemma}
+  The algorithm succeeds with probability at least \(\frac{1}{3}\). 
+\end{lemma}
+\begin{proof}
+  Let \(S\) be a set of size \(n\) and let \(v \in S\) be chosen uniformly at random. Let the rank of \(v\) in \(S\) be \(\text{rank}(v)\). 
+
+  Define \(S_1 = \{x \in S : x \leq v\}\), \(S_2 = \{x \in S : x > v\}\). If \(|S_1| \geq k\), return \(S^{\prime} = S_1\) and \(k^{\prime} = k\); otherwise \(S^{\prime} = S_2\) and \(k^{\prime} = k - |S_1|\). The sub-problem succeeds if \(|S^{\prime}| \leq \frac{2n}{3}\). 
+
+  If \(|S_1| \geq k\), then \(|S^{\prime}| = |S_1| = \text{rank}(v)\), and success requires
+  \[
+    \text{rank}(v) \leq \dfrac{2n}{3}. 
+  \]
+  If \(|S_1| < k\), then \(|S^{\prime}| = |S_2| = n - \text{rank}(v)\), and success requires
+  \[
+    n - \text{rank}(v) \leq \dfrac{2n}{3} \Longrightarrow \text{rank}(v) \geq \dfrac{n}{3}.
+  \]
+  Then we have 
+  \[
+    \text{rank}(v) \in \left[\dfrac{n}{3}, \dfrac{2n}{3}\right].
+  \]
+  Since \(v\) is chosen uniformly at random, every rank is equally likely, and the number of ranks in the success range is at least \(\frac{2n}{3} - \frac{n}{3} = \frac{n}{3}\). Thus we have 
+  \[
+    \mathbb{P}[\text{success}] \geq \dfrac{\frac{n}{3}}{n} = \dfrac{1}{3}.
+  \]
+\end{proof}
+\begin{remark}
+  Choosing \(\frac{2n}{3}\) is not mandatory, but rather a convenient threshold since it gives a smaller sub-problem. For example, if we say it succeeds when \(|S^{\prime}| \leq \frac{9n}{10}\), we have the range \([\frac{n}{10}, \frac{9n}{10}]\), giving the probability of success \(\frac{8}{10}\), which is high. However, this is simply because we have a larger range to choose from, making the sub-problem larger. 
+\end{remark}
 
 In general, if an algorithm succeeds with a probability at least \(c > 0\), then the number of repeats needed for the algorithm to succeed for the first time is at most \(\frac{1}{c}\) in expectation. 
 

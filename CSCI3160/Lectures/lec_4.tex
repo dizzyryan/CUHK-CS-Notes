@@ -60,11 +60,10 @@ However, this reduction cannot utilize recursion; therefore, we choose another s
     p(z) = a_n \prod_{k = 1}^{n} (z - \zeta_k),
   \]
   where each root appears according to its multiplicity.
-  
-  \begin{explanation}
-    Consider our problem: we have a polynomial \(C(x)\) that can be determined by \(n = 2d + 1\) points. According to the theorem, every polynomial of degree \(2d\) has exactly \(2d\) roots in \(\mathbb{C}\). Hence, we can use these complex roots to find a convenient set of points that make evaluation easier.
-  \end{explanation}
 \end{theorem}
+\begin{explanation}
+  Consider our problem: we have a polynomial \(C(x)\) that can be determined by \(n = 2d + 1\) points. According to the theorem, every polynomial of degree \(2d\) has exactly \(2d\) roots in \(\mathbb{C}\). Hence, we can use these complex roots to find a convenient set of points that make evaluation easier.
+\end{explanation}
 
 \begin{definition}
   An \(n\)-th root of unity, where \(n\) is a positive integer, is a complex number \(z\) satisfying 
@@ -110,36 +109,38 @@ Moreover, we note some important facts about the roots of unity:
     U_n = \{\omega_n^0, \omega_n^1, \omega_n^2, \dots, \omega_n^{n-1}\}.
   \]
 \end{proposition}
+
 \begin{proposition}
   For all even \(n \in \mathbb{N}\), it holds that 
   \[
     \omega_n^{k + \frac{n}{2}} = -\omega_n^k, \quad \forall k \in \{0, 1, \dots, \tfrac{n}{2} - 1\}.
   \]
 \end{proposition}
+
 \begin{proposition}
   3. For all even \(n \in \mathbb{N}\), squaring each element of \(U_n\) gives the set \(U_{\frac{n}{2}}\), i.e., the set of \(\frac{n}{2}\)-th roots of unity. More explicitly, 
   \[
     \omega_n^{2k} = \omega_{\frac{n}{2}}^{k \bmod (\frac{n}{2})}.
   \]
-
-  \begin{proof}
+\end{proposition}
+\begin{proof}
     Let \(\omega_n = e^{\frac{2\pi i}{n}}\) be a primitive \(n\)-th root of unity. Consider the square of \(\omega_n^k\):
     \[
       (\omega_n^k)^2 = (e^{\frac{2k\pi i}{n}})^2 = e^{\frac{2(2k)\pi i}{n}} = e^{\frac{2k\pi i}{\frac{n}{2}}} = \omega_{\frac{n}{2}}^{k}.
     \]
     Thus, for each \(k = 0 , 1, \dots, n-1\), squaring \(\omega_n^k\) gives \(\omega_{n/2}^{k}\).  
-  \end{proof}
-  \begin{remark}~
+\end{proof}
 
-    - Since \(k\) ranges over \(0, \dots, n - 1\), some values of \(\omega_{n/2}^k\) repeat (because \(k\) modulo \(\frac{n}{2}\)).  
+\begin{remark}~
 
-    - Therefore, the set of all \((\omega_n^k)^2\) is exactly
-    \[
-      \{\omega_{n/2}^0, \omega_{n/2}^1, \dots, \omega_{n/2}^{n/2-1}\} = U_{n/2},
-    \]
-    the set of \(\frac{n}{2}\)-th roots of unity.
-    \end{remark}
-\end{proposition}
+  - Since \(k\) ranges over \(0, \dots, n - 1\), some values of \(\omega_{n/2}^k\) repeat (because \(k\) modulo \(\frac{n}{2}\)).  
+
+  - Therefore, the set of all \((\omega_n^k)^2\) is exactly
+  \[
+    \{\omega_{n/2}^0, \omega_{n/2}^1, \dots, \omega_{n/2}^{n/2-1}\} = U_{n/2},
+  \]
+  the set of \(\frac{n}{2}\)-th roots of unity.
+\end{remark}
 
 
 \subsection{Fast Fourier Transform}

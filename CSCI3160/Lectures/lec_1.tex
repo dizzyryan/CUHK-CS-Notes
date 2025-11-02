@@ -163,24 +163,23 @@ By looking at the cost of an algorithm on the worst input, we are able to measur
   \end{algorithm}
 
   The algorithm finishes in \(\mathcal{O}(1)\) expected time on every input \(A\). 
-
-  \begin{proof}
-    Let \(X\) be the number of iterations until the algorithm picks a zero. Each iteration chooses \(r \in \{1,\dots, n\}\). 
-
-    Then we have 
-    \[
-      p = \mathbb{P}\left[A[r] = 0\right] = \dfrac{\text{\# of zeros}}{n} = \dfrac{\frac{n}{2}}{n} = \dfrac{1}{2}.
-    \]
-    Then \(X\) is a geometric random variable with success probability \(p = \frac{1}{2}\). 
-
-    For a geometric random variable, we have
-    \[
-      \mathbb{E}[X] = \dfrac{1}{p} = \dfrac{1}{\frac{1}{2}} = 2.
-    \]
-    Since each iteration takes \(\mathcal{O}(1)\) time to pick a random index, we need two such iterations in expectation. Thus, the expected running time is \(2 \times \mathcal{O}(1) = \mathcal{O}(1)\). 
-  \end{proof}
-
-  \begin{remark}
-    In contrast, any deterministic algorithm must probe at least \(\frac{n}{2}\) integers of \(A\) in the worst case. In other words, any deterministic algorithm must have a worst-case time of \(\Theta(n)\) — provably slower than the above randomized algorithm (in expectation).
-  \end{remark}
 \end{eg}
+\begin{proof}
+  Let \(X\) be the number of iterations until the algorithm picks a zero. Each iteration chooses \(r \in \{1,\dots, n\}\). 
+
+  Then we have 
+  \[
+    p = \mathbb{P}\left[A[r] = 0\right] = \dfrac{\text{\# of zeros}}{n} = \dfrac{\frac{n}{2}}{n} = \dfrac{1}{2}.
+  \]
+  Then \(X\) is a geometric random variable with success probability \(p = \frac{1}{2}\). 
+
+  For a geometric random variable, we have
+  \[
+    \mathbb{E}[X] = \dfrac{1}{p} = \dfrac{1}{\frac{1}{2}} = 2.
+  \]
+  Since each iteration takes \(\mathcal{O}(1)\) time to pick a random index, we need two such iterations in expectation. Thus, the expected running time is \(2 \times \mathcal{O}(1) = \mathcal{O}(1)\). 
+\end{proof}
+
+\begin{remark}
+  In contrast, any deterministic algorithm must probe at least \(\frac{n}{2}\) integers of \(A\) in the worst case. In other words, any deterministic algorithm must have a worst-case time of \(\Theta(n)\) — provably slower than the above randomized algorithm (in expectation).
+\end{remark}
