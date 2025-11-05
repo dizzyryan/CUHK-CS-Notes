@@ -5,7 +5,7 @@ import java.sql.*;
 import db.GeneralFileHandler;
 import db.db_op.*;
 
-public class PartTableParse implements GeneralFileHandler {
+public class PartParse implements GeneralFileHandler {
     private int p_id;
     private String p_name;
     private int p_price;

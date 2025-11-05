@@ -2,13 +2,13 @@ package db.db_op;
 
 import java.sql.*;
 
-public class TransactionRecordsTable {
+public class TransactionTable {
     private int t_id;
     private int p_id;
     private int s_id;
     private String t_date;
 
-    public TransactionRecordsTable(int t_id, int p_id, int s_id, String t_date) {
+    public TransactionTable(int t_id, int p_id, int s_id, String t_date) {
         this.t_id = t_id;
         this.p_id = p_id;
         this.s_id = s_id;

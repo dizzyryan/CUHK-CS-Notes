@@ -5,7 +5,7 @@ import java.sql.*;
 import db.GeneralFileHandler;
 import db.db_op.*;
 
-public class SalespersonTableParse implements GeneralFileHandler {
+public class SalespersonParse implements GeneralFileHandler {
     private int s_id;
     private String s_name;
     private String s_address;

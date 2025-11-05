@@ -5,7 +5,7 @@ import java.sql.*;
 import db.GeneralFileHandler;
 import db.db_op.*;
 
-public class TransactionRecordsParse implements GeneralFileHandler {
+public class TransactionParse implements GeneralFileHandler {
     private int t_id;
     private int p_id;
     private int s_id;
@@ -20,7 +20,7 @@ public class TransactionRecordsParse implements GeneralFileHandler {
     }
 
     public void insertToDB(Connection conn) throws SQLException {
-        TransactionRecordsTable item = new TransactionRecordsTable(t_id, p_id, s_id, t_date);
+        TransactionTable item = new TransactionTable(t_id, p_id, s_id, t_date);
         item.databaseInsert(conn);
     }
 }
