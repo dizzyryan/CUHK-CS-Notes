@@ -1,32 +1,37 @@
 package db.file_op;
 
 import java.sql.*;
+import java.util.*;
 
 import db.GeneralFileHandler;
 import db.db_op.*;
 
 public class PartParse implements GeneralFileHandler {
-    private int p_id;
-    private String p_name;
-    private int p_price;
-    private int m_id;
-    private int c_id;
-    private int p_warranty;
-    private int p_quantity;
+    private List<PartTable> batchItems = new ArrayList<>();
 
-    public void parseLine(String line) {
-        String[] parts = line.split("\t");
-        this.p_id = Integer.parseInt(parts[0]);
-        this.p_name = parts[1];
-        this.p_price = Integer.parseInt(parts[2]);
-        this.m_id = Integer.parseInt(parts[3]);
-        this.c_id = Integer.parseInt(parts[4]);
-        this.p_warranty = Integer.parseInt(parts[5]);
-        this.p_quantity = Integer.parseInt(parts[6]);
+    public void parseLines(List<String> lines) {
+        batchItems.clear();
+        for (String line : lines) {
+            if (line == null || line.isEmpty())
+                continue;
+            String[] parts = line.split("\t");
+            if (parts.length != 7) {
+                continue;
+            }
+            int pId = Integer.parseInt(parts[0]);
+            String pName = parts[1];
+            int pPrice = Integer.parseInt(parts[2]);
+            int mId = Integer.parseInt(parts[3]);
+            int cId = Integer.parseInt(parts[4]);
+            int pWarranty = Integer.parseInt(parts[5]);
+            int pAvailableQuantity = Integer.parseInt(parts[6]);
+            batchItems.add(new PartTable(pId, pName, pPrice, mId, cId, pWarranty, pAvailableQuantity));
+        }
     }
 
-    public void insertToDB(Connection connection) throws SQLException {
-        PartTable item = new PartTable(p_id, p_name, p_price, m_id, c_id, p_warranty, p_quantity);
-        item.databaseInsert(connection);
+    public void insertBatchToDB(Connection connection) throws SQLException {
+        if (batchItems.isEmpty())
+            return;
+        PartTable.databaseInsertBatch(connection, batchItems);
     }
 }

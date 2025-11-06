@@ -1,26 +1,39 @@
 package db.file_op;
 
 import java.sql.*;
+import java.util.*;
 
 import db.GeneralFileHandler;
 import db.db_op.*;
 
 public class ManufacturerParse implements GeneralFileHandler {
-    private int m_id;
-    private String m_name;
-    private String m_address;
-    private int m_phone;
+    private List<ManufacturerTable> batchItems = new ArrayList<>();
 
-    public void parseLine(String line) {
-        String[] parts = line.split("\t");
-        this.m_id = Integer.parseInt(parts[0]);
-        this.m_name = parts[1];
-        this.m_address = parts[2];
-        this.m_phone = Integer.parseInt(parts[3]);
+    public void parseLines(List<String> lines) {
+        batchItems.clear();
+        for (String line : lines) {
+            if (line == null || line.isEmpty())
+                continue;
+            String[] parts;
+            if (line.contains("\t")) {
+                parts = line.split("\t");
+            } else {
+                parts = line.trim().split("\\s+");
+            }
+            if (parts.length != 4) {
+                continue;
+            }
+            int mId = Integer.parseInt(parts[0]);
+            String mName = parts[1];
+            String mAddress = parts[2];
+            int mPhoneNumber = Integer.parseInt(parts[3]);
+            batchItems.add(new ManufacturerTable(mId, mName, mAddress, mPhoneNumber));
+        }
     }
 
-    public void insertToDB(Connection connection) throws SQLException {
-        ManufacturerTable item = new ManufacturerTable(m_id, m_name, m_address, m_phone);
-        item.databaseInsert(connection);
+    public void insertBatchToDB(Connection connection) throws SQLException {
+        if (batchItems.isEmpty())
+            return;
+        ManufacturerTable.databaseInsertBatch(connection, batchItems);
     }
 }

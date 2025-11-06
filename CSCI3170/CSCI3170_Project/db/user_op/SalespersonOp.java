@@ -16,7 +16,7 @@ public class SalespersonOp {
     public void searchForParts(String searchCriterion, String keyword, String ordering) throws SQLException {
         if (searchCriterion.equals("p_name")) {
             try {
-                String sql = "SELECT p.p_id, p.p_name, m.m_name, c.c_name, p.p_quantity, p.p_warranty, p.p_price FROM part p JOIN manufacturer m ON p.m_id = m.m_id JOIN category c ON p.c_id = c.c_id WHERE LOWER(p.p_name) LIKE LOWER(?) ORDER BY p.p_price "
+                String sql = "SELECT p.pId, p.pName, m.mName, c.cName, p.pAvailableQuantity, p.pWarranty, p.pPrice FROM part p JOIN manufacturer m ON p.mId = m.mId JOIN category c ON p.cId = c.cId WHERE LOWER(p.pName) LIKE LOWER(?) ORDER BY p.pPrice "
                         + ordering;
                 PreparedStatement pstmt = connection.prepareStatement(sql);
                 pstmt.setString(1, "%" + keyword + "%");
@@ -32,13 +32,14 @@ public class SalespersonOp {
                                     + rs.getString(4) + " | " + rs.getString(5) + " | " + rs.getString(6) + " | "
                                     + rs.getString(7) + " | ");
                 }
+                pstmt.close();
+                rs.close();
             } catch (SQLException e) {
                 System.out.println("[Error] " + e.getMessage() + "\n");
             }
-
         } else if (searchCriterion.equals("m_name")) {
             try {
-                String sql = "SELECT p.p_id, p.p_name, m.m_name, c.c_name, p.p_quantity, p.p_warranty, p.p_price FROM part p JOIN manufacturer m ON p.m_id = m.m_id JOIN category c ON p.c_id = c.c_id WHERE LOWER(m.m_name) LIKE LOWER(?) ORDER BY p.p_price "
+                String sql = "SELECT p.pId, p.pName, m.mName, c.cName, p.pAvailableQuantity, p.pWarranty, p.pPrice FROM part p JOIN manufacturer m ON p.mId = m.mId JOIN category c ON p.cId = c.cId WHERE LOWER(m.mName) LIKE LOWER(?) ORDER BY p.pPrice "
                         + ordering;
                 PreparedStatement pstmt = connection.prepareStatement(sql);
                 pstmt.setString(1, "%" + keyword + "%");
@@ -54,6 +55,8 @@ public class SalespersonOp {
                                     + rs.getString(4) + " | " + rs.getString(5) + " | " + rs.getString(6) + " | "
                                     + rs.getString(7) + " | ");
                 }
+                pstmt.close();
+                rs.close();
             } catch (SQLException e) {
                 System.out.println("[Error] " + e.getMessage() + "\n");
             }
@@ -62,7 +65,8 @@ public class SalespersonOp {
 
     public void sellAPart(int partID, int salespersonID) throws SQLException {
         try {
-            PreparedStatement pstmtQC = connection.prepareStatement("SELECT p_quantity FROM part WHERE p_id = ?");
+            PreparedStatement pstmtQC = connection
+                    .prepareStatement("SELECT pAvailableQuantity FROM part WHERE pId = ?");
             pstmtQC.setInt(1, partID);
             ResultSet rs = pstmtQC.executeQuery();
             if (!rs.isBeforeFirst()) {
@@ -75,35 +79,38 @@ public class SalespersonOp {
                 System.out.println("Out of stock.\n");
                 return;
             } else {
-                int t_id = 1;
-                String sql = "SELECT NVL(MAX(t_id), 0) AS max_tid FROM transactionrecords";
+                int tId = 1;
+                String sql = "SELECT NVL(MAX(tId), 0) AS max_tid FROM transaction";
                 PreparedStatement pstmt = connection.prepareStatement(sql);
                 ResultSet maxTID = pstmt.executeQuery();
                 if (!maxTID.next()) {
-                    t_id = 1;
+                    tId = 1;
                 } else {
-                    t_id = maxTID.getInt(1) + 1;
+                    tId = maxTID.getInt(1) + 1;
                 }
                 PreparedStatement[] pstmts = {
                         connection.prepareStatement(
-                                "INSERT INTO transactionrecords (t_id, p_id, s_id, t_date) VALUES (?, ?, ?, TRUNC(CURRENT_DATE))"),
+                                "INSERT INTO transaction (tId, pId, sId, tDate) VALUES (?, ?, ?, TRUNC(CURRENT_DATE))"),
                         connection.prepareStatement(
-                                "UPDATE part SET p_quantity = p_quantity - 1 WHERE p_id = ?"),
+                                "UPDATE part SET pAvailableQuantity = pAvailableQuantity - 1 WHERE pId = ?"),
                 };
-                pstmts[0].setInt(1, t_id);
+                pstmts[0].setInt(1, tId);
                 pstmts[0].setInt(2, partID);
                 pstmts[0].setInt(3, salespersonID);
                 pstmts[1].setInt(1, partID);
 
                 for (int i = 0; i < pstmts.length; i++) {
                     pstmts[i].executeUpdate();
+                    pstmts[i].close();
                 }
+                pstmt.close();
+                maxTID.close();
 
                 PreparedStatement[] results = {
                         connection.prepareStatement(
-                                "SELECT p_name FROM part WHERE p_id = " + partID),
+                                "SELECT pName FROM part WHERE pId = " + partID),
                         connection.prepareStatement(
-                                "SELECT p_quantity FROM part WHERE p_id = " + partID)
+                                "SELECT pAvailableQuantity FROM part WHERE pId = " + partID)
                 };
                 ResultSet rsName = results[0].executeQuery();
                 rsName.next();
@@ -114,7 +121,13 @@ public class SalespersonOp {
                 System.out
                         .println("Product: " + p_name + "(id: " + partID + ") " + "Remaining Quantity: " + p_quantity);
                 System.out.println();
+                results[0].close();
+                results[1].close();
+                rsName.close();
+                rsQty.close();
             }
+            pstmtQC.close();
+            rs.close();
         } catch (SQLException e) {
             System.out.println("[Error] " + e.getMessage() + "\n");
         }

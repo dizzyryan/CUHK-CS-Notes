@@ -1,22 +1,32 @@
 package db.file_op;
 
 import java.sql.*;
+import java.util.*;
 
-import db.*;
+import db.GeneralFileHandler;
 import db.db_op.*;
 
 public class CategoryParse implements GeneralFileHandler {
-    private int c_id;
-    private String c_name;
+    private List<CategoryTable> batchItems = new ArrayList<>();
 
-    public void parseLine(String line) {
-        String[] parts = line.split("\t");
-        this.c_id = Integer.parseInt(parts[0]);
-        this.c_name = parts[1];
+    public void parseLines(List<String> lines) {
+        batchItems.clear();
+        for (String line : lines) {
+            if (line == null || line.isEmpty())
+                continue;
+            String[] parts = line.split("\t");
+            if (parts.length != 2) {
+                continue;
+            }
+            int cId = Integer.parseInt(parts[0]);
+            String cName = parts[1];
+            batchItems.add(new CategoryTable(cId, cName));
+        }
     }
 
-    public void insertToDB(Connection connection) throws SQLException {
-        CategoryTable item = new CategoryTable(c_id, c_name);
-        item.databaseInsert(connection);
+    public void insertBatchToDB(Connection connection) throws SQLException {
+        if (batchItems.isEmpty())
+            return;
+        CategoryTable.databaseInsertBatch(connection, batchItems);
     }
 }

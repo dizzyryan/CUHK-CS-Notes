@@ -1,26 +1,33 @@
 package db.db_op;
 
 import java.sql.*;
+import java.util.List;
 
 public class TransactionTable {
-    private int t_id;
-    private int p_id;
-    private int s_id;
-    private String t_date;
+    private int tId;
+    private int pId;
+    private int sId;
+    private String tDate;
 
-    public TransactionTable(int t_id, int p_id, int s_id, String t_date) {
-        this.t_id = t_id;
-        this.p_id = p_id;
-        this.s_id = s_id;
-        this.t_date = t_date;
+    public TransactionTable(int tId, int pId, int sId, String tDate) {
+        this.tId = tId;
+        this.pId = pId;
+        this.sId = sId;
+        this.tDate = tDate;
     }
 
-    public void databaseInsert(Connection conn) throws SQLException {
-        PreparedStatement stmt = conn
-                .prepareStatement("INSERT INTO transactionrecords (t_id, p_id, s_id, t_date) VALUES (?, ?, ?, TO_DATE('" + t_date + "', 'DD/MM/YYYY'))");
-        stmt.setInt(1, t_id);
-        stmt.setInt(2, p_id);
-        stmt.setInt(3, s_id);
-        stmt.execute();
+    public static void databaseInsertBatch(Connection connection, List<TransactionTable> items) throws SQLException {
+        PreparedStatement pstmt = connection
+                .prepareStatement(
+                        "INSERT INTO transaction (tId, pId, sId, tDate) VALUES (?, ?, ?, TO_DATE(?, 'DD/MM/YYYY'))");
+        for (TransactionTable item : items) {
+            pstmt.setInt(1, item.tId);
+            pstmt.setInt(2, item.pId);
+            pstmt.setInt(3, item.sId);
+            pstmt.setString(4, item.tDate);
+            pstmt.addBatch();
+        }
+        pstmt.executeBatch();
+        pstmt.close();
     }
 }

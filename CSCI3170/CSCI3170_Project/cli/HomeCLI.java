@@ -20,8 +20,9 @@ public class HomeCLI implements CLIInterface {
             try {
                 choice = scanner.nextInt();
                 scanner.nextLine();
-            } catch (InputMismatchException e) {
-                System.out.println("[Selection Error] Please choose a valid option.\n");
+            } catch (Exception e) {
+                scanner.nextLine();
+                System.out.println("[Error] Please choose a valid option.\n");
                 continue;
             }
             System.out.println();
@@ -33,13 +34,14 @@ public class HomeCLI implements CLIInterface {
                 case 2:
                     c = new SalespersonCLI(database, scanner);
                     break;
-                // case 3:
-                // c = new ManagerCLI(database, scanner);
-                // break;
+                case 3:
+                    c = new ManagerCLI(database, scanner);
+                    break;
                 case 4:
+                    database.closeConnection();
                     return;
                 default:
-                    System.out.println("[Selection Error] Please choose a valid option.\n");
+                    System.out.println("[Error] Please choose a valid option.\n");
             }
             if (c != null)
                 c.startCLI();

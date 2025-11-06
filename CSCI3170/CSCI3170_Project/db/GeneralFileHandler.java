@@ -1,9 +1,10 @@
 package db;
 
 import java.sql.*;
+import java.util.List;
 
 public interface GeneralFileHandler {
-    public void parseLine(String line);
+    public void parseLines(List<String> lines);
 
-    public void insertToDB(Connection connection) throws SQLException;
+    public void insertBatchToDB(Connection connection) throws SQLException;
 }

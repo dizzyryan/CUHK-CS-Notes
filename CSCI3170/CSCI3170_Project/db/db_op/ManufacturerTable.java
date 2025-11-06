@@ -1,27 +1,32 @@
 package db.db_op;
 
 import java.sql.*;
+import java.util.List;
 
 public class ManufacturerTable {
-    private int m_id;
-    private String m_name;
-    private String m_address;
-    private int m_phone;
+    private int mId;
+    private String mName;
+    private String mAddress;
+    private int mPhoneNumber;
 
-    public ManufacturerTable(int m_id, String m_name, String m_address, int m_phone) {
-        this.m_id = m_id;
-        this.m_name = m_name;
-        this.m_address = m_address;
-        this.m_phone = m_phone;
+    public ManufacturerTable(int mId, String mName, String mAddress, int mPhoneNumber) {
+        this.mId = mId;
+        this.mName = mName;
+        this.mAddress = mAddress;
+        this.mPhoneNumber = mPhoneNumber;
     }
 
-    public void databaseInsert(Connection connection) throws SQLException {
+    public static void databaseInsertBatch(Connection connection, List<ManufacturerTable> items) throws SQLException {
         PreparedStatement pstmt = connection.prepareStatement(
-                "INSERT INTO manufacturer (m_id, m_name, m_address, m_phone) VALUES (?, ?, ?, ?)");
-        pstmt.setInt(1, m_id);
-        pstmt.setString(2, m_name);
-        pstmt.setString(3, m_address);
-        pstmt.setInt(4, m_phone);
-        pstmt.execute();
+                "INSERT INTO manufacturer (mId, mName, mAddress, mPhoneNumber) VALUES (?, ?, ?, ?)");
+        for (ManufacturerTable item : items) {
+            pstmt.setInt(1, item.mId);
+            pstmt.setString(2, item.mName);
+            pstmt.setString(3, item.mAddress);
+            pstmt.setInt(4, item.mPhoneNumber);
+            pstmt.addBatch();
+        }
+        pstmt.executeBatch();
+        pstmt.close();
     }
 }

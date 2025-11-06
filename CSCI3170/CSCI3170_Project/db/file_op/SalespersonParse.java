@@ -1,28 +1,35 @@
 package db.file_op;
 
 import java.sql.*;
+import java.util.*;
 
 import db.GeneralFileHandler;
 import db.db_op.*;
 
 public class SalespersonParse implements GeneralFileHandler {
-    private int s_id;
-    private String s_name;
-    private String s_address;
-    private int s_phone;
-    private int s_experience;
+    private List<SalespersonTable> batchItems = new ArrayList<>();
 
-    public void parseLine(String line) {
-        String[] parts = line.split("\t");
-        this.s_id = Integer.parseInt(parts[0]);
-        this.s_name = parts[1];
-        this.s_address = parts[2];
-        this.s_phone = Integer.parseInt(parts[3]);
-        this.s_experience = Integer.parseInt(parts[4]);
+    public void parseLines(List<String> lines) {
+        batchItems.clear();
+        for (String line : lines) {
+            if (line == null || line.isEmpty())
+                continue;
+            String[] parts = line.split("\t");
+            if (parts.length != 5) {
+                continue;
+            }
+            int sId = Integer.parseInt(parts[0]);
+            String sName = parts[1];
+            String sAddress = parts[2];
+            int sPhoneNumber = Integer.parseInt(parts[3]);
+            int sExperience = Integer.parseInt(parts[4]);
+            batchItems.add(new SalespersonTable(sId, sName, sAddress, sPhoneNumber, sExperience));
+        }
     }
 
-    public void insertToDB(Connection connection) throws SQLException {
-        SalespersonTable item = new SalespersonTable(s_id, s_name, s_address, s_phone, s_experience);
-        item.databaseInsert(connection);
+    public void insertBatchToDB(Connection connection) throws SQLException {
+        if (batchItems.isEmpty())
+            return;
+        SalespersonTable.databaseInsertBatch(connection, batchItems);
     }
 }

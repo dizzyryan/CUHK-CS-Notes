@@ -1,20 +1,25 @@
 package db.db_op;
 
 import java.sql.*;
+import java.util.List;
 
 public class CategoryTable {
-    private int c_id;
-    private String c_name;
+    private int cId;
+    private String cName;
 
-    public CategoryTable(int c_id, String c_name) {
-        this.c_id = c_id;
-        this.c_name = c_name;
+    public CategoryTable(int cId, String cName) {
+        this.cId = cId;
+        this.cName = cName;
     }
 
-    public void databaseInsert(Connection connection) throws SQLException {
-        PreparedStatement pstmt = connection.prepareStatement("INSERT INTO category (c_id, c_name) VALUES (?, ?)");
-        pstmt.setInt(1, c_id);
-        pstmt.setString(2, c_name);
-        pstmt.execute();
+    public static void databaseInsertBatch(Connection connection, List<CategoryTable> items) throws SQLException {
+        PreparedStatement pstmt = connection.prepareStatement("INSERT INTO category (cId, cName) VALUES (?, ?)");
+        for (CategoryTable item : items) {
+            pstmt.setInt(1, item.cId);
+            pstmt.setString(2, item.cName);
+            pstmt.addBatch();
+        }
+        pstmt.executeBatch();
+        pstmt.close();
     }
 }

@@ -27,7 +27,7 @@ public class AdminCLI implements CLIInterface {
                 scanner.nextLine();
             } catch (InputMismatchException e) {
                 scanner.nextLine();
-                System.out.println("[Selection Error] Please choose a valid option.\n");
+                System.out.println("[Error] Please choose a valid option.\n");
                 continue;
             }
             System.out.println();
@@ -47,7 +47,7 @@ public class AdminCLI implements CLIInterface {
                 case 5:
                     return;
                 default:
-                    System.out.println("[Selection Error] Please choose a valid option.\n");
+                    System.out.println("[Error] Please choose a valid option.\n");
             }
         }
     }
@@ -67,7 +67,7 @@ public class AdminCLI implements CLIInterface {
         try {
             System.out.printf("Processing...");
             adminOp.createAllTables();
-            System.out.println("Done! Database is initialized!\n");
+            System.out.println("Done! All tables are created!\n");
         } catch (SQLException e) {
             System.out.println();
             System.out.println("[Creation Error] " + e.getMessage());
@@ -78,7 +78,7 @@ public class AdminCLI implements CLIInterface {
         try {
             System.out.printf("Processing...");
             adminOp.deleteAllTables();
-            System.out.println("Done! Database is removed!\n");
+            System.out.println("Done! All tables are removed!\n");
         } catch (SQLException e) {
             System.out.println();
             System.out.println("[Deletion Error] " + e.getMessage());
@@ -91,7 +91,7 @@ public class AdminCLI implements CLIInterface {
         try {
             System.out.printf("Processing...");
             adminOp.loadFromDatafile(folderPath);
-            System.out.println("Done! Data is inputted to the databse!\n");
+            System.out.println("Done! Data is inputted to the database!\n");
         } catch (Exception e) {
             if (e instanceof SQLException) {
                 System.out.println();
@@ -109,8 +109,7 @@ public class AdminCLI implements CLIInterface {
         try {
             adminOp.showTableContent(tableName);
         } catch (SQLException e) {
-            System.out.println();
-            System.out.println("[Show Error] " + e.getMessage());
+            System.out.println("[Error] " + e.getMessage() + "\n");
         }
     }
 }

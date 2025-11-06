@@ -26,7 +26,8 @@ public class SalespersonCLI implements CLIInterface {
                 choice = scanner.nextInt();
                 scanner.nextLine();
             } catch (InputMismatchException e) {
-                System.out.println("[Selection Error] Please choose a valid option.\n");
+                scanner.nextLine();
+                System.out.println("[Error] Please choose a valid option.\n");
                 continue;
             }
             System.out.println();
@@ -40,7 +41,7 @@ public class SalespersonCLI implements CLIInterface {
                 case 3:
                     return;
                 default:
-                    System.out.println("[Selection Error] Please choose a valid option.\n");
+                    System.out.println("[Error] Please choose a valid option.\n");
             }
         }
     }
@@ -55,14 +56,21 @@ public class SalespersonCLI implements CLIInterface {
     }
 
     private void searchForParts() {
+        int tmp;
+        String searchCriterion, ordering;
         System.out.println("Choose the Search criterion: ");
         System.out.println("1. Part name");
         System.out.println("2. Manufacturer Name");
         System.out.printf("Choose the Search criterion: ");
-        int tmp = scanner.nextInt();
-        String searchCriterion = tmp == 1 ? "p_name" : "m_name";
+        try {
+            tmp = scanner.nextInt();
+            searchCriterion = tmp == 1 ? "p_name" : "m_name";
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            System.out.println("[Error] Please choose a valid option.\n");
+            return;
+        }
         scanner.nextLine();
-        System.out.println();
         System.out.printf("Type in the Search Keyword: ");
         String keyword = scanner.nextLine();
         System.out.println();
@@ -70,8 +78,14 @@ public class SalespersonCLI implements CLIInterface {
         System.out.println("1. By price, ascending order");
         System.out.println("2. By price, descending order");
         System.out.printf("Choose ordering: ");
-        tmp = scanner.nextInt();
-        String ordering = tmp == 1 ? "ASC" : "DESC";
+        try {
+            tmp = scanner.nextInt();
+            ordering = tmp == 1 ? "ASC" : "DESC";
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            System.out.println("[Error] Please choose a valid option.\n");
+            return;
+        }
         System.out.println();
         try {
             salespersonOp.searchForParts(searchCriterion, keyword, ordering);
@@ -82,11 +96,24 @@ public class SalespersonCLI implements CLIInterface {
     }
 
     private void sellAPart() {
+        int partID, salespersonID;
         System.out.printf("Enter the Part ID: ");
-        int partID = scanner.nextInt();
+        try {
+            partID = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            System.out.println("[Error] Please enter a valid Part ID.\n");
+            return;
+        }
         scanner.nextLine();
         System.out.printf("Enter the Salesperson ID: ");
-        int salespersonID = scanner.nextInt();
+        try {
+            salespersonID = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            System.out.println("[Error] Please enter a valid Salesperson ID.\n");
+            return;
+        }
         scanner.nextLine();
         try {
             salespersonOp.sellAPart(partID, salespersonID);
