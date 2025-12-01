@@ -1,61 +1,82 @@
-\chapter{Introduction}
+\chapter{Basis of AI}
 
-\section{Overview}
-A \textbf{data structure} is a way to organize and store data in a computer program, allowing for efficient access and manipulation.
+\section{Introduction}
+Artificial intelligence (AI) is intelligence demonstrated by machines, as opposed to the natural intelligence displayed by humans or animals. \footnote{Here are some funny facts I would like to share, which are not necessary. You can directly go to \ref{sec1.2}.}
 
-An \textbf{algorithm} is different from a \textbf{program}. An algorithm is a process or set of rules used for calculation or problem-solving. It is a step-by-step outline or flowchart showing how to solve a problem. A program, on the other hand, is a series of coded instructions that control the operation of a computer or other machines. It is the implemented code of an algorithm.
+It can be distinguished into \textbf{Artificial Narrow Intelligence} and \textbf{Artificial General Intelligence}. The latter refers to the ability of an intelligent agent to understand or learn any intellectual task that a human being can. Machine learning, as often mentioned, is a branch of AI, while deep learning is a specific subset of machine learning.
 
-For example, to solve the greatest common divisor (GCD) problem, we can use the following algorithm.
+Before delving into details, we consider how humans learn, since AI is basically simulating the way people learn.
 
-\begin{algorithm}[H]
-	\DontPrintSemicolon{}
-	\caption{Euclid's Algorithm}
-	\KwData{\(m, n \in \mathbb{Z}^+\) }
-	\KwResult{GCD(\(m, n\))}
-	\BlankLine
-	\While(){\(m > 0\)}{
-		\If(){\(n > m\)}{
-      swap \(m\) and \(n\) 
-    }
-    subtract \(n\) from \(m\) 
-	}
-	\Return{\(n\)}\;
-\end{algorithm}
+For humans, we acquire or learn some skills by accumulating experience from observations. This is basically the same for computers, except that the observations are now in the form of data, which can vary from text documents to sound recordings.
 
-By using a mathematical method to prove this algorithm, we can show that it is correct, provided that it terminates. 
+The skill of a machine can be illustrated by prediction, which is basically what AI does—makes predictions. Then, how can data be learned? There are learning algorithms that train the machine on how to make predictions; we construct a model corresponding to such an algorithm and then use the data to train the model.
 
-Having proved the correctness, we also need to use different test cases to check if there is anything wrong with the coding or the proof. We should consider special cases, including large values, swapped values, etc.
+Think of it this way: a learning algorithm is the functionality of the brain, where the model is the container, i.e., the brain itself. We have observations (training data), and then, using these observations, we make predictions based on new information (test data) — for example, the answer to a math question, the answer to someone else's question, etc.
 
-We are also interested in the time and space (computer memory) it uses, which we call \textbf{time complexity} and \textbf{space complexity}. Typically, complexity is a function of the values of the inputs, and we would like to know which function. We can also consider the best case, average case, and worst-case scenarios.
+Then, you observe that there are two sets of data: one is the training set and the other is the test set. Their usage is just like their names suggest. For example, for labeled data, we might randomly split them into 80\% training data and 20\% test data. Notice that a larger test set will give a more accurate assessment of performance.
 
-For example, in the above algorithm, the best case would be \(m = n\), with just one iteration. If \(n = 1\), there are \(m\) iterations, which is the worst case. However, for the average case, it is difficult to analyze.
+We sometimes also use a validation data set, which is a set of examples used to tune the \textit{hyperparameters} of the model.
 
-Also, for space complexity, it is constant since we only use space for the three integers: \(m\), \(n\), and \(t\). 
+In short, we have an original labeled data set, and we either split it into two sets, i.e., training and test sets, or we split it into three sets with a validation set used to tune the model.
 
-To improve the above algorithm, we can use \verb|mod|, so we don't need to keep doing subtraction.
+If there is a small-scale dataset, we can use \textbf{cross-validation}. We shuffle the dataset randomly and split it into \(k\) groups. For each unique group, take that group as a hold-out or test dataset, and use the remaining groups as the training dataset. Then, summarize the performance of the model using all the evaluation scores from each fold.  
 
-\section{Algorithm}
-An algorithm is a finite set of instructions which, if followed, accomplishes a particular task. Every algorithm must satisfy the following criteria:
+With all these methods, the question remains: how do we evaluate the performance of a model given a dataset?
 
-- Input: There are zero or more quantities that are externally supplied.
+\section{Model Performance}\label{sec1.2}
+To evaluate the model performance, we can compare it with previous models if they exist. There are also some metrics that can be used, which are based on the confusion matrix. 
 
-- Output: At least one quantity is produced.
+Assume we have a binary classifier that can classify the data into positive and negative samples. Then we have
 
-- Definiteness: Each instruction must be clear and unambiguous.
+\begin{figure}[ht]
+    \centering    
+    \begin{tabular}{c c | c | c |}
+        \multicolumn{2}{c}{} & \multicolumn{2}{c}{\textbf{Actual}} \\
+        \cmidrule(lr){3-4}
+        \multicolumn{2}{c|}{} & Positive & Negative \\
+        \midrule
+        \multirow{2}{*}{\textbf{Predicted}} & Positive & True Positive (TP) & False Positive (FP) \\
+        \cmidrule{2-4}
+         & Negative & False Negative (FN) & True Negative (TN) \\
+        \bottomrule
+    \end{tabular}
+    \captionof{table}{Standard Binary Confusion Matrix Layout}
+\end{figure}
 
-- Finiteness: If we trace out the instructions of an algorithm, then for all cases, the algorithm will terminate after a finite number of steps.
+Here TP and TN show correct prediction, whereas FP and FN show incorrect prediction.
 
-- Effectiveness: Every instruction must be sufficiently basic that it can, in principle, be carried out by a person using only pencil and paper. 
+Below might provide a more intuitive illustration.\footnote{\url{https://codefinity.com/courses/v2/b71ff7ac-3932-41d2-a4d8-060e24b00129/6b1d35ef-cd16-405c-8202-ef0f3d8e10c5/be441b8d-e533-4c4d-8e34-817ea61b6fa0}}
 
-We also define an algorithm as any well-defined computational procedure that takes some value, or set of values, as input and produces some value, or set of values, as output. It is thus a sequence of computational steps that transform the input into output.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figure/TPFPTNFN.pdf}
+  \caption{Pregnancy Confusion Matrix}
+\end{figure}
 
-It can also be viewed as a tool for solving a well-specified computational problem. The problem statement specifies, in general terms, the desired input or output relationship, and the algorithm describes a specific computational procedure for achieving that input or output relationship.
+We define \textbf{Accuracy} as the fraction of correct prediction,
+\[
+  \frac{\text{TP} + \text{TN}}{\text{TP} + \text{FP} + \text{TN} + \text{FN}}.
+\]
 
-An algorithm is said to be correct if, for every input instance, it halts with the correct output. It can solve the given computational problem. In contrast, an incorrect algorithm might not halt at all on some input instances, and sometimes it can even produce useful results.
+\textbf{Precision} is the accuracy of the positive predictions:
+\[
+  \frac{\text{TP}}{\text{TP} + \text{FP}}.
+\]
+Notice that high precision means low `false alarm rate'.
 
-\section{Study of Data}
-A data structure is a particular way of storing and organizing data in a computer so that it can be used efficiently.
+Lastly, \textbf{recall} (or \textbf{sensitivity}) is the accuracy for the positive class,
+\[
+  \frac{\text{TP}}{\text{TP} + \text{FN}}.
+\]
+High recall means low possibility of missing many positives.
 
-A data structure is a set of domains \(D\), a designated domain \(d \in D\), a set of functions \(F\), and a set of axioms \(A\).
+We use a confusion matrix to visualize the performance of an algorithm. Each row of the matrix represents the instances in an actual class, while each column represents the instances in a predicted class, or vice versa.
 
-An implementation of a data structure \(d\) is a mapping from \(d\) to a set of other data structures \(e\).
+\section{Types of Learning}
+There are three types of learning.
+
+\textbf{Supervised Learning:} data is labeled such that the machine can learn from the characters. This is used to predict outcomes or the future. It can be seen as a function that maps an input to an output based on example input--output pairs.
+
+\textbf{Unsupervised Learning:} data is in the form of unlabeled samples, where the machine needs to learn on its own and find hidden structure.
+
+\textbf{Reinforcement Learning:} this can be considered as a reward system, where it deals with the way intelligent agents take actions in order to maximize their cumulative reward.

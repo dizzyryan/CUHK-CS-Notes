@@ -1,0 +1,322 @@
+\chapter{Regression}
+Regression is a statistical process for estimating the relation between dependent and independent variables. Consider it as a program, where the input is independent variables and the output is dependent variables. 
+
+\section{Linear Regression}
+Linear regression is a kind of regression model, which hypothesizes that the relation between dependent variables and independent variables is linear. Mathematically, a function \(f(x)\) is linear iff. \(f(u + v) = f(u) + f(v)\) and \(f(cu) = cf(u)\).
+
+\subsection{Formulation}
+Consider intelligent machines as functions with input and output. Then we have
+\[
+  f: X \to Y
+\]
+where \(X \subset \mathbb{R}^n\) is the domain of input and \(Y \subset \mathbb{R}\) is the domain of output. The goal of the learning algorithm is to take the given data as training examples, then try to find a general mapping \(\hat{f}: X \to Y\) such that it is close to the true \(f\), i.e. \(\hat{f} \approx f\). 
+
+As we plot the given data on a graph, if the data points are distributed along a straight line, we can assume the relation between input \(X\) and output \(Y\) is linear for simplification. 
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\textwidth]{Figure/linear_reg.pdf}
+  \caption{Linear Regression}
+\end{figure}
+
+For a univariate linear function in a 1-dimensional feature space, we have
+\[
+  \hat{y} = \hat{f}_{\theta_0, \theta_1} (x) = \theta_0 + \theta_1 x.
+\]
+If we can find the optimal \(\theta_0\) and \(\theta_1\), i.e., the relation parameters, then we can predict the output with higher precision. 
+
+When there are more than one factors, we consider an \(n\)-dimensional feature space. The multivariate linear function is
+\[
+  \hat{y} = \hat{f}_{\theta_0, \theta_1, \dots, \theta_n} (x_1, \dots, x_n) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \cdots + \theta_n x_n.
+\]
+We can also write it in vector form as
+\[
+  \hat{y} = \hat{f}_{\theta_0, \Theta} (X) = X^T \Theta + \theta_0,
+\]
+where
+\[
+  \Theta = \begin{pmatrix}
+    \theta_1 \\
+    \vdots \\
+    \theta_n
+  \end{pmatrix}, \quad 
+  X = \begin{pmatrix}
+    x_1 \\
+    \vdots \\
+    x_n
+  \end{pmatrix}.
+\]
+
+\begin{remark}
+  \(\theta_0\) and \(\Theta\) are parameters that should be learned from the training data. 
+\end{remark}
+
+There might be more than one sample being studied. Suppose we have \(m\) samples, and
+\[
+  X^{(1)} = \begin{pmatrix}
+    x_1^{(1)} \\
+    \vdots \\
+    x_n^{(1)}
+  \end{pmatrix}, \quad
+  X^{(2)} = \begin{pmatrix}
+    x_1^{(2)} \\
+    \vdots \\
+    x_n^{(2)}
+  \end{pmatrix}, \dots, 
+  X^{(m)} = \begin{pmatrix}
+    x_1^{(m)} \\
+    \vdots \\
+    x_n^{(m)}
+  \end{pmatrix},
+\]
+with respective labels \(y^{(1)}, y^{(2)}, \dots, y^{(m)}\). 
+
+We denote \(\mathbf{X} \in \mathbb{R}^{m \times n}\) as the data matrix, where rows represent samples and columns represent features:
+\[
+  \mathbf{X} = \begin{pmatrix}
+    X^{(1)^T} \\
+    \vdots \\
+    X^{(m)^T}
+  \end{pmatrix} = \begin{pmatrix}
+    x_1^{(1)} & \cdots & x_n^{(1)} \\
+    \vdots & \ddots & \vdots \\
+    x_1^{(m)} & \cdots & x_n^{(m)}
+  \end{pmatrix}.
+\]
+Then we have a more general function for linear regression with \(n\) features and \(m\) samples:
+\[
+  \hat{Y} = \hat{f}_{\theta_0, \Theta} (\mathbf{X}) = \mathbf{X} \Theta + \theta_0,
+\]
+where
+\[
+  \Theta = \begin{pmatrix}
+    \theta_1 \\
+    \vdots \\
+    \theta_n
+  \end{pmatrix}, \quad 
+  \hat{Y} = \begin{pmatrix}
+    \hat{y}^{(1)} \\
+    \vdots \\
+    \hat{y}^{(m)}
+  \end{pmatrix}.
+\]
+
+\begin{remark}
+  For \(\mathbf{X} \Theta\), consider it as combining the features for each sample:
+  \[
+    \mathbf{X} \Theta = \theta_1 \begin{pmatrix}
+    x_1^{(1)} \\
+    \vdots \\
+    x_1^{(m)}
+  \end{pmatrix} + \theta_2 \begin{pmatrix}
+    x_2^{(1)} \\
+    \vdots \\
+    x_2^{(m)}
+  \end{pmatrix} + \cdots + \theta_n \begin{pmatrix}
+    x_n^{(1)} \\
+    \vdots \\
+    x_n^{(m)}
+  \end{pmatrix}.
+  \]
+\end{remark}
+
+For simplification, we define
+\[
+  \mathbf{X} = \begin{pmatrix}
+    1 & x_1^{(1)} & \cdots & x_n^{(1)} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    1 & x_1^{(m)} & \cdots & x_n^{(m)}
+  \end{pmatrix}, \quad 
+  \Theta = \begin{pmatrix}
+    \theta_0 \\
+    \theta_1 \\
+    \vdots \\
+    \theta_n
+  \end{pmatrix},
+\]
+then
+\[
+  \hat{Y} = \hat{f}_{\Theta} (\mathbf{X}) = \mathbf{X} \Theta.
+\]
+
+\begin{note}[Geometry of Linear Regression]
+  Data points \(\{(x_1^{(1)}, \cdots, x_n^{(1)}, y^{(1)})\}, \dots, \{(x_1^{(m)}, \cdots, x_n^{(m)}, y^{(m)})\}\) occupy a \((n + 1)\)-dimensional space. The fitted line is actually an \(n\)-dimensional hyperplane in this space.
+\end{note}
+
+Since all data points are supposed to be sampled from the same distribution, once we find the optimal \(\Theta\), we obtain \(\hat{f}_\Theta \approx f\). The next question is: how do we find the optimal \(\Theta\)? We first focus on fitting the training data. 
+
+\subsection{Optimization}
+Intuitively, we need to measure and minimize the distance between the estimated values \(\hat{f}_\Theta(X^{(i)})\) and the true training labels \(y^{(i)}\). 
+
+We denote \(J(\Theta)\) as the objective function (or cost function) to measure this distance. The goal is to find \(\Theta\) such that \(J(\Theta)\) is minimized. 
+
+We define \(J(\Theta)\) as the \textbf{Residual Sum of Squares (RSS)}:
+\[
+  J(\Theta) = \sum_{i = 1}^m (\hat{f}_{\Theta}(X^{(i)}) - y^{(i)})^2 = \Vert \hat{f}_{\Theta}(\mathbf{X}) - Y \Vert_2^2.
+\]
+The method that approximates the solution by minimizing the RSS is called \textbf{ordinary least squares}.
+
+\begin{remark}
+  The \emph{residual} is the difference between the estimated value and the corresponding training label.
+\end{remark}
+
+Consider the univariate linear regression problem. Its residual sum of squares (RSS) is
+\[
+  J(\theta_0, \theta_1) = \sum_{i = 1}^m (\hat{f}_{\theta_0, \theta_1}(x^{(i)}) - y^{(i)})^2 = \sum_{i = 1}^m (\theta_0 + \theta_1 x^{(i)} - y^{(i)})^2.
+\]
+
+Then we can rewrite \(J(\theta_0, \theta_1)\) as
+\[
+\begin{aligned}
+  J(\theta_0, \theta_1) &= \sum_{i = 1}^m (x^{(i)} - \overline{x})^2 \left(\theta_1 - \frac{\sum_{i = 1}^m (x^{(i)} - \overline{x})(y^{(i)} - \overline{y})}{\sum_{i = 1}^m (x^{(i)} - \overline{x})^2}\right)^2 + m\big(\theta_0 - (\overline{y} - \theta_1 \overline{x})\big)^2 \\
+  &\quad + \sum_{i = 1}^m (y^{(i)} - \overline{y})^2 - \frac{\Big(\sum_{i = 1}^m (x^{(i)} - \overline{x})(y^{(i)} - \overline{y})\Big)^2}{\sum_{i = 1}^m (x^{(i)} - \overline{x})^2}.
+\end{aligned}
+\]
+
+\begin{remark}
+  Only the first two terms depend on \(\theta_0\) and \(\theta_1\). Therefore, to minimize \(J(\theta_0, \theta_1)\), it suffices to set these two terms to zero.
+\end{remark}
+
+Thus, we solve
+\[
+  \begin{dcases}
+    0 &= \sum_{i = 1}^m (x^{(i)} - \overline{x})^2 \left(\theta_1 - \dfrac{\sum_{i = 1}^m (x^{(i)} - \overline{x})(y^{(i)} - \overline{y})}{\sum_{i = 1}^m (x^{(i)} - \overline{x})^2}\right)^2, \\
+    0 &= m\big(\theta_0 - (\overline{y} - \theta_1 \overline{x})\big)^2,
+  \end{dcases}
+\]
+which gives the closed-form solution
+\[
+  \begin{dcases}
+    \theta_1 &= \dfrac{\sum_{i = 1}^m (x^{(i)} - \overline{x})(y^{(i)} - \overline{y})}{\sum_{i = 1}^m (x^{(i)} - \overline{x})^2}, \\
+    \theta_0 &= \overline{y} - \theta_1 \overline{x}.
+  \end{dcases}
+\]
+Usually, we use optimization methods to find \(\Theta^{\star}\) that minimizes the objective function. Optimization is the process of selecting the best element with regard to some criterion. We can write it as
+\[
+  \arg \min_x g(x) \quad \text{s.t. some conditions here,}
+\]
+where \(g(x)\) is the target to minimize and \(x\) is the element to search.  
+
+For ordinary linear regression, we can formulate the optimization problem as
+\[
+  \hat{\Theta} = \Theta^{\star} = \arg \min_{\Theta} J(\Theta).
+\]
+Since the RSS function is convex, i.e., the global minimum is also a local minimum, we can find the global minimum by solving
+\[
+  J^{\prime} (\Theta^{\star}) = 0 \quad \text{and} \quad J^{\prime\prime}(\Theta^{\star}) > 0.
+\]
+We have
+\[
+  \begin{aligned}
+    J(\Theta) &= \Vert \hat{f}_{\Theta}(\mathbf{X}) - Y \Vert_2^2 = (\mathbf{X}\Theta - Y)^T(\mathbf{X}\Theta - Y) \\
+    &= \Theta^T \mathbf{X}^T \mathbf{X} \Theta - Y^T \mathbf{X} \Theta - \Theta^T \mathbf{X}^T Y - Y^T Y.
+  \end{aligned}
+\]
+Then, the derivatives are
+\[
+  \begin{aligned}
+    \frac{\partial J(\Theta)}{\partial \Theta} &= 2\mathbf{X}^T \mathbf{X} \Theta - \mathbf{X}^T Y - \mathbf{X}^T Y \\
+    &= 2 \mathbf{X}^T (\mathbf{X}\Theta - Y) = 0, \\
+    \frac{\partial^2 J(\Theta)}{\partial \Theta^2} &= 2 \mathbf{X}^{T} \mathbf{X} > 0.
+  \end{aligned}
+\]
+Finally, we obtain the closed-form solution
+\[
+  \mathbf{X}^T \mathbf{X} \Theta = \mathbf{X}^T Y \quad \Longrightarrow \quad
+  \hat{\Theta} = \Theta^{\star} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T Y.
+\]
+
+\begin{intuition}
+  All in all, the goal is to find the best \(\Theta\), i.e., the parameters, since we want the model to capture most of the data and provide more precise predictions. For the case with only one feature, the derived formula is sufficient. However, for multiple features and samples, the calculation becomes cumbersome. 
+  
+  Thus, we consider the RSS function in another way. Since it is convex by nature, we can use its derivative to find the optimal \(\Theta\) efficiently.
+\end{intuition}
+
+\subsection{Shrinkage Methods}
+There are noises from observation. Therefore, we have \(y = f(X) + \epsilon\), where \(\mathbb{E}(\epsilon) = 0\) and \(\Var(\epsilon) = \sigma^2\). Noise could lead to error, so for any fixed \(X\) with label \(y\) the expected prediction error at \(X\) is
+\[
+  \text{EPE}(X) = \mathbb{E}((y - \hat{f}(X))^2) = \text{Bias}(\hat{f}(X))^2 + \Var(\hat{f}(X)) + \sigma^2
+\]
+where
+\[
+  \text{Bias}(\hat{f}(X)) = \mathbb{E}(\hat{f}(X)) - f(X) \quad \Var(\hat{f}(X)) = \mathbb{E}((\hat{f}(X) - \mathbb{E}[\hat{f}(X)])^2)
+\]
+The expected prediction error is composed of bias, variance, and irreducible error. We can achieve a considerable EPE if both bias and variance are minimized simultaneously (see Figure 2.2\footnote{\url{http://scott.fortmann-roe.com/docs/BiasVariance.html}}).
+
+As we repeat the training on randomly sampled data, if the model perfectly fits the training data, the prediction bias is low while variance is very high, since the model varies among different training datasets. Yet, if the model is constant among different training datasets, the prediction variance will be zero but with high bias. This means that in general, low variance causes high bias, and vice versa. 
+
+Thus, we need to make a trade-off between minimizing bias and variance. 
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{Figure/Bias_variance.png}
+  \caption{Graphical illustration of bias and variance}
+\end{figure}
+
+Over-fitting refers to the case where we have low bias but high variance, which usually occurs when the model has high complexity, i.e., many features used in training and prediction.
+
+Under-fitting refers to the case where we have high bias but low variance, which occurs when the model complexity is too low.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figure/model_complexity.png}
+  \caption{Model Complexity}
+\end{figure}
+
+Ordinary least squares is prone to producing a model with low bias but high variance. To improve the EPE, we can tune the model complexity. Shrinkage methods are a set of techniques for automatically controlling and reducing model complexity.
+
+\subsubsection{Ridge Regression}
+When there are many correlated features in a linear regression model, the estimated coefficients can become poorly determined and exhibit high variance. For example, a very large positive coefficient on one variable can be offset by a similarly large negative coefficient on a correlated variable. The ridge penalty regularizes the coefficients by adding a cost for large values, so that the optimization function discourages excessively large coefficients. As a result, the problem of unstable estimates due to multicollinearity is alleviated.
+
+As we have 
+\[
+  \hat{Y} = \hat{f}_{\theta_0, \Theta} (\mathbf{X}) = \mathbf{X} \Theta + \theta_0,
+\]
+the ordinary least squares problem can be formulated as the following optimization:
+\[
+  \hat{\Theta} = \arg \min_{\Theta} \Vert \mathbf{X} \Theta + \theta_0 - Y \Vert_2^2.
+\]
+Ridge regression aims to shrink the parameters by imposing a penalty on the squared magnitude of the coefficients:
+\[
+  \hat{\Theta}^{ridge} = \arg \min_{\Theta} \Vert \mathbf{X} \Theta + \theta_0 - Y \Vert_2^2 + \lambda \Vert \Theta \Vert_2^2.
+\]
+The penalty term (also known as the L2 norm) is defined as
+\[
+  \Vert \Theta \Vert_2^2 = \sum_{i = 1}^n \theta_i^2.
+\]
+Note that \(\theta_0\) is not included in the penalty term, and \(\lambda\) is a user-specified hyperparameter.
+
+In the figures below, the red `+' markers represent points on the true relationship \(f(X)\) (shown as blue lines). Ordinary least squares fits the training data very well but exhibits high variability across different training sets. In contrast, ridge regression reduces the variability of the estimated coefficients, leading to more stable models, but may not fit the training data perfectly.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{Figure/OLS_Ridge.png}
+  \caption{OLS v.s. Ridge}
+\end{figure}
+
+\begin{intuition}
+In a test, each feature represents a factor affecting your score: hours studied, sleep, coffee, etc. In OLS, you try to perfectly fit the past test scores. Some factors may receive very large weights to match the training data exactly.
+
+However, if a future test changes slightly (due to noise), your predictions fluctuate a lot, resulting in high variance. Ridge regression addresses this by discouraging any factor from having too much influence. If a parameter becomes too large, it incurs a penalty.
+
+As a result, the optimization shrinks \(\Theta\) toward zero.
+\end{intuition}
+
+\subsubsection{Lasso Regression}
+Lasso regression is also a shrinkage method, similar to ridge regression, but differs in the penalty term: 
+\[
+  \hat{\Theta}^{lasso} = \arg \min_{\Theta} \Vert \mathbf{X} \Theta + \theta_0 - Y \Vert_2^2 + \lambda \Vert \Theta \Vert_1.
+\]
+The penalty term (also known as the L1 norm) is defined as 
+\[
+  \Vert \Theta \Vert_1 = \sum_{i = 1}^n \vert \theta_i \vert,
+\]
+and is designed to encourage sparsity in the parameters. Sparsity means that many elements in \(\Theta\) are exactly zero, effectively reducing the number of features used and therefore decreasing model complexity.
+
+Similarly to ridge regression, Lasso yields models with less variance, but it is less likely to perfectly fit every data point.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{Figure/OLS_Lasso.png}
+  \caption{OLS v.s. Ridge}
+\end{figure}
