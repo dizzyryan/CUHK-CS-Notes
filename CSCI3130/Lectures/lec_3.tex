@@ -1,1 +1,271 @@
-\chapter{Finite Accepter}
+\subsection{Automata}
+An automaton is an abstract model of a digital computer. There are input, a control unit, storage, and output.
+
+There are deterministic and nondeterministic automata. Also, as introduced before, we have acceptors and transducers. More specifically, an automaton whose output is “yes” or “no” is an acceptor, while one whose output is a string of symbols is a transducer.
+
+We will look at the details in the next chapter.
+
+\chapter{Finite Acceptor}
+
+Before diving into the details, we take a look at the transition graph, which is an important component in learning the concepts that follow.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figure/2-1_tran.pdf}
+  \caption{Transition Graph}
+  \label{eg2.1}
+\end{figure}
+
+For a transition graph, there is an initial state, and the internal transitions are represented by arrows, where the labels on top of them indicate valid transitions. There is also a final (accepting) state, which is a node drawn with a double circle, as shown above for \(q_4\).
+
+\section{Deterministic Finite Acceptor}
+A Deterministic Finite Acceptor is a machine with a finite number of states; some states are accepting while others are rejecting. It reads the input string one character at a time. 
+
+After reading a character, it moves to another state depending on the current state and the input read. After reading the entire string, if the DFA is in an accepting state, the input string is accepted; otherwise, it is rejected.
+
+\begin{definition}[Deterministic Finite Acceptor (DFA)]
+  A Deterministic Finite Acceptor is defined by the 5-tuple
+  \[
+    M = (Q, \Sigma, \delta, q_0, F)
+  \]
+  where
+
+  - \(Q\): a finite set of internal states,
+
+  - \(\Sigma\): a finite set of symbols called the input alphabet,
+
+  - \(\delta\): \(Q \times \Sigma \to Q\), called the transition function (a total function),
+
+  - \(q_0\): \(q_0 \in Q\) is the initial state,
+  
+  - \(F\): \(F \subseteq Q\) is the set of final states.
+\end{definition}
+
+From Figure 2.1, we have \(\Sigma = \{a, b\}\), \(Q = \{q_0, q_1, q_2, q_3, q_4, q_5\}\), where \(q_0\) is the initial state and \(q_4\) is the final state. The transition function is
+\[
+  \delta(q_0, a) = q_1, \quad \delta(q_0, b) = q_5, \cdots
+\]
+We also have the extended transition function \(\delta^{\star}\) 
+\[
+  \delta^{\star}: Q \times \Sigma^{\star} \to Q,
+\]
+for example,
+\[
+  \delta^{\star} (q_0, ab) = q_2.
+\]
+That being said, if we have the string \(abba\) as input, it will be accepted by this DFA since it reaches the final state and outputs ``accept''.
+
+Here we see that there is a walk from \(q \to q^{\prime}\) with label \(w\) iff. \(\delta^{\star} (q, w) = q^{\prime}\), where \(w = \sigma_1 \sigma_2 \cdots \sigma_k\).
+
+We also allow recursion:
+\[
+  \delta^{\star} (q, w \sigma) = \delta (\delta^{\star} (q, w), \sigma).
+\]
+
+\begin{definition}
+  For a DFA \(M\), the language \(L(M)\) contains all input strings accepted by \(M\), where
+  \[
+    L(M) = \{w \in \Sigma^{\star} : \delta^{\star} (q_0, w) \in F\}.
+  \]
+\end{definition}
+
+Then it is intuitive that 
+\[
+  \overline{L(M)} = \{w \in \Sigma^{\star} : \delta^{\star} (q_0, w) \notin F\}
+\]
+is the language rejected by \(M\).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figure/2-2_tran.pdf}
+  \caption{Transition Graph}
+  \label{eg2.2}
+\end{figure}
+
+For example, in the above DFA \(M\), \(L(M) = \{\lambda, ab, abba\}\).
+
+\begin{definition}[Regular Language]
+  A language \(L\) is regular iff. there exists some DFA \(M\) such that \(L = L(M)\). The language \(L(M)\) contains all input string accepted by a DFA \(M\). 
+\end{definition}
+
+This means that there are also languages that are not regular, since no DFA can accept such languages.
+
+\section{Nondeterministic Finite Acceptor}
+Many deterministic algorithms require that one make a choice at some stage. Thus, we introduce nondeterminism, which is sometimes helpful in solving problems easily. It is also an effective mechanism for describing some complicated languages concisely. 
+
+\begin{definition}[Nondeterministic Finite Acceptor (NFA)]
+  A Nondeterministic Finite Acceptor is defined by the 5-tuple
+  \[
+    M = (Q, \Sigma, \delta, q_0, F)
+  \]
+  where
+
+  - \(Q\): a finite set of internal states,
+
+  - \(\Sigma\): a finite set of symbols called the input alphabet,
+
+  - \(\delta\): \(Q \times (\Sigma \cup \{\lambda\}) \to 2^Q\), called the transition function (a total function),
+
+  - \(q_0\): \(q_0 \in Q\) is the initial state,
+  
+  - \(F\): \(F \subseteq Q\) is the set of final states.
+\end{definition}
+
+The main difference between an NFA and a DFA is that in an NFA, the range of \(\delta(q, \sigma)\) is in the powerset \(2^Q\). It allows \(\lambda\) as the second argument of \(\delta\), and the set \(\delta(q_i, a)\) may be empty.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{Figure/2-3_tran.pdf}
+  \caption{Transition Graph}
+\end{figure}
+
+For example, in Figure 2.3, when the input symbol is \(a\), there are two choices. If we have the input string \(aa\), all input is consumed and accepted in the upper route, while the automaton hangs in the lower route.
+
+We say that an NFA accepts a string when there exists a computation of the NFA that accepts the string, i.e., all the input is consumed and the automaton is in a final state.
+
+An NFA rejects a string when there is no computation of the NFA that accepts the string, i.e., either all input is consumed and the automaton is not in a final state, or the input cannot be consumed.
+
+Therefore, in the above example, \(aa\) is accepted.
+
+In an NFA, we also allow \(\lambda\)-transitions, as shown below.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{Figure/2-4_tran.pdf}
+  \caption{Lambda transition}
+\end{figure}
+
+Note that the \(\lambda\) symbol will not appear on the input tape. We can also express languages more easily using an NFA than a DFA.
+
+\begin{definition}
+  For an NFA \(M\), the language \(L(M)\) contains all input strings accepted by \(M\), where
+  \[
+    L(M) = \{w \in \Sigma^{\star} : \delta^{\star} (q_0, w) \cap F \neq \varnothing\}.
+  \]
+\end{definition}
+
+Consider the following: we can have \(\delta(q_1, 0) = \{q_0, q_2\}, \delta(q_0, \lambda) = \{q_0, q_2\}, \cdots\). 
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{Figure/2-5_tran.pdf}
+  \caption{Transition Graph}
+\end{figure}
+
+The extended transition function \(\delta^{\star}\) is the same as in the case of a DFA. 
+
+Again, there is a walk from \(q_i \to q_j\) with label \(w\) iff. \(q_j \in \delta^{\star} (q_i, w)\).
+
+\section{Equivalence of DFA and NFA}
+\begin{definition}
+  Two finite acceptors \(M_1, M_2\) are said to be equivalent if 
+  \[
+    L(M_1) = L(M_2),
+  \]
+  i.e., both accept the same language. 
+\end{definition}
+
+DFA and NFA have the same computational power, since a DFA is just a restricted kind of NFA. One operation we can perform is the conversion from an NFA to a DFA. 
+
+Given an NFA \(M\), we want to convert it to an equivalent DFA \(M^{\prime}\). If the NFA has states \(q_0, q_1, \cdots\), then the DFA will have states in the powerset of the NFA states, i.e., \(\{\varnothing, \{q_0\}, \{q_1\}, \cdots\}\). 
+
+To do the conversion, we follow the following procedure:
+
+1. Convert the initial state of the NFA \(q_0\) to the initial state of the DFA \(\{q_0\}\).
+
+\begin{minipage}{0.5\textwidth}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Figure/2-6_con_1.pdf}
+  \caption{NFA}
+\end{figure}
+\end{minipage} 
+\begin{minipage}{0.5\textwidth}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\textwidth]{Figure/2-6_con_2.pdf}
+  \caption{DFA - 1}
+\end{figure}
+\end{minipage}
+
+2. For every DFA state, compute the transition function in the NFA, then add the corresponding transition to the DFA. Repeat this step until no more transitions can be added. 
+
+3. For any state in the DFA that contains a final NFA state, mark it as a final state in the DFA. 
+
+\begin{minipage}{0.5\textwidth}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figure/2-6_con_3.pdf}
+  \caption{DFA - 2}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figure/2-6_con_4.pdf}
+  \caption{DFA - 3}
+\end{figure}
+\end{minipage}
+
+As previously mentioned, the language accepted by a DFA is regular, and this also applies to an NFA. To prove this, we show the following:
+
+1. Every DFA is trivially an NFA, i.e., any language accepted by a DFA is also accepted by an NFA. 
+
+2. Any NFA can be converted to an equivalent DFA, i.e., any language accepted by an NFA is also accepted by a DFA.
+
+\begin{theorem}
+  For any NFA \(M\), there exists a DFA \(M'\) constructed via the subset construction such that
+  \[
+    L(M) = L(M').
+  \]
+
+  \begin{proof}
+    Let \(M = (Q, \Sigma, \delta, q_0, F)\) be an NFA. We construct a DFA \(M^{\prime} = (Q^{\prime}, \Sigma, \delta^{\prime}, q_0^{\prime}, F^{\prime})\) using the subset construction:
+    \[
+      Q^{\prime} = \mathcal{P}(Q), \quad q_0^{\prime} = \{q_0\}, \quad F^{\prime} = \{S \subseteq Q \mid S \cap F \neq \emptyset\}, 
+    \]
+    \[
+      \delta^{\prime}(S, a) = \bigcup_{q \in S} \delta(q, a) \quad \text{for } S \subseteq Q, a \in \Sigma.
+    \]
+    We want to prove that for all strings \(w \in \Sigma^*\),
+    \[
+      \hat{\delta}^{\prime}(q_0^{\prime}, w) = \hat{\delta}(q_0, w),
+    \]
+    where \(\hat{\delta}\) and \(\hat{\delta}^{\prime}\) are the extended transition functions for \(M\) and \(M^{\prime}\) respectively. 
+
+    \textbf{Base Case:} \(|w| = 0\), i.e., \(w = \epsilon\).
+    \[
+      \hat{\delta}^{\prime}(q_0^{\prime}, \epsilon) = q_0^{\prime} = \{q_0\} = \hat{\delta}(q_0, \epsilon).
+    \]
+    \textbf{Inductive Step:} Assume that for a string \(x \in \Sigma^*\) of length \(k\),
+    \[
+      \hat{\delta}^{\prime}(q_0^{\prime}, x) = \hat{\delta}(q_0, x).
+    \]  
+    Now consider a string \(w = xa\) where \(a \in \Sigma\). Then
+    \[
+      \begin{aligned}
+        \hat{\delta}^{\prime} (q_0^{\prime}, xa) &= \delta^{\prime}(\hat{\delta}^{\prime}(q_0^{\prime}, x), a) \\
+        &= \delta^{\prime}(\hat{\delta}(q_0, x), a) \quad \text{(by inductive hypothesis)} \\
+        &= \bigcup_{q \in \hat{\delta}(q_0, x)} \delta(q, a) \\
+        &= \hat{\delta}(q_0, xa).
+      \end{aligned}
+    \]
+    By induction, for all \(w \in \Sigma^*\),
+    \[
+      \hat{\delta}^{\prime}(q_0^{\prime}, w) = \hat{\delta}(q_0, w).
+    \]
+    Finally, a string \(w\) is accepted by \(M\) if \(\hat{\delta}(q_0, w) \cap F \neq \emptyset\), and \(w\) is accepted by \(M^{\prime}\) if \(\hat{\delta}^{\prime}(q_0^{\prime}, w) \in F^{\prime}\). Since 
+    \[
+      \hat{\delta}^{\prime}(q_0^{\prime}, w) = \hat{\delta}(q_0, w),
+    \]
+    we have
+    \[
+      w \in L(M) \iff w \in L(M^{\prime}).
+    \]
+    Hence, \(L(M) = L(M^{\prime})\).
+  \end{proof}
+\end{theorem}
+
+Therefore, it suffices to show that an NFA accepts a regular language.
+
+Also, any NFA can be converted into an equivalent NFA with a single final state by using \(\lambda\)-transitions.

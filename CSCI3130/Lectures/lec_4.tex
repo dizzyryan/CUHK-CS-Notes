@@ -1,1 +1,23 @@
 \chapter{Regular Language}
+\section{Regular Expression}
+We describe regular language using basic language operations. it involves combination of strings of stmbols from some alphabet \(\Sigma\), parentheses and opertors. 
+
+\begin{remark}
+  regular expression is not a languaem but describption of language. 
+\end{remark}
+
+all finite languages can be described by regular expressionss. 
+
+\begin{definition}
+  Let \(\Sigma\) be agiven alphabet. then
+
+  1. \(\varnothing, \lambda, a \in \Sigma\) are all regular expressionss, tgese are claled oprimitive regular expressions. 
+
+  2. if \(r_1, r_2\) ar regular expressions, so are \(r_1 + r_2, r_1 \cdot r_2, r_1^{\star}, (r_1)\). 
+
+  3. A string is a regular expression iff it can be derived from the primitive regular expressions by a finite number of applications of the rules in (2).
+\end{definition}
+
+
+
+Here denote \(L(R)\) the alnguae of regular expression \(R\). 
