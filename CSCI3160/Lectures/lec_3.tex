@@ -5,9 +5,9 @@ We take a look at divide and conquer, which guarantees strong performance. When 
 \section{Sorting}
 We consider \href{https://www.ryanc.wtf/files/CSCI2100.pdf#page=41}{merge sort} in this example.
 
-\textbf{Problem Statement}
-
-Given an array \(A\) of \(n\) distinct integers, produce another array where the same integers are arranged in ascending order.
+\begin{problem}
+  Given an array \(A\) of \(n\) distinct integers, produce another array where the same integers are arranged in ascending order.
+\end{problem}
 
 \textbf{Divide}
 
@@ -29,9 +29,9 @@ which gives\footnote{See Master Theorem \ref{mastertheorem}.}
 \]
 
 \section{Counting Inversions}
-\textbf{Problem Statement}
-
-Given an array \(A\) of \(n\) distinct integers, count the number of inversions, where an inversion is a pair \((i, j)\) such that \(1 \leq i < j \leq n\) and \(A[i] > A[j]\).
+\begin{problem}
+  Given an array \(A\) of \(n\) distinct integers, count the number of inversions, where an inversion is a pair \((i, j)\) such that \(1 \leq i < j \leq n\) and \(A[i] > A[j]\).
+\end{problem}
 
 \textbf{Divide}
 
@@ -57,11 +57,11 @@ which gives
 \]
 
 \section{Dominance Counting}
-\textbf{Problem Statement}
-
-Denote \(\mathbb{Z}\) as the set of integers. Given a point \(p\) in \(\mathbb{Z}^2\), denoted by \(p[1], p[2]\) its \(x\)- and \(y\)-coordinate, given two distinct points \(p\) and \(q\), we say that \(q\) dominates \(p\) if \(p[1] \leq q[1]\) and \(p[2] \leq q[2]\). 
-
-Let \(P\) be a set of \(n\) points in \(\mathbb{Z}^2\) with distinct \(x\)-coordinates. Find for each point \(p \in P\) the number of points in \(P\) that are dominated by \(p\). 
+\begin{problem}
+  Denote \(\mathbb{Z}\) as the set of integers. Given a point \(p\) in \(\mathbb{Z}^2\), denoted by \(p[1], p[2]\) its \(x\)- and \(y\)-coordinate, given two distinct points \(p\) and \(q\), we say that \(q\) dominates \(p\) if \(p[1] \leq q[1]\) and \(p[2] \leq q[2]\). 
+  
+  Let \(P\) be a set of \(n\) points in \(\mathbb{Z}^2\) with distinct \(x\)-coordinates. Find for each point \(p \in P\) the number of points in \(P\) that are dominated by \(p\). 
+\end{problem}
 
 Assume that, without loss of generality, the points are given in ascending order in the \(x\)-coordinates, i.e. 
 \[

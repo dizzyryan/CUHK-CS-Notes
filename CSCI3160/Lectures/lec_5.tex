@@ -2,9 +2,9 @@
 Greedy algorithms enforce a simple strategy, i.e. make the locally optimal decision at each step. 
 
 \section{Activity Selection}
-\textbf{Problem Statement} 
-
-Given a set \(S\) of \(n\) intervals of the form \([s, f]\) where \(s, f\) are integers, we want to output a subset \(T \subseteq S\) of disjoint intervals with the largest size \(\lvert T \rvert\). 
+\begin{problem}
+  Given a set \(S\) of \(n\) intervals of the form \([s, f]\) where \(s, f\) are integers, we want to output a subset \(T \subseteq S\) of disjoint intervals with the largest size \(\lvert T \rvert\). 
+\end{problem}
 
 \begin{remark}
   One can think of \([s, f]\) as the duration of an activity, and consider the problem as picking the largest number of activities that do not have time conflicts. 
@@ -14,13 +14,11 @@ Given a set \(S\) of \(n\) intervals of the form \([s, f]\) where \(s, f\) are i
 
 The idea is to pick the earliest-finishing interval, keep it, and discard all intervals that overlap it. Repeat until none remain. 
 
-Algorithm: 
-
 Repeat until \(S\) becomes empty:
-\begin{itemize}
-  \item Add to \(T\) the interval \(\mathcal{I} \in S\) with the smallest finish time. 
-  \item Remove from \(S\) all intervals intersecting \(\mathcal{I}\) (including \(\mathcal{I}\)). 
-\end{itemize}
+
+1. Add to \(T\) the interval \(\mathcal{I} \in S\) with the smallest finish time. 
+
+2. Remove from \(S\) all intervals intersecting \(\mathcal{I}\) (including \(\mathcal{I}\)). 
 
 The greedy algorithm picks the earliest finishing activity, leaving the most room for future choices. 
 
