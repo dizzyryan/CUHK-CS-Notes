@@ -1,1 +1,273 @@
 \section{Logistic Regression}
+Before looking at regression, we take a look at classification.  
+
+\subsection{Classification}
+Classification is a process related to categorizing things. The goal of a classification problem is to learn a classifier for a given set of samples with different categories such that it can automatically recognize new samples within the set of given categories.
+
+The output of classification is a discrete value, while for regression it is a continuous value. Think of it as: classification gives a class (category) and is therefore discrete, while regression gives a number without a category.
+
+In classification, samples are represented as feature vectors. Suppose we have \(m\) training samples, each with \(n\)-dimensional features. We can write them as
+\[
+  \begin{aligned}
+    X^{(1)} &= (x_1^{(1)}, \cdots, x_n^{(1)}) \\
+    X^{(2)} &= (x_1^{(2)}, \cdots, x_n^{(2)}) \\
+    & \vdots \\
+    X^{(m)} &= (x_1^{(m)}, \cdots, x_n^{(m)})
+  \end{aligned}
+\]
+with their corresponding category labels \(y^{(1)}, y^{(2)}, \cdots, y^{(m)}\).
+
+There are two types of classification. One is \textbf{binary classification}, where there are only two categories. We use 0 (negative) and 1 (positive) to label the categories. Another is \textbf{multi-class classification}, where we use 1, 2, 3, ... to label the categories. 
+
+Then, how do we classify the samples? We partition the entire feature space into multiple parts, one for each category (aka class). Data points associated with the same category lie in the same partition. A \textbf{decision boundary} is a union of curves or surfaces that partition the feature space. 
+
+A linear classifier is a kind of linear model that classifies data based on a linear combination of input features. The decision boundary for a linear classifier is a union of straight lines or hyperplanes.
+
+For a linear binary classifier, its decision boundary is a straight line or hyperplane that partitions the feature space into two half-spaces.
+
+Then, the problem that arises is: how do we classify the samples, i.e., which class should a sample belong to? We consider logistic regression.
+
+\subsection{Formulation}
+Logistic regression models the probabilities for classification problems with two possible outcomes. 
+
+Consider linear binary classification. Given an input \(n\)-dimensional feature vector \(X \in \mathbb{R}^n\) and its possible category \(y \in \{0, 1\}\), we would like to construct a model to estimate 
+\[
+  \mathbb{P} (\hat{y} = 1 \mid X).
+\] 
+As we have only two classes, we have
+\[
+  \mathbb{P} (\hat{y} = 0 \mid X) + \mathbb{P} (\hat{y} = 1 \mid X) = 1.
+\]
+
+If \(\mathbb{P} (\hat{y} = 1 \mid X) \geq \mathbb{P} (\hat{y} = 0 \mid X)\) or equivalently \(\mathbb{P} (\hat{y} = 1 \mid X) \geq 0.5\), we say that \(y = 1\) is more likely to occur, and it is predicted to be label 1; otherwise, it is predicted to be label 0.
+
+\begin{remark}[Is linear regression applicable for binary classification?]~
+
+We can use a linear regression model to fit data points. Can we use the same model for binary classification and predict the probability?
+
+\begin{minipage}{0.5\textwidth}
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{Figure/LR_comp1.pdf}
+  \caption{Linear Regression}
+  \end{figure}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{Figure/LR_comp2.pdf}
+  \caption{Linear Regression}
+  \end{figure}
+\end{minipage}
+
+Figure 2.6 shows that it is possible, but the range of linear functions is \((-\infty, +\infty)\), which is not suitable for outputting probabilities. 
+
+If we apply a cut-off rule (Figure 2.7), such that \(\hat{f}(X) \geq 0.5 \Rightarrow \hat{y} = 1\), it is valid. However, linear regression with a cut-off rule would be sensitive to outliers. This is because outliers (points with very large or small \(y\) values) have a disproportionate effect due to squaring large errors, which can shift the regression line. This, in turn, changes the threshold crossing point and may change the predicted class for many samples. 
+
+Thus, it is hard to use a cut-off with linear regression for classification.
+\end{remark}
+
+Consider the following: 
+
+For an event \(A\), we say that the probability it happens is \(\mathbb{P}(A) = p\) and \(\mathbb{P}(A^C) = 1 - p\). Then, the odds (the ratio of the probability of the event to its complement) of event \(A\) is defined as 
+\[
+  \text{odds}(p) = \frac{p}{1 - p}.
+\]
+The range of the odds is \((0, +\infty)\). We define the logit (log-odds) of an event \(A\) as 
+\[
+  \text{logit}(p) = \ln \text{odds}(p) = \ln \left(\frac{p}{1 - p}\right),
+\]
+whose range is \((-\infty, +\infty)\).
+
+This is called the logit transformation, which maps probabilities in the range \((0, 1)\) to \((-\infty, +\infty)\). 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{Figure/logit.pdf}
+\caption{Logit}
+\end{figure}
+
+Then, in order to adopt a linear function for classification, we can apply \(\text{logit}^{-1}(\cdot)\), which transforms any value in \((-\infty, +\infty)\) to a probability in \((0, 1)\).
+
+Note that \(\text{logit}(p)\) is strictly monotonically increasing, so \(\text{logit}^{-1}(\cdot)\) must exist. To find it, for all \(z \in (-\infty, +\infty)\), there exists \(p \in (0, 1)\) such that
+\[
+  \begin{aligned}
+    z &= \text{logit}(p) = \ln \left(\dfrac{p}{1 - p}\right) \\
+    -z &= \ln \left(\dfrac{1 - p}{p}\right) \\
+    e^{-z} &= \dfrac{1}{p} - 1 \\
+    p &= \dfrac{1}{1 + e^{-z}}
+  \end{aligned}\qquad
+  \Longrightarrow \qquad \text{logit}^{-1}(z) = p = \dfrac{1}{1 + e^{-z}}
+\]
+This is also known as the logistic sigmoid function: 
+\[
+  \sigma (x) = \text{logit}^{-1} (x) = \frac{1}{1 + e^{-x}}.
+\]
+The graph of the sigmoid function is S-shaped. \(\sigma(x)\) is monotonic, and its first derivative is bell-shaped.
+
+\begin{minipage}{0.5\textwidth}
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{Figure/sigmoid.pdf}
+  \caption{Logistic Sigmoid Function}
+  \end{figure}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{Figure/sigmoid_first_derivative.pdf}
+  \caption{Logistic Sigmoid Function - Derivative}
+  \end{figure}
+\end{minipage}
+
+Recall the linear function
+\[
+  \hat{f}_{\Theta}(X) = X^T \Theta + \theta_0.
+\]
+As our goal is to find \(\mathbb{P} (\hat{y} = 1 \mid X)\), we apply the logit transformation on the linear function to fit the probability for classification prediction: 
+\[
+  \mathbb{P} (\hat{y} = 1 \mid X) = \sigma (X^T \Theta + \theta_0) = \text{logit}^{-1}(X^T \Theta + \theta_0) = \frac{1}{1 + e^{-(X^T \Theta + \theta_0)}}.
+\]
+Here, \(\Theta\) and \(\theta_0\) are parameters learned from the training data. For simplification, we absorb \(\theta_0\) into \(\Theta\), then we have
+\[
+  \mathbb{P} (\hat{y} = 1 \mid X) = \sigma (X^T \Theta) = \frac{1}{1 + e^{-(X^T \Theta)}}.
+\]
+This is the basic formulation of logistic regression. 
+
+\begin{intuition}
+  In logistic regression, each sample's features are combined linearly using \(\Theta^T X\) to produce a score reflecting its tendency toward a class. Unlike linear regression, this score is not the prediction itself, because it can take any real value. Instead, we apply the sigmoid (inverse logit) function to transform the linear score into a valid probability between 0 and 1. This allows us to interpret the output as the probability of belonging to a class while keeping a linear decision boundary. Logistic regression is preferred over linear regression for classification because it produces stable probabilities, handles binary labels correctly, and is less sensitive to outliers than a simple cutoff rule. 
+\end{intuition}
+
+Logistic regression exactly outputs the probability of \(y = 1\) conditioned on the known input \(X\). \(\mathbb{P} (\hat{y} = 1 \mid X)\) changes significantly around \(X^T \Theta = 0\), which is a good characteristic for distinguishing samples with different labels, and it is more robust to outliers.
+
+Since \(\sigma (X^T \Theta) \geq 0.5\) iff \(X^T \Theta \geq 0\), we know that 
+\[
+X^T \Theta \geq 0 \Rightarrow \hat{y} = 1 \quad \text{and} \quad X^T \Theta < 0 \Rightarrow \hat{y} = 0.
+\]
+The geometry of \(X^T \Theta = 0\) is a hyperplane, which also serves as the decision boundary. The region where \(X^T \Theta \geq 0\) lies on one side of the hyperplane, while the region where \(X^T \Theta < 0\) lies on the other side.
+
+\subsection{Optimization}
+The problem now lies in finding the optimal \(\Theta\) through the training data such that we maximize classification performance. 
+
+Given training data with labels, for each sample \(X^{(i)} = (x_1^{(i)}, x_2^{(i)}, \cdots, x_n^{(i)})\), we have
+\[
+  \mathbb{P} (\hat{y}^{(i)} = 1 \mid X^{(i)}) = \sigma \left(X^{(i)^T} \Theta\right) = \frac{1}{1 + e^{-(X^{(i)^T} \Theta)}}.
+\]
+We then follow the supervised criterion. If \(y^{(i)} = 1\), we expect \(\mathbb{P} (\hat{y}^{(i)} = 1 \mid X^{(i)})\) to approach 1 as closely as possible, and similarly for \(y^{(i)} = 0\). The probability that the label is correctly predicted can be written as
+\[
+  p_i \stackrel{\text{def}}{=} \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right)^{y^{(i)}} \left(1 - \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right)\right)^{1 - y^{(i)}}.
+\]
+This means that when \(\hat{y}^{(i)} = 0\), \(p_i = \mathbb{P} (\hat{y}^{(i)} = 0 \mid X^{(i)})\), and when \(\hat{y}^{(i)} = 1\), \(p_i = \mathbb{P} (\hat{y}^{(i)} = 1 \mid X^{(i)})\). 
+
+So no matter which category the sample belongs to, \(p_i\) represents the probability that the prediction \(\hat{y}^{(i)}\) matches the true label \(y^{(i)}\).
+
+Then we can try to maximize the joint probability of all training samples to learn \(\Theta\). Since all samples are independent, we have
+\[
+  \begin{aligned}
+    p(\Theta) &\stackrel{\text{def}}{=} \mathbb{P} \left(\hat{y}^{(1)} = y^{(1)}, \cdots, \hat{y}^{(m)} = y^{(m)} \mid X^{(1)}, \cdots, X^{(m)}\right) \\
+    &= \mathbb{P} \left(\hat{y}^{(1)} = y^{(1)} \mid X^{(1)}\right) \cdots \mathbb{P} \left(\hat{y}^{(m)} = y^{(m)} \mid X^{(m)}\right) \\
+    &= \prod_{i = 1}^{m} \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right)^{y^{(i)}} \left(1 - \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right)\right)^{1 - y^{(i)}} \\
+    &= \prod_{i = 1}^{m} p_i.
+  \end{aligned}
+\]
+Here, \(p(\Theta)\) is also known as the likelihood function. The method that estimates the parameters of a probabilistic model by maximizing the likelihood function is called \textbf{maximum likelihood estimation (MLE)}.
+
+Maximizing \(p(\Theta)\) is equivalent to minimizing \(-\ln p(\Theta)\). Then we consider
+\[
+  \begin{aligned}
+    E (\Theta) &= -\ln p(\Theta) = -\ln \left(\prod_{i = 1}^{m} p_i\right) = -\sum_{i = 1}^m \ln p_i \\
+    &= -\sum_{i = 1}^m \ln \left(\mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right)^{y^{(i)}} \left(1 - \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right)\right)^{1 - y^{(i)}}\right) \\
+    &= -\sum_{i = 1}^m \left[y^{(i)} \ln \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right) + (1 - y^{(i)}) \ln \left(1 - \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right)\right)\right].
+  \end{aligned}
+\]
+For each single sample, we define
+\[
+  E_i (\Theta) = - y^{(i)} \ln \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right) - (1 - y^{(i)}) \ln \left(1 - \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right)\right),
+\]
+so that we can write
+\[
+  E (\Theta) = \sum_{i = 1}^m E_i (\Theta).
+\]
+Consider the cross-entropy error function
+\[
+  \text{cross-entropy error} = -y \ln \mathbb{P} (y) - (1 - y) \ln (1 - \mathbb{P} (y)), \quad y \in \{0, 1\},
+\]
+where in our case we have \(\mathbb{P} (y) = \mathbb{P} \left(\hat{y}^{(i)} = 1 \mid X^{(i)}\right)\).
+
+Since the cross-entropy function is convex, and the sum of convex functions is also convex, we know that \(E_i (\Theta)\) is convex. Thus, \(E (\Theta)\) is convex, and its global minimum is also a local minimum.
+
+We can then use \textbf{gradient descent} to minimize \(E (\Theta)\).
+
+\begin{intuition}[Gradient Descent]
+Suppose the geometry of the objective function \(z = f(x, y)\) is a surface resembling a mountain. Iterative optimization is similar to searching for a path to the foot of the mountain step by step. At each step, we only move downhill. To descend faster, we move along the steepest slope.
+
+Gradient descent is motivated by this greedy scheme: at each optimization step, we adjust parameters in the direction where the objective function decreases fastest.
+\end{intuition}
+
+As the function we have is convex, gradient descent can find the steepest descent direction, i.e. global minimum.
+
+\begin{proposition}
+  For a twice-differentiable function \(f: \mathbb{R}^n \to \mathbb{R}\), the gradient \(\nabla f(\Theta)\) points in the direction of the steepest ascent or descent at \(\Theta\), where 
+  \[
+    \nabla f(\Theta) = \dfrac{\partial f(\Theta)}{\partial \Theta} = \left(\dfrac{\partial f(\Theta)}{\partial \theta_1}, \cdots, \dfrac{\partial f(\Theta)}{\partial \theta_n}\right),
+  \]
+  and \(\theta_i\) is the \(i\)-th element of \(\Theta\).
+\end{proposition}
+
+\begin{proof}[\(\nabla f(\Theta)\) maximizes the directional derivative]
+  Fix any \(\Theta \in \mathbb{R}^n\) and \(\mathbf{v} \in \mathbb{R}^n\) with \(\Vert \mathbf{v} \Vert_2 = 1\). Define
+  \[
+    g(h) = f(\Theta + h \mathbf{v}).
+  \]
+  The directional derivative along \(\mathbf{v}\) at \(\Theta\) is 
+  \[
+    D_\mathbf{v} f(\Theta) = \lim_{h \to 0} \frac{f(\Theta + h \mathbf{v}) - f(\Theta)}{h} = \lim_{h \to 0} \frac{g(h) - g(0)}{h} = g^{\prime} (0).
+  \]
+  Also, we have
+  \[
+    g^{\prime} (h) = \frac{\partial f(\Theta + h \mathbf{v})}{\partial (\Theta + h \mathbf{v})} \cdot \frac{\partial (\Theta + h \mathbf{v})}{\partial h} = \nabla f(\Theta + h \mathbf{v}) \cdot \mathbf{v},
+  \]
+  which gives
+  \[
+    D_\mathbf{v} f(\Theta) = g^{\prime} (0) = \nabla f(\Theta) \cdot \mathbf{v}.
+  \]
+  By the Cauchy-Schwarz inequality:
+  \[
+    D_\mathbf{v} f(\Theta) = \nabla f(\Theta) \cdot \mathbf{v} \leq \Vert \nabla f(\Theta) \Vert_2 \, \Vert \mathbf{v} \Vert_2.
+  \]
+  Equality is achieved if and only if \(\mathbf{v}\) is a scalar multiple of \(\nabla f(\Theta)\), which means it points in the optimal direction \(\mathbf{v}^{\star}\) that maximizes the directional derivative \(D_\mathbf{v} f(\Theta)\).
+\end{proof}
+
+\begin{algorithm}
+\caption{Gradient Descent}
+\textbf{Ensure} \(\alpha > 0\) \\
+  Initialize \(\Theta \gets \Theta_0\) randomly \\
+  \While{not converged}{
+    \(Theta \gets \Theta - \alpha \nabla f(\Theta)\)
+    }
+\end{algorithm}
+
+
+In gradient descent, we introduce a hyperparameter called the \textbf{learning rate}, which can be adjusted at each iteration. A learning rate that is too small leads to slow convergence, while a learning rate that is too large may cause divergence or unstable updates.
+
+\begin{remark}
+  Gradient descent also works for non-convex objective functions. However, for most complex and non-convex functions, gradient descent usually converges to a local minimum and may not reach the global minimum.
+\end{remark}
+
+Then we return to logistic regression. The analytic expression of the gradient of \(E(\Theta)\) is
+\[
+  \nabla E(\Theta) = \frac{\partial E(\Theta)}{\partial \Theta} = \sum_{i = 1}^m \left(\frac{1}{1 + e^{-X^{(i)^T} \Theta}} - y^{(i)}\right) X^{(i)}.
+\]
+
+\begin{algorithm}
+\caption{Gradient Descent for Logistic Regression}
+\textbf{Ensure:} \(\alpha > 0\) \\
+Initialize \(\Theta\) randomly \\
+\While{not converged}{
+  \(\Theta \gets \Theta - \alpha \sum_{i = 1}^m \left(\frac{1}{1 + e^{-X^{(i)^T} \Theta}} - y^{(i)}\right) X^{(i)}\)
+}
+\end{algorithm}
+
+\begin{intuition}
+  Logistic regression is a probability model for binary classification, predicting the probability that a given sample belongs to class 1. The input features \(X\) are combined linearly using \(\theta^T X + \theta_0\), and the logit (sigmoid) transformation converts this linear score into a probability in \((0, 1)\). However, the parameters \(\theta\) are unknown, and they directly affect the predicted probabilities. To find the optimal \(\theta\), we use the training data to construct the likelihood function, which measures how well the predicted probabilities match the observed labels. Maximizing this likelihood is equivalent to minimizing the negative log-likelihood, which is a convex function. Because it is convex, we can efficiently find the minimum using gradient descent, which iteratively moves in the direction of the steepest descent of the loss function. This process gives the \(\theta\) that maximizes the likelihood and produces the most accurate predicted probabilities for classification.
+\end{intuition}
