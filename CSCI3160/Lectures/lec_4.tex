@@ -195,10 +195,10 @@ Suppose we want to evaluate a polynomial at \(n = 8\) points.
   \[
     A(\omega_n^k) = A_{\text{even}}(\omega_{n/2}^k) + \omega_n^k \, A_{\text{odd}}(\omega_{n/2}^k),
   \]
-  which takes \(O(n)\) time per level.
+  which takes \(\mathcal{O} (n)\) time per level.
 \end{enumerate}
 
-\textbf{Key idea:} At each level, the recursive results are reused for multiple points; only the multiplication by \(\omega_n^k\) differs. This divide-and-conquer gives total complexity \(O(n \log n)\).
+\textbf{Key idea:} At each level, the recursive results are reused for multiple points; only the multiplication by \(\omega_n^k\) differs. This divide-and-conquer gives total complexity \(\mathcal{O} (n \log n)\).
 \end{explanation}
 
 The last step is to turn the point-value pair representation back to the coefficient representation, which is called interpolation. We can accomplish the interpolation in \(\mathcal{O}(n \log n)\) time by using the inverse FFT. 
