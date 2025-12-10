@@ -1,5 +1,5 @@
 \chapter{Dynamic Programming}
-
+\section{Pitfall of Recursion}
 Let \(A\) be an array of \(n\) positive integers, with function
 \[
   f(k) = \begin{dcases}
@@ -32,11 +32,12 @@ This recursion gives \(\Omega(2^n)\) because it computes \(f(x)\) for the same \
 
 We resolve such by dynamic programming, where we resolve sub-problems according to a certain order, remembering the output of every sub-problem to avoid re-computation.
 
-For the same problem, we consider solving the problem with order \(f(1), f(2), \cdots, f(n)\). Then we need \(O(n^2)\) time in total. 
+For the same problem, we consider solving the problem with order \(f(1), f(2), \cdots, f(n)\). Then we need \(\mathcal{O} (n^2)\) time in total. 
 
 \begin{algorithm}[H]
 	\DontPrintSemicolon{}
 	\caption{Dynamic programming for \(f(n)\)}
+  \label{DynRodCutting}
 	\BlankLine
   Initialize: \(\textit{ans}[n], \textit{ans}[0] \gets 0\)\; 
   \For{\(k \gets 1\) \KwTo \(n\)}{
@@ -49,3 +50,7 @@ For the same problem, we consider solving the problem with order \(f(1), f(2), \
     }
   }
 \end{algorithm}
+
+In the following, we will see examples of dynamic programming, where the core idea is to break the problem into sub-problems that can be solved in a \textbf{nice order}, so that later sub-problems can reuse the solutions of earlier ones.
+
+The key to solving a problem is identifying its recursive structure — how the original problem relates to its sub-problems — which then guides the design of a dynamic programming algorithm.
