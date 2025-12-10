@@ -1,0 +1,52 @@
+\section{Rod Cutting}
+\begin{problem}
+  Consider a rod of length \(n\) with an array \(P\) of length \(n\) where \(P[i]\) is the price for a rod of length \(i , i \in [1, n]\). How to cut the rod into segments of integer lengths to maximize the revenue? 
+\end{problem}
+
+\begin{eg}
+  Consider the price array \(P\)
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c}
+        \toprule
+        length \(i\) & 1 & 2 & 3 & 4  \\
+      \midrule
+        price \(P[i]\) & 1 & 5 & 8 & 9  \\
+        \bottomrule
+    \end{tabular}
+  \end{table} 
+
+  There are 8 ways to cut the rod of length 4:
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Figure/rod_cutting.png}
+    \caption{Rod Cutting}
+  \end{figure}
+
+  Where the optimal cutting method is (c), which has a revenue of 10. 
+\end{eg}
+
+\begin{intuition}
+  No matter how we cut, we must make a first cut, but we do not know which first cut is optimal. Therefore, we can consider all possible first cuts, then choose the one that maximizes revenue. For each choice of the first cut, we cut the remaining rod optimally and select the maximum revenue among all possible cutting strategies.
+\end{intuition}
+
+Let \(\text{opt}(n)\) denote the optimal revenue from cutting a rod of length \(n\). For \(n \geq 1\), conditioned on choosing a first segment of length \(i\), the revenue is 
+\[
+  P[i] + \text{opt}(n - i),
+\] 
+and this holds for any choice of first cut. Since there are \(n\) possible first cuts, we have
+\[
+  \text{opt}(n) = \max_{i=1}^n \big(P[i] + \text{opt}(n - i)\big).
+\] 
+Using dynamic programming, \(\text{opt}(n)\) can be computed in \(\mathcal{O}(n^2)\) time\footnote{The algorithm used can be found in \ref{DynRodCutting}}.
+
+If we want not only the optimal revenue but also the corresponding cutting strategy, we can record which sub-problem yields \(\text{opt}(n)\). Define
+\[
+  \text{bestSub}(n) = k \quad \text{if the optimal revenue is obtained by making the first cut at length } k.
+\] 
+After computing all \(\text{bestSub}(i)\) for \(i \in [1, n]\), we can reconstruct the optimal cutting method using another array in \(\mathcal{O}(n)\) time. Therefore, the overall complexity of the rod cutting problem remains \(\mathcal{O}(n^2)\).  
+
+\begin{note}
+  The technique of using the bestSub function to reconstruct an optimal solution is known as the \emph{piggyback technique}.
+\end{note}
