@@ -1,1 +1,51 @@
 \chapter{Dynamic Programming}
+
+Let \(A\) be an array of \(n\) positive integers, with function
+\[
+  f(k) = \begin{dcases}
+   0 , &\text{ if } k = 0 \\
+   \max_{i = 1}^k (A[i] + f(k - i)), &\text{ if } 1 \leq k \leq n 
+  \end{dcases}
+\]
+To compute \(f(n)\), we can utilize the following:
+
+\begin{algorithm}[H]
+	\DontPrintSemicolon{}
+	\caption{\(f(n)\)}
+	\BlankLine
+  \If{\(k = 0\)}
+  {
+    \Return{0}\;
+  }
+  \(\textit{ans} \gets -\infty\)\;
+	\For{\(i \gets 1\) \KwTo \(k\)}{
+		\(\textit{tmp} \gets A[i] + f(k - i)\)\;
+    \If{\(\textit{tmp} > \textit{ans}\)}
+    {
+      \(\textit{ans} \gets \textit{tmp}\)\;
+    }
+	}
+	\Return{\(\textit{ans}\)}\;
+\end{algorithm}
+
+This recursion gives \(\Omega(2^n)\) because it computes \(f(x)\) for the same \(x\) repeatedly. A recursive algorithm does considerable redundant work if the same sub-problem is encountered over and over again.
+
+We resolve such by dynamic programming, where we resolve sub-problems according to a certain order, remembering the output of every sub-problem to avoid re-computation.
+
+For the same problem, we consider solving the problem with order \(f(1), f(2), \cdots, f(n)\). Then we need \(O(n^2)\) time in total. 
+
+\begin{algorithm}[H]
+	\DontPrintSemicolon{}
+	\caption{Dynamic programming for \(f(n)\)}
+	\BlankLine
+  Initialize: \(\textit{ans}[n], \textit{ans}[0] \gets 0\)\; 
+  \For{\(k \gets 1\) \KwTo \(n\)}{
+    \(\textit{ans}[k] \gets -\infty\)\;
+    \For{\(i \gets 1\) \KwTo \(k\)}{
+      \(\textit{tmp} \gets A[i] + \textit{ans}[k - i]\)\;
+      \If{\(\textit{tmp} > \textit{ans}[k]\)}{
+        \(\textit{ans}[k] \gets \textit{tmp}\)\;
+      }
+    }
+  }
+\end{algorithm}
