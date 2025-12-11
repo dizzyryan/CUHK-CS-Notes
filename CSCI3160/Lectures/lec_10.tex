@@ -1,1 +1,60 @@
-\chapter{Graph}
+\section{Longest Increasing Subsequences}
+\begin{problem}
+  Given an array of integers \(A[1 \dots n]\), how can we find the length of the \textbf{longest strictly increasing subsequence} (LIS)?
+\end{problem}
+
+\begin{eg}
+  Consider the array
+  \[
+    A = [10, 9, 2, 5, 3, 7, 101, 18].
+  \]
+  Then we have \(\text{LIS} = [2, 3, 7, 101]\) with length \(4\).
+\end{eg}
+
+\begin{remark}
+  The elements in the LIS do not need to be contiguous in the original array \(A\); there may be gaps between them. The only requirement is that they appear in strictly increasing order.
+\end{remark}
+
+Using a brute-force method, i.e., trying all possible subsequences, requires \(\mathcal{O}(2^n)\) time.
+
+\begin{intuition}
+  The idea is similar to the rod-cutting problem: we try to determine the best last element to place in the LIS, then reduce the problem to a sub-problem. If we choose an element as the last element of an increasing subsequence, the optimal solution can be found by examining all valid previous elements. This approach works nicely with an appropriate ordering.
+\end{intuition}
+
+Let \(\text{dp}[i]\) be the length of the LIS ending at index \(i\). Using the recurrence relation, we have
+\[
+  \text{dp}[i] = 1 + \max\{\text{dp}[j] : j < i \text{ and } A[j] < A[i]\},
+  \qquad
+  \text{and if no such } j \text{ exists, then } \text{dp}[i] = 1.
+\]
+Let \(\text{len}_{\text{LIS}}(i)\) denote the length of the LIS that \textbf{ends at} \(A[i]\). Then
+\[
+  \text{len}_{\text{LIS}}(i)
+  =
+  1 + 
+  \max_{j < i \text{ and } A[j] < A[i]}
+  \{\text{len}_{\text{LIS}}(j)\},
+\]
+where we append \(A[i]\) to the LIS that ends at \(A[j]\) only if \(A[j] < A[i]\). After computing \(\text{len}_{\text{LIS}}(i)\) for each \(i \in \{1, 2, \dots, n\}\), the LIS length is
+\[
+  \max_{i \in \{1, 2, \dots, n\}} \{\text{len}_{\text{LIS}}(i)\}.
+\]
+
+\begin{algorithm}[H]
+	\DontPrintSemicolon{}
+	\caption{Longest Increasing Subsequence (LIS)}
+	\BlankLine
+  \KwIn{Array \(A[1 \dots n]\)}
+  \KwOut{Length of the Longest Increasing Subsequence}
+  Initialize: \(\text{dp}[1 \dots n] = 1\)\;
+  \For{\(i \gets 1\) \KwTo \(n\)}{
+		\For{\(j \gets 1\) \KwTo \(i - 1\)}{
+      \If{\(A[j] < A[i]\)}{
+        \(\text{dp}[i] \gets \max (\text{dp}[i], \text{dp}[j] + 1)\)\;
+      }
+	  }
+	}
+	\Return{\(\max (\text{dp}[1 \dots n])\)}\;
+\end{algorithm}
+
+This algorithm runs in \(\mathcal{O}(n^2)\) time. As before, we can use the piggyback technique to recover the actual longest increasing subsequence by maintaining an extra array to record the predecessors of each element in the LIS.

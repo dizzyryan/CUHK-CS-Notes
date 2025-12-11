@@ -1,0 +1,194 @@
+\newpage
+\section{Edit Distance}
+\begin{problem}
+  Given two strings
+  \[
+    A = a_1 a_2 \cdots a_m \quad \text{and} \quad B = b_1 b_2 \cdots b_n,
+  \]
+  we allow three operations: \textbf{insertion}, \textbf{deletion}, and \textbf{replacement}. The \textbf{Edit Distance} is defined as the minimum number of such operations required to transform \(A\) into \(B\). How can we compute the edit distance?
+\end{problem}
+
+\begin{eg}
+  Consider \(A = \texttt{kitten}\) and \(B = \texttt{sitting}\):
+  \begin{enumerate}
+    \item \(\texttt{kitten} \to \texttt{sitten}\) (replace 'k' with 's')
+    \item \(\texttt{sitten} \to \texttt{sittin}\) (replace 'e' with 'i')
+    \item \(\texttt{sittin} \to \texttt{sitting}\) (insert 'g' at the end)
+  \end{enumerate}
+
+  Therefore, the edit distance is 3.
+\end{eg}
+
+\begin{intuition}
+  If we can find the best way to align two strings, i.e., maximize the overlap of characters, then we can minimize the number of edit operations.
+\end{intuition}
+
+Consider the endpoints of the alignment in both strings. Let the last characters be \(a_m\) in \(A\) and \(b_n\) in \(B\), and write
+\[
+  A = \underbrace{a_1 a_2 \cdots a_{m-1}}_{\alpha} a_m, \quad
+  B = \underbrace{b_1 b_2 \cdots b_{n-1}}_{\beta} b_n.
+\]
+We have three possible alignments for the last characters:
+
+\begin{minipage}{0.32\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+      \toprule
+      \(A =\) & \(\alpha a_m\) &  \\
+      \midrule
+      \(B =\) & \(\beta\) & \(b_n\)  \\
+      \bottomrule
+    \end{tabular}
+    \caption{Case 1}
+  % \caption{Case 1: Insert \(b_n\) at the end of \(A\)}
+  \end{table}
+\end{minipage}
+\begin{minipage}{0.32\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+      \toprule
+      \(A =\) & \(\alpha\) & \(a_m\)  \\
+      \midrule
+      \(B =\) & \(\beta b_n\) &  \\
+      \bottomrule
+    \end{tabular}
+    \caption{Case 2}
+  % \caption{Case 2: Delete \(a_m\) from \(A\)}
+  \end{table}
+\end{minipage}
+\begin{minipage}{0.32\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c}
+      \toprule
+      \(A =\) & \(\alpha\) & \(a_m\)  \\
+      \midrule
+      \(B =\) & \(\beta\) & \(b_n\)  \\
+      \bottomrule
+    \end{tabular}
+    \caption{Case 3}
+  % \caption{Case 3: Replace \(a_m\) with \(b_n\) (if \(a_m \neq b_n\))}
+  \end{table}
+\end{minipage}
+
+Denote the edit distance between two strings by \(D(\text{str}_1, \text{str}_2)\). Then we can see that 
+\[
+  D(A, B) = \begin{dcases}
+   D(\alpha a_m, \beta) + 1, &\text{ if case 1 happens},  \\
+   D(\alpha, \beta b_n) + 1, &\text{ if case 2 happens},  \\
+   D(\alpha, \beta) + 1, &\text{ if case 3 happens and } a_m \neq b_n, \\
+   D(\alpha, \beta), &\text{ if case 3 happens and } a_m = b_n .
+  \end{dcases}, 
+\]
+which can be rewritten as
+\[
+  D(A, B) = \min \left\{D(\alpha a_m, \beta) + 1,\; D(\alpha, \beta b_n) + 1,\; D(\alpha, \beta) + [a_m == b_n]\right\}, a_m == b_n \coloneqq 
+  \begin{dcases}
+    1, &\text{ if } a_m \neq b_n, \\
+    0, &\text{ if } a_m = b_n .
+  \end{dcases}.
+\]
+Consider the sub-problem. Let
+\[
+  A[1 \dots i] = a_1 a_2 \cdots a_i \quad \text{and} \quad B[1 \dots j] = b_1 b_2 \cdots b_j,
+\]
+then we have
+
+\begin{minipage}{0.32\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|l|c}
+      \toprule
+      \(A =\) & \(a_1 \dots a_{i-1} a_i\) &  \\
+      \midrule
+      \(B =\) & \(b_1 \dots b_{j-1}\) & \(b_j\)  \\
+      \bottomrule
+    \end{tabular}
+    \caption{Case 1}
+  \end{table}
+\end{minipage}
+\begin{minipage}{0.32\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|l|c}
+      \toprule
+      \(A =\) & \(a_1 \dots a_{i-1}\) & \(a_i\)  \\
+      \midrule
+      \(B =\) & \(b_1 \dots b_{j-1} b_j\) &  \\
+      \bottomrule
+    \end{tabular}
+    \caption{Case 2}
+  \end{table}
+\end{minipage}
+\begin{minipage}{0.32\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|l|c}
+      \toprule
+      \(A =\) & \(a_1 \dots a_{i-1}\) & \(a_i\)  \\
+      \midrule
+      \(B =\) & \(b_1 \dots b_{j-1}\) & \(b_j\)  \\
+      \bottomrule
+    \end{tabular}
+    \caption{Case 3}
+  \end{table}
+\end{minipage}
+
+\[
+  D(i, j) = \min \left\{D(i, j - 1) + 1, D(i - 1, j) + 1, D(i - 1, j - 1) + [a_i == b_j]\right\}.
+\]
+Consider also the boundary case, where \(D(i, 0) = i\) is to delete all chars from \(A\) and \(D(0, j) = j\) is to insert all chars of \(B\).
+
+Then, for all \(0 \leq i \leq m\) and \(0 \leq j \leq n\), we have
+\[
+  D(i, j) = \begin{dcases}
+    i, &\text{ if } j = 0 \\
+    j, &\text{ if } i = 0 \\
+    \min \left\{D(i, j - 1) + 1, D(i - 1, j) + 1, D(i - 1, j - 1) + [a_i == b_j]\right\}, &\text{ if } i, j \neq 0
+  \end{dcases}
+\]
+The edit distance between \(A\) and \(B\) is given by the value \(D(m, n)\).
+
+To solve the problem \(D(i, j)\), we only need to know the solution to three sub-problems \(D(i - 1, j)\), \(D(i, j - 1)\) and \(D(i - 1, j - 1)\). Therefore, we can utilize the \textbf{dynamic programming table}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Figure/DP_table.png}
+  \caption{Dynamic Programming Table}
+\end{figure}
+
+\begin{explanation}
+  We first fill all the cells in the first row and column, which is simple insertion and deletion. Consider \(D(i, j - 1)\) as deletion (or insertion), same for \(D(i - 1, j)\), and \(D(i - 1, j - 1)\) is to find if the current character is the same. If not the same, then we find the minimum of these three and add 1, else if the char is the same, we simply use the value in \([i - 1, j - 1]\).
+\end{explanation}
+
+By filling the table in proper order, we can solve the problem in \(\mathcal{O}(mn)\) time.
+
+\begin{algorithm}[H]
+	\DontPrintSemicolon{}
+	\caption{Edit Distance}
+	\BlankLine
+  \KwIn{Strings \(A[1 \dots m], B[1 \dots n]\)}
+  Initialize:\;
+  \(D[0][j] \gets B[j]\) for \(j = 0 \dots n\)\;
+  \(D[i][0] \gets A[i]\) for \(i = 0 \dots m\)\;
+  \For{\(i \gets 1\) \KwTo \(m\)}{
+		\For{\(j \gets 1\) \KwTo \(n\)}{
+      \eIf{\(A[i] = B[j]\)}{
+        \(D[i][j] \gets D[i - 1][j - 1]\)\;
+      }
+      {
+        \(
+          D[i][j] \gets 1 + \min \begin{dcases}
+            D[i - 1][j] \quad \text{// delete} \\
+            D[i][j - 1] \quad \text{// insert} \\
+            D[i - 1][j - 1] \quad \text{// replace}
+          \end{dcases}
+        \)\;
+      }
+	  }
+	}
+\end{algorithm}
+
+We can again use piggyback to retrieve the edit sequence.
