@@ -1,0 +1,75 @@
+\newpage
+\section{Optimal BST}
+Consider a Binary Search Tree (BST). The level of a node \(u\) in a BST \(T\), denoted as \(\textit{level}_T (u)\), is equal to the number of edges in the path from the root to \(u\). The depth of a tree is the maximum level of the nodes in the tree. The cost to search a node \(u\) is proportional to \(1 + \text{level}_T (u)\). 
+
+A balanced BST has depth \(\mathcal{O} (\log n)\), where \(n\) is the number of nodes in the tree. This is generally good if all integers are searched with equal probabilities, yet in practice, not all keys are equally important. 
+
+\begin{problem}
+  Given a set \(S\) of \(n\) integers and an array \(W\) where \(W[i]\) stores a positive integer weight, with average cost 
+  \[
+    \textit{avgcost} (T) = \sum_{i = 1}^n W[i] \times \textit{cost}_T (i)
+  \] 
+  where \(\textit{cost}_T (i) = 1 + \textit{level}_T (i)\) is the number of nodes accessed to find the key \(i\) in \(T\), how do we build a better BST \(T\) to minimize the average search cost? 
+\end{problem}
+
+\begin{eg}~
+
+  \begin{minipage}{0.65\textwidth}
+  Suppose that the search frequencies of 10, 20, 30, and 40 are 40\%, 15\%, 35\%, and 10\%, respectively. Then, the average cost of searching for a key in the BST equals:
+  \[
+    \sum_{n \in S} \textit{freq}(n) \times \textit{cost} (n) = 0.4 \times 2 + 0.15 \times 1 + 0.35 \times 3 + 0.1 \times 2 = 2.2
+  \]
+  \end{minipage}
+  \begin{minipage}{0.33\textwidth}
+    \begin{center}  
+      \begin{tikzpicture}[node distance=6mm, every node/.style={align=center}]
+        \node (20) {20};
+        \node (10) [below left=of 20] {10};
+        \node (40) [below right=of 20] {40};
+        \node (30) [below left=of 40] {30};
+        
+        \path[-]
+        (20) edge (10)
+        (20) edge (40)
+        (40) edge (30);
+      \end{tikzpicture}
+    \end{center}
+  \end{minipage}
+\end{eg}
+
+Consider a more general problem, where we have integers \(a, b\) satisfying \(1 \leq a \leq b \leq n\), and we want to output a BST \(T\) on \(\{a, a + 1, \dots, b\}\). Then we have 
+\[
+  \textit{avgcost} (T) = \sum_{i = a}^b W[i] \times \textit{cost}_T (i).
+\] 
+As the root of \(T\) must have a key \(r \in [a, b]\), after fixing the root, we have \(S_1 = \{a, \dots, r - 1\}\) in the left subtree and \(S_2 = \{r + 1, \dots, b\}\) in the right subtree. 
+
+\begin{lemma}
+  Let \(T, T_1\) and \(T_2\) be defined as above, then
+  \[
+    \textit{avgcost} (T) = \left(\sum_{i = a}^b W[i]\right) + \textit{avgcost} (T_1) + \textit{avgcost} (T_2).
+  \] 
+\end{lemma}
+\begin{proof}
+  \[
+    \begin{aligned}
+      \textit{avgcost} (T) &= \sum_{i = a}^b W[i] \times \textit{cost}_T (i) = \sum_{i = a}^b W[i] \times (1 + \textit{level}_T (i)) \\
+      &= \left(\sum_{i = a}^b W[i]\right) + \sum_{i = a}^b W[i] \cdot \textit{level}_T (i) \\
+      &= \left(\sum_{i = a}^b W[i]\right) + \sum_{i = a}^{r-1} W[i] \cdot \textit{level}_T (i) + \sum_{i = r + 1}^b W[i] \cdot \textit{level}_T (i) \\
+      &= \left(\sum_{i = a}^b W[i]\right) + \sum_{i = a}^{r-1} W[i] \cdot (1 + \textit{level}_{T_1} (i)) + \sum_{i = r + 1}^b W[i] \cdot (1 + \textit{level}_{T_2} (i)) \\
+      &= \left(\sum_{i = a}^b W[i]\right) + \textit{avgcost} (T_1) + \textit{avgcost} (T_2)
+    \end{aligned}
+  \]
+\end{proof}
+
+Then we define
+\[
+  \textit{optavg} (a, b) = \begin{dcases}
+    0, &\text{ if } a > b ;\\
+    \text{the smallest average cost of a BST on } \{a, a+1, \dots, b\}, &\text{ otherwise}.
+  \end{dcases}
+\]
+and \(\textit{optavg} (a, b \mid r)\) as the optimal average cost of a BST with \(r \in [a, b]\) as the key of the root. Then 
+\[
+  \textit{optavg} (a, b) = \min_{r = a}^b \textit{optavg} (a, b \mid r) = \left(\sum_{i = a}^b W[i]\right) + \min_{r = a}^b \big(\textit{optavg} (a, r - 1) + \textit{optavg} (r + 1, b)\big).
+\]
+We can then compute \(\textit{optavg} (1, n)\) in \(\mathcal{O} (n^3)\) time.
