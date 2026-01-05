@@ -31,15 +31,15 @@ If any content is found to infringe upon copyright, please contact me directly s
 |  Code  |  Course  |  Repository  |  Notes  |
 |  :---:  |  :---:  |  :---:  |  :---:  |
 |  CSCI1130  |  Introduction to Computing Using Java  |  [Repo](CSCI1130)  |  X  |
-|  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](https://ryanc.wtf/files/ENGG2440.pdf)  |
-|  ENGG2760  |  Probability for Engineers  |  [Repo](ENGG2760)  |  [Notes](https://ryanc.wtf/files/ENGG2760.pdf)  |
+|  ENGG2440  |  Discrete Mathematics for Engineers  |  [Repo](ENGG2440)  |  [Notes](https://ryansloom.com/files/ENGG2440.pdf)  |
+|  ENGG2760  |  Probability for Engineers  |  [Repo](ENGG2760)  |  [Notes](https://ryansloom.com/files/ENGG2760.pdf)  |
 
 ### 24-25 Spring
 |  Code  |  Course  |  Repository  |  Notes  |  Cheat Sheet  |
 |  :---:  |  :---:  |  :---:  |  :---:  |  :---:  |
 |  CSCI2100  |  Data Structure  |  [Repo](CSCI2100)  |  X  |  X  |
-|  CENG3420  |  Computer Organization & Design  |  [Repo](CENG3420)  [Lab3](https://github.com/dizzyryan/CENG3420_main)  |  [Notes](https://ryanc.wtf/files/CENG3420.pdf)  |  X  |
-|  ENGG2780  |  Statistic for Engineers  |  [Repo](ENGG2780)  |  [Notes](https://ryanc.wtf/files/ENGG2780.pdf)  |  [Ref](https://ryanc.wtf/files/ENGG2780_Midterm_CheatSheet.pdf)  |
+|  CENG3420  |  Computer Organization & Design  |  [Repo](CENG3420)  [Lab3](https://github.com/dizzyryan/CENG3420_main)  |  [Notes](https://ryansloom.com/files/CENG3420.pdf)  |  X  |
+|  ENGG2780  |  Statistic for Engineers  |  [Repo](ENGG2780)  |  [Notes](https://ryansloom.com/files/ENGG2780.pdf)  |  [Ref](https://ryansloom.com/files/ENGG2780_Midterm_CheatSheet.pdf)  |
 
 > Will be uploaded later (if I get time :sweat_smile::sweat_smile::innocent:
 
