@@ -30,6 +30,15 @@
                                 {\normalfont\small\bfseries}}
 \makeatother
 
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength{\abovedisplayskip}{2pt}%
+  \setlength{\belowdisplayskip}{2pt}%
+  \setlength{\abovedisplayshortskip}{2pt}%
+  \setlength{\belowdisplayshortskip}{2pt}%
+}
+\makeatother
+
 \begin{document}
 \begin{multicols}{4}
 % ---------------------- Content ---------------------- %
