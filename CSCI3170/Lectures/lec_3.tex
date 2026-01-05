@@ -11,11 +11,9 @@ A \textbf{super-key} is any set of attributes that can uniquely identify an enti
 A \textbf{candidate key} is a minimal set of attributes whose values uniquely identify an entity in the entity set. As there could be more than one candidate key, \textbf{primary key} is a candidate key chosen to serve as the main key for the entity set.  
 
 For example, consider the following schema:  
-
 \[
 \text{Lecture(lecturer: string, course\_code: string, location: string, date: date, time: string)}
-\]  
-
+\]
 In this schema, \(\{ \text{location, date, time} \}\) is a key, while \(\{ \text{lecturer, location, date, time} \}\) is not minimal, but it is a \textbf{super-key}.  
 
 However, it is possible that no existing attribute can uniquely identify an entity. In such cases, we can provide a \textbf{surrogate key}, which is a system-generated value used to uniquely identify a record in a table.

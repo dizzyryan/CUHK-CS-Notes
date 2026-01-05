@@ -197,6 +197,7 @@ This naming scheme avoids ambiguity during operations such as joins and products
 
 \begin{remark}
   The \textbf{rename} (\(\rho\)) operator is a \emph{basic} operator in relational algebra, while the \textbf{assignment} (\(\leftarrow\)) operator is not. 
+  
   Assignment simply allows us to store intermediate results under a temporary name for convenience — it does not modify the relations themselves or affect the algebraic computation.
 \end{remark}
 
@@ -288,7 +289,7 @@ For example, let \(R = (A, B, C, D)\) and \(S = (E, B, D)\). Then, the result sc
       \(x\) \\
     \midrule
       \(\alpha\) \\
-      \(\beta\) \\
+      \(\varepsilon\) \\
       \bottomrule
   \end{tabular}
   \caption*{\(A / B\)}
