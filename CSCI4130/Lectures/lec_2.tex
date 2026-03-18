@@ -127,7 +127,7 @@ When this input is processed by the program (\texttt{user[i] = tolower(name[i])}
 
 \begin{minipage}{0.4\textwidth}
 \subsubsection{Overflow - Divert}
-Assume the address of \texttt{reveal\_secret} is \texttt{0xc8f4f2a9}. Similar to the previous case, with a carefully crafted overflow, the user can overwrite the return instruction pointer (RIP) with \texttt{0xc8f4f2a9}. Then, when the function call ends, the program will jump to \texttt{reveal\_secret} and display the message `SUPER SECRET \(=\) 42'.
+This type of overflow is similar to the code injection. Assume the address of \texttt{reveal\_secret} is \texttt{0xc8f4f2a9}. Similar to the previous case, with a carefully crafted overflow, the user can overwrite the return instruction pointer (RIP) with \texttt{0xc8f4f2a9}. Then, when the function call ends, the program will jump to \texttt{reveal\_secret} and display the message `SUPER SECRET \(=\) 42'.
 \end{minipage}
 \begin{minipage}{0.6\textwidth}
 \begin{figure}[H]
