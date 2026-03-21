@@ -4,7 +4,7 @@ Application software is computer software that performs a group of pre-defined f
 
 Compromising the security properties, i.e. \textbf{Confidentiality}, \textbf{Integrity}, and \textbf{Availability}, is the goal of attackers. But how can they achieve this?
 
-\section{Attack}
+\section{Introduction}
 Control hijacking attacks are a class of attacks that hijack the control flow of an application. Since application code is loaded into memory, attackers may corrupt memory through techniques such as buffer overflows, integer overflows, and format string exploitation. Before diving into the details, we first look at several related concepts.
 
 \subsection{Control Flow Graph}
@@ -86,13 +86,13 @@ Next, \texttt{login[512]} is allocated on the stack. The program then reaches th
 
 These steps repeat for subsequent function calls until the program finishes executing all function calls.
 
-\subsection{Overflow}
+\section{Attacks}
 Overflow is one of the most popular classes of attacks, as it is exploitable both locally and remotely, and it can modify both the data and the control flow of an application.
 
 More specifically, we will discuss stack overflow. A function's local variables (buffers) are statically allocated on the stack, and data may be copied or written without boundary checking. Therefore, data can overflow a buffer and overwrite other important data, e.g.\ the return address or the saved \texttt{EBP}. With a carefully crafted input, it is possible to overwrite security-sensitive data, redirect execution to user-defined code, or even reuse existing code. We will examine three cases.
 
 \begin{minipage}{0.4\textwidth}
-\subsubsection{Overflow -- Crash}
+\subsection{Overflow -- Crash}
 Consider the example above. Suppose the user inputs a value of 500 bytes. After the \texttt{fgets} function call finishes, the program proceeds to the \texttt{verify(login)} function call. Inside \texttt{int verify}, the program iterates through the input and calls \texttt{tolower}. The resulting characters are then stored in the array \texttt{user[256]}.\\[3pt]
 Since the length of \texttt{name} is 500, writing the data into \texttt{user[256]} causes the buffer to overflow. As a result, the content beyond \texttt{user[256]} overwrites other data on the stack, including the saved frame pointer and the return address (instruction pointer / program counter, \texttt{EIP}). When the function returns, the program attempts to jump to the corrupted return address. This typically redirects execution to an invalid or unknown address, causing the program to crash.
 \end{minipage}
@@ -105,7 +105,7 @@ Since the length of \texttt{name} is 500, writing the data into \texttt{user[256
 \end{minipage}
 
 \begin{minipage}{0.4\textwidth}
-\subsubsection{Overflow -- Inject}
+\subsection{Overflow -- Inject}
 Assume the attacker provides input containing machine code (shellcode), e.g.
 
 \begin{verbatim}
@@ -126,7 +126,7 @@ When this input is processed by the program (\texttt{user[i] = tolower(name[i])}
 \end{minipage}
 
 \begin{minipage}{0.4\textwidth}
-\subsubsection{Overflow - Divert}
+\subsection{Overflow - Divert}
 This type of overflow is similar to the code injection. Assume the address of \texttt{reveal\_secret} is \texttt{0xc8f4f2a9}. Similar to the previous case, with a carefully crafted overflow, the user can overwrite the return instruction pointer (RIP) with \texttt{0xc8f4f2a9}. Then, when the function call ends, the program will jump to \texttt{reveal\_secret} and display the message `SUPER SECRET \(=\) 42'.
 \end{minipage}
 \begin{minipage}{0.6\textwidth}
@@ -153,7 +153,7 @@ There are several other vulnerable functions in C/C++, e.g.\ \texttt{fgets()}, \
 
 Therefore, safer versions of memory access functions should be used to ensure that important data structures, i.e.\ the stack, heap, and others, cannot be overwritten. However, there are still some possible overflows.
 
-\textbf{Integer Overflow}
+\subsection{Integer Overflow}
 
 Integer overflow is caused by unexpected results when comparing, casting, or performing arithmetic operations on integers. There are several cases:
 
@@ -165,7 +165,7 @@ Integer overflow is caused by unexpected results when comparing, casting, or per
 
 Therefore, integers of different sizes or types should be assigned with great care, and assertions or similar checks can be used to avoid overflows.
 
-\textbf{Index Overflow}
+\subsection{Index Overflow}
 
 Index overflow exploits the lack of boundary checks when referencing a value in an array using an index. This allows direct writes to memory locations. Depending on the situation, it may only be possible to modify memory values that conform to the type of elements in the array.
 
