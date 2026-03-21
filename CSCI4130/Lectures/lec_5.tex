@@ -1,0 +1,154 @@
+\section{Asymmetric Key Cryptography}
+
+To solve the problem of secret key management and distribution in symmetric encryption, we consider asymmetric cryptography.
+
+\subsection{Basic Model}
+In asymmetric cryptography, each party has a pair of keys \(\{PK, SK\}\). The public key is known to everyone, while the private key is kept secret.
+
+A message from \(A\) to \(B\) is encrypted using \(B\)'s public key, and \(B\) uses the private key to decrypt it.
+
+Let message \(M\), public key \(PK\), and private key \(SK\):
+\[
+  C_i = E(M_i, PK_B), \quad M_i = D(C_i, SK_B)
+\]
+This model relies on the following building blocks:
+
+1. \textbf{Key generation algorithm}: the generated public key cannot be used to easily compute the secret key, and vice versa.
+
+2. \textbf{Trapdoor permutation}: a one-way permutation that is easy to invert with special (secret) information.
+
+3. \textbf{Encryption/Decryption}:
+\[
+  C = F(PK, M), \quad F^{-1}(SK, C) = M
+\]
+
+\subsection{Euler's Totient Function}
+A one-way function \(f\) is a function such that, given \(x\), it is easy to compute \(f(x)\), but it is difficult to find any \(x\) for a given \(y\) such that \(f(x) = y\). The difficulty is measured with respect to polynomial-time computation.
+
+A key tool in RSA is Euler's totient function \(\phi(n)\), which counts the number of positive integers \(k\) that are relatively prime to \(n\), i.e. \(\gcd(k, n) = 1\).
+
+Important properties:
+\[
+  \phi(p) = p - 1 \quad \text{if } p \text{ is prime}
+\]
+\[
+  \phi(pq) = \phi(p)\phi(q) \quad \text{if } p, q \text{ are relatively prime}
+\]
+Euler's theorem states that if \(a\) and \(n\) are co-prime:
+\[
+  a^{\phi(n)} \equiv 1 \pmod{n}
+\]
+This property forms the foundation of RSA.
+
+To find a large prime \(p\):
+
+1. Generate a large random number \(p\).
+
+2. Choose random \(a\), \(1 < a < p - 1\).
+
+3. Test whether \(a^{p-1} \bmod p = 1\).
+
+If not, find another \(p\). Otherwise, repeat with different \(a\). Some composite numbers (Carmichael numbers) may pass, but they are rare.
+
+\subsection{RSA Crypto-System}
+\subsubsection{RSA Key Generation}
+This key generation algorithm follows these steps:
+
+1. Find large prime numbers \(p, q\).
+
+2. Compute \(n = p \cdot q\).
+
+3. Compute \(\phi(n) = (p - 1)(q - 1)\).
+
+Note that computing \(\phi(n)\) from \(n\) alone is difficult.
+
+4. Choose an integer \(e\) such that \(\gcd(e, \phi(n)) = 1\) and \(2 < e < \phi(n)\).
+
+5. Compute \(d = e^{-1} \bmod \phi(n)\), which is the multiplicative inverse of \(e\) modulo \(\phi(n)\).
+\[
+  \text{PK} = \{n, e\}, \quad \text{SK} = \{d\}.
+\]
+
+\subsubsection{Encryption and Decryption}
+For \(M < n\):
+\[
+  C = E(M, PK) = E_{\{n, e\}} (M) = M^e \mod n
+\]
+\[
+  D(C, SK) = D_{\{d\}} (C) = C^d \mod n = M^{ed} \mod n = (M^{ed-1})M \mod n
+\]
+Since \(e \cdot d = 1 \mod f(n)\) gives \(e \cdot d - 1 = k \cdot f(n)\) for some \(k\), then 
+\[
+  \begin{aligned}
+    (M^{ed-1})M \mod n &= (M^{kf(n)})M \mod n\\
+    &= ((M^{f(n)})^k)M \mod n \\
+    &= (1^k)M \mod n \\
+    &= M \mod n \\
+    &= M
+  \end{aligned}
+\]
+
+\begin{remark}
+If \(M \geq n\), we typically encrypt a symmetric key using RSA and use symmetric encryption for the message.
+\end{remark}
+
+However, this scheme is deterministic and not IND-CPA secure.
+
+\subsection{Diffie-Hellman Key Exchange}
+Diffie-Hellman is used for secure key exchange.
+
+Two parties agree on a prime \(p\) and base (generator) \(g\), where \(g\) is a primitive root modulo \(p\)\footnote{A primitive root \(g\) mod \(p\) is a number that can generate all possible non-zero values mod \(p\) by exponentiation.}.
+
+- \(A\) chooses secret \(a\), sends \(A = g^a \mod p\)
+
+- \(B\) chooses secret \(b\), sends \(B = g^b \mod p\)
+
+Both compute:
+\[
+  s = g^{ab} \mod p
+\]
+The computation of modular exponentiation can be done efficiently even for large numbers. However, given only \(g, p\), and \(A = g^a \mod p\), it is very difficult to find \(a\) if \(p\) is very large (Discrete Logarithm Problem). This makes it infeasible for an attacker to learn the secret even with the fastest computers.
+
+\(s = g^{ab} \mod p\) is used as the basis for a session key. When the communication stops, the secrets are discarded, providing forward secrecy. They also do not retain any information that later attackers could use to decrypt messages exchanged using \(s\).
+
+\subsubsection{MITM Attacks}
+An active attacker can replace \(A, B\) with \(A', B'\), establishing separate keys with both parties. Thus, Diffie-Hellman alone does not provide authentication.
+
+This can be prevented using digital signatures and certificates.
+
+\subsection{Digital Signatures}
+To bind a document to its author, the signature must depend on the document.
+\[
+  S = \text{sign}(M, SK) = F^{-1}(H(M), SK)
+\]
+\[
+  \text{verify}(M, S, PK) = \text{accept if } F(S, PK) = H(M)
+\]
+In practice, \(A\) will generate a public-private key pair \(\{n, e\}\) and \(\{d\}\), then sign a message \(M\) where 
+\[
+  S = \text{sign}_{\{d\}} (M) = RSA_{\{d\}} (H(M)) = H(M)^d \mod n
+\]
+This can be validated using 
+\[
+  \text{verify}_{\{n, e\}} (M, S) = \text{true} \iff H(M) = S^e \mod n
+\]
+This provides authentication and non-repudiation.
+
+\section{A Better Asymmetric Key Encryption}
+Asymmetric encryption alone ensures confidentiality, but not authentication.
+
+A common approach:
+
+- Sign with sender's private key
+
+- Encrypt with receiver's public key
+
+This provides confidentiality, integrity, authentication, and non-repudiation. However, it is still vulnerable to MITM attacks during key exchange.
+
+MITM attacks occur when an attacker replaces public keys. This is solved using certificates, which bind a public key to an identity.
+
+A Certificate Authority (CA) verifies identities and signs certificates:
+\[
+  \text{Cert} = \text{Sign}_{SK_{CA}}(\text{identity}, PK)
+\]
+The CA publishes its own public key, allowing anyone to verify certificates.
