@@ -39,7 +39,9 @@ A \textbf{cryptographic hash function} produces a fixed-length output and satisf
 
 Cryptographic algorithms can be computationally secure, since the cost of breaking the cipher is unacceptably high and the time required to break it exceeds the useful lifetime of the encrypted information.
 
-\section{Threat Model and Attacks}
+\section{Threat Model, Attacks and Security}
+
+\subsection{Threat Model and Attacks}
 
 Before constructing secure systems, we define attacker capabilities:
 
@@ -52,6 +54,47 @@ Before constructing secure systems, we define attacker capabilities:
 4. \textbf{Chosen Ciphertext Attack (CCA)}: attacker can choose ciphertexts to be decrypted
 
 A secure scheme must remain secure even under strong attack models (e.g. CPA).
+
+\subsection{Security Definitions}
+
+\subsubsection{Pseudo-Random Permutation (PRP)}
+Encryption should behave like a random permutation to any efficient attacker.
+
+\begin{intuition}
+  The attacker can query inputs and observe the outputs from two boxes, one implementing \(E_K\) and one implementing a random permutation. Although the same input always produces the same output, the attacker cannot find any pattern to distinguish which box is the real encryption. Hence, the cipher behaves like a random shuffling, achieving PRP security.
+\end{intuition}
+
+We say an encryption scheme is PRP secure if for any polynomial-time attacker, the probability of winning this security game is not significantly greater than \(50\%\), i.e.,
+\[
+  \mathbb{P}[\text{Attacker wins}] \leq \frac{1}{2} + \varepsilon \quad (\text{e.g., } \varepsilon = \frac{1}{2^{128}})
+\]
+However, the attacker may still learn whether two plaintexts are equal, since \(E_K(M_i) = E_K(M_j)\) implies \(M_i = M_j\), even though the actual values of \(M_i\) and \(M_j\) remain unknown.
+
+\subsubsection{Indistinguishability under Known Plaintext Attack (IND-KPA)}
+Even with known plaintexts, attacker cannot distinguish encryptions.
+
+\begin{intuition}
+  The attacker has access to some plaintext--ciphertext pairs from previous observations. Even with this knowledge, they should not be able to gain any additional information about new ciphertexts or recover the underlying plaintexts. Thus, past knowledge does not help the attacker break the encryption, which corresponds to IND-KPA security.
+\end{intuition}
+
+An encryption scheme is IND-KPA secure if and only if, for any polynomial-time attacker, the probability of winning the IND-KPA game is not significantly greater than \(50\%\), i.e.,
+\[
+  \mathbb{P}[\text{Attacker wins}] \leq \frac{1}{2} + \varepsilon \quad (\text{e.g., } \varepsilon = \frac{1}{2^{128}})
+\]
+
+\subsubsection{Indistinguishability under Chosen Plaintext Attack (IND-CPA)}
+Even if attacker can choose plaintexts, they cannot distinguish which message was encrypted.
+
+\begin{intuition}
+  The attacker can choose arbitrary plaintexts and obtain their corresponding ciphertexts. Despite this strong capability, when given a ciphertext of one of two chosen messages, the attacker still cannot determine which message was encrypted with probability better than random guessing. This means the encryption reveals no useful information even under active attack, achieving IND-CPA security.
+\end{intuition}
+
+An encryption scheme is IND-CPA secure if and only if, for any polynomial-time attacker, the probability of winning the IND-CPA game is not significantly greater than \(50\%\), i.e.,
+\[
+  \mathbb{P}[\text{Attacker wins}] \leq \frac{1}{2} + \varepsilon \quad (\text{e.g., } \varepsilon = \frac{1}{2^{128}})
+\]
+
+\textbf{Key insight:} IND-CPA requires \textbf{randomized encryption}, so for the same plaintext it outputs a different ciphertext each time.
 
 \section{Symmetric Key Cryptography}
 
@@ -89,49 +132,6 @@ Any advantage \(> 0.5\) implies information leakage.
   \]
   If the probability is greater than \(0.5\), the encryption leaks information.
 \end{remark}
-
-\section{Security Definitions}
-
-\subsection{Pseudo-Random Permutation (PRP)}
-Encryption should behave like a random permutation to any efficient attacker.
-
-\begin{intuition}
-  The attacker can query inputs and observe the outputs from two boxes, one implementing \(E_K\) and one implementing a random permutation. Although the same input always produces the same output, the attacker cannot find any pattern to distinguish which box is the real encryption. Hence, the cipher behaves like a random shuffling, achieving PRP security.
-\end{intuition}
-
-We say an encryption scheme is PRP secure if for any polynomial-time attacker, the probability of winning this security game is not significantly greater than \(50\%\), i.e.,
-\[
-  \mathbb{P}[\text{Attacker wins}] \leq \frac{1}{2} + \varepsilon \quad (\text{e.g., } \varepsilon = \frac{1}{2^{128}})
-\]
-However, the attacker may still learn whether two plaintexts are equal, since \(E_K(M_i) = E_K(M_j)\) implies \(M_i = M_j\), even though the actual values of \(M_i\) and \(M_j\) remain unknown.
-
-\subsection{Indistinguishability under Known Plaintext Attack (IND-KPA)}
-Even with known plaintexts, attacker cannot distinguish encryptions.
-
-\begin{intuition}
-  The attacker has access to some plaintext--ciphertext pairs from previous observations. Even with this knowledge, they should not be able to gain any additional information about new ciphertexts or recover the underlying plaintexts. Thus, past knowledge does not help the attacker break the encryption, which corresponds to IND-KPA security.
-\end{intuition}
-
-An encryption scheme is IND-KPA secure if and only if, for any polynomial-time attacker, the probability of winning the IND-KPA game is not significantly greater than \(50\%\), i.e.,
-\[
-  \mathbb{P}[\text{Attacker wins}] \leq \frac{1}{2} + \varepsilon \quad (\text{e.g., } \varepsilon = \frac{1}{2^{128}})
-\]
-
-\subsection{Indistinguishability under Chosen Plaintext Attack (IND-CPA)}
-Even if attacker can choose plaintexts, they cannot distinguish which message was encrypted.
-
-\begin{intuition}
-  The attacker can choose arbitrary plaintexts and obtain their corresponding ciphertexts. Despite this strong capability, when given a ciphertext of one of two chosen messages, the attacker still cannot determine which message was encrypted with probability better than random guessing. This means the encryption reveals no useful information even under active attack, achieving IND-CPA security.
-\end{intuition}
-
-An encryption scheme is IND-CPA secure if and only if, for any polynomial-time attacker, the probability of winning the IND-CPA game is not significantly greater than \(50\%\), i.e.,
-\[
-  \mathbb{P}[\text{Attacker wins}] \leq \frac{1}{2} + \varepsilon \quad (\text{e.g., } \varepsilon = \frac{1}{2^{128}})
-\]
-
-\textbf{Key insight:} IND-CPA requires \textbf{randomized encryption}, so for the same plaintext it outputs a different ciphertext each time.
-
-\section{Defenses}
 
 \subsection{Simple Cipher}
 A simple cipher is the Caesar cipher, e.g.
@@ -173,9 +173,9 @@ However, there are several problems regarding the one-time pad.
 
 3. Key Length: the key needs to be as long as the message.
 
-\section{Block Cipher}
+\section{More on Symmetric Key Cryptography}
 
-\subsection{Definition}
+\subsection{Block Cipher}
 Consider the building blocks as follows:
 
 1. A function \(E: \{0, 1\}^n \times \{0, 1\}^k \to \{0, 1\}^n\)
@@ -285,7 +285,7 @@ This is similar to the OTP, and it can produce any number of pseudo-random bits.
 
 After confidentiality, we also need to defend against active attacks.
 
-\section{Integrity and Authentication}
+\subsection{Integrity and Authentication}
 Confidentiality alone is insufficient against active attacks. For an active attacker, they can inject new messages (ciphertexts), replay previous ciphertexts, and cause messages to be reordered or discarded. Therefore, for a message, we need to prove that it is not altered and is indeed sent from the sender. The approach to provide integrity is to use cryptographically strong hash functions.
 
 There are properties that need to be satisfied:
