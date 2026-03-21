@@ -1,0 +1,233 @@
+\chapter{OS Security}
+
+Operating system security aims to protect system resources while ensuring correct and controlled access. The fundamental goals remain the same: confidentiality, integrity, and authentication. Since many system resources are sensitive, mechanisms are required to prevent unauthorized access and misuse.
+
+\section{Access Control}
+
+\subsection{Fundamentals}
+To enforce security goals, we first need a way to regulate how resources are accessed. Access control is the selective restriction of access to resources according to a policy.
+
+The key components are:
+
+- subject (principal): the entity requesting access to resources
+
+- object: a resource that can be accessed
+
+- policy: rules that define how subjects can access objects
+
+- authentication: identifying who is making the request
+
+- authorization: determining what actions the subject is allowed to perform
+
+- audit: logging actions performed by subjects
+
+- accountability: holding subjects responsible for their actions
+
+We formalize access decisions as:
+\[
+  \text{access}(\text{Subject}, \text{Object}) = \text{true} / \text{false}
+\]
+
+\subsection{Access Control Matrix}
+A natural way to represent access control policies is through the access control matrix, which maps subjects to objects and specifies allowed actions.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c|c|c}
+      \toprule
+       & \texttt{/user/alice} & \texttt{/user/bob} & \texttt{/etc/password} & \texttt{/share/bob/b.txt} & ... \\
+    \midrule
+      Alice & True & False & False & True &   \\
+    \midrule
+      Bob & False & True & False & True &   \\
+    \midrule
+      root & True & True & True & True &   \\
+    \midrule
+      ... &  &  &  &  &   \\
+      \bottomrule
+  \end{tabular}
+  \caption{Access Control Matrix}
+\end{table}
+
+In practice, permissions are not simply binary. Instead, we use finer-grained access rights such as Read (R), Write (W), and Execute (X).
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c|c|c}
+      \toprule
+       & \texttt{/user/alice} & \texttt{/user/bob} & \texttt{/etc/password} & \texttt{/share/bob/b.txt} & ... \\
+    \midrule
+      Alice & \{R, W\} & \{\} & \{\} & \{R\} &   \\
+    \midrule
+      Bob & \{\} & \{R, W\} & \{\} & \{R, W\} &   \\
+    \midrule
+      root & \{R, W\} & \{R, W\} & \{R, W\} & \{R, W\} &   \\
+    \midrule
+      ... &  &  &  &  &   \\
+      \bottomrule
+  \end{tabular}
+  \caption{Access Control Matrix}
+\end{table}
+
+However, directly storing this matrix is inefficient in real systems. This motivates practical mechanisms for implementing access control.
+
+\section{Security Mechanisms}
+
+There are two primary ways to implement the access control matrix:
+
+1. Access Control List (ACL)
+
+2. Capability-based Security
+
+\subsection{Access Control List}
+ACL is an object-centric mechanism. Each object maintains a list specifying which subjects have what permissions.
+
+When access is requested:
+
+- the system identifies the subject,
+
+- looks up the subject in the object's ACL,
+
+- and determines whether the requested action is allowed.
+
+\subsection{Capability-based Security}
+Capability-based security is a subject-centric mechanism. Each subject holds capabilities, which are unforgeable tokens that reference objects along with permitted operations.
+
+When access is requested:
+
+- the subject presents a capability,
+
+- the system verifies the capability,
+
+- and grants access if the required permission is included.
+
+\subsection{Reference Monitor}
+Regardless of the mechanism used, all access decisions must be enforced by a reference monitor.
+
+A reference monitor mediates every access to objects and must satisfy:
+
+1. unbypassable
+
+2. tamper-proof
+
+3. verifiable
+
+Thus, subjects cannot access objects directly; all requests must pass through the reference monitor.
+
+\subsection{Trusted Computing Base}
+The Trusted Computing Base (TCB) consists of all components that must be correct to enforce security. Since all trust depends on the TCB, it should be:
+
+- minimal
+
+- unbypassable
+
+- tamper-proof
+
+- verifiable
+
+\subsection{DAC vs. MAC}
+Different systems adopt different policy models.
+
+- Discretionary Access Control (DAC): object owners define access policies.
+
+- Mandatory Access Control (MAC): a centralized authority enforces system-wide policies.
+
+\subsection{Attribute-Based Access Control}
+Attribute-Based Access Control (ABAC) generalizes access control by assigning attributes to subjects and objects. Policies are defined based on these attributes.
+
+Role-Based Access Control (RBAC) can be viewed as a special case of ABAC.
+
+\section{UNIX Security Model}
+
+We now examine how these concepts are applied in a real system.
+
+In UNIX:
+
+1. subjects: users
+
+2. objects: files, directories, devices, sockets, etc.
+
+3. operations: read, write, execute
+
+Users may belong to multiple groups, enabling group-based (role-like) access control.
+
+\subsection{File Access Control}
+Each file has an owner and a simple ACL based on:
+
+1. owner
+
+2. group
+
+3. others
+
+Permissions are set by the owner or root.
+
+\begin{remark}
+  If a user has write permission on a directory but not on a file, the ability to rename or delete the file depends on the sticky bit.
+
+  - If the sticky bit is off: users can delete or rename files they do not own.
+
+  - If the sticky bit is on: only the file owner, directory owner, or root can do so.
+\end{remark}
+
+Each process maintains:
+
+1. real UID/GID: identity of the process owner
+
+2. effective UID/GID: used for permission checks
+
+3. saved UID/GID: allows privilege dropping and restoration
+
+If an executable has the SUID bit set, executing it temporarily grants the process the privileges of the file owner.
+
+\section{Privilege and Isolation}
+
+Traditional UNIX distinguishes between:
+
+- privileged processes (e.g., root)
+
+- unprivileged processes
+
+To reduce risk, modern systems decompose root privileges into smaller capabilities.
+
+To limit damage from compromise:
+
+- minimize the TCB
+
+- enforce the principle of least privilege
+
+- isolate untrusted components
+
+\subsection{Sandbox}
+A sandbox isolates a process from the rest of the system. If some vulnerable code is from an untrusted source or takes input from potential attackers, running it in a sandbox aims to prevent exploits from spreading outside of the sandbox. 
+
+It restricts access to:
+
+- file system
+
+- network
+
+- system resources
+
+This prevents exploits from affecting the broader system.
+
+\subsection{Android Process Isolation}
+Android enforces sandboxing as follows:
+
+1. Isolation: each app runs with a unique UID in its own VM
+
+2. Interaction: permissions checked via a reference monitor
+
+3. Least privilege: permissions granted explicitly by users
+
+\subsection{Chrome Security Model}
+Chrome uses a multi-process architecture:
+
+- a privileged browser process
+
+- multiple sandboxed renderer processes
+
+Renderer processes handle untrusted web content with restricted permissions. If compromised, the damage is contained.
+
+\subsection{Information Flow Tracking}
+Information flow tracking monitors how data propagates through a system. Objects are labeled with security tags, which are updated during computation. This helps enforce confidentiality and integrity constraints.
