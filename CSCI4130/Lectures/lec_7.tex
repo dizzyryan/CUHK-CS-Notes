@@ -1,0 +1,63 @@
+\chapter{Security Principles}
+
+To design secure software and systems, we follow a set of fundamental security principles. These principles guide how systems should be built, how access should be controlled, and how users interact with security mechanisms.
+
+\textbf{Understanding Threat Model} 
+
+To defend against attacks, we must first understand what we are protecting and what the potential threats are. Therefore, threat modeling should be performed both before and after deploying any security mechanisms. This ensures that defenses remain effective as the system evolves.
+
+\textbf{Economy of Security Mechanism} 
+
+There is often a tradeoff between the cost of security and the level of protection provided. The goal is to increase the cost or difficulty for an attacker such that the reward does not justify the effort. At the same time, defenders must consider the cost of implementing and maintaining security mechanisms.
+
+\textbf{Open Design} 
+
+Security should not rely on obscurity. As stated in Kerckhoffs's principle: ``A crypto-system should be secure even if everything about the system, except the key, is public knowledge,'' and Shannon’s maxim: ``the enemy will immediately gain full familiarity with the system.''
+
+It is easier to protect and revoke a key than to keep a system design secret. Open design allows public scrutiny, which helps identify flaws in both design and implementation.
+
+\textbf{Fail-safe Defaults} 
+
+Access decisions should be based on permission rather than exclusion. Without explicit permission, the default action is to deny access. Mechanisms that attempt to identify only unsafe conditions are less reliable and not recommended.
+
+\textbf{Least Privilege} 
+
+Each system module should have only the minimum privileges necessary for its intended function. This principle relies on compartmentalization and isolation, where the system is divided into separate components with limited access rights.
+
+\textbf{Separation of Privilege} 
+
+When possible, multiple independent privileges should be required to perform sensitive actions. This reduces the risk that a single compromised component can lead to a full system breach.
+
+\textbf{Defense in Depth} 
+
+Security should not rely on a single mechanism. Instead, multiple layers of protection should be used so that even if one fails, others remain effective. These mechanisms should be diverse to avoid common points of failure.
+
+For example, two-factor authentication combines:
+
+- something you know (e.g. password),
+
+- something you have (e.g. security token),
+
+- something you are (e.g. biometrics).
+
+\textbf{Monolithic Design} 
+
+A monolithic design builds the entire application as a single unified program. It is simple to develop, test, and deploy, and does not require communication between components. However, a single successful attack can compromise the entire system, since components are not isolated.
+
+\textbf{Component Design} 
+
+In component-based design, the system is divided into separate modules with well-defined interfaces. This improves structure and reduces accidental vulnerabilities. However, since components still reside within the same application, a compromise may still propagate across components.
+
+\textbf{Complete Mediation} 
+
+Every access to every resource must be checked for authorization. This is typically enforced using a reference monitor, through which all access requests must pass.
+
+\textbf{Human Factors} 
+
+Security mechanisms must account for human limitations. Since users cannot reliably store high-quality cryptographic keys, systems rely on tools to securely manage credentials.
+
+Two important considerations are:
+
+\textit{Psychological acceptability}: systems should be easy to use securely, so users do not bypass or misuse security mechanisms.
+
+\textit{Human factor assumptions}: security mechanisms should not rely on unrealistic assumptions about user behavior, even when users are not intentionally acting against the system.
