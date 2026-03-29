@@ -1,0 +1,263 @@
+\chapter{Web Security}
+
+The World Wide Web was originally conceived as a geographically distributed information retrieval system, where documents are interconnected through hyperlinks. With its evolution into a full-fledged application platform, it is also vulnerable to many attacks with enormous impact due to the widespread use of the service, accessibility of the servers, and widespread use of clients. Therefore, we look at web security in this chapter. 
+
+\section{Fundamentals of Web}
+
+\subsection{Web Security Goals}
+There are several goals to achieve:
+
+1. \textbf{Confidentiality}: malicious websites shall not be able to learn the data on a user's computer or on other websites 
+
+2. \textbf{Integrity}: malicious websites shall not be able to modify the data on a user's computer or on other websites
+
+3. \textbf{Authenticity}: malicious websites shall not be able to impersonate another website 
+
+4. \textbf{Availability}: attackers cannot make a website we visit unavailable, or exhaust or abuse a user's computer's computing power 
+
+5. \textbf{Privacy}: malicious websites should not be able to learn a user's activities online
+
+As many vulnerabilities are the result of interactions among various components used for processing requests, we also need to analyze vulnerabilities in:
+
+- protocol 
+
+- infrastructure
+
+- server-side of the application (back-end)
+
+- client-side of the application (front-end)
+
+\subsection{Uniform Resource Identifier (URI)}
+A Uniform Resource Identifier is a string that identifies a resource, e.g.:
+
+- scheme: protocol / framework (HTTP, HTTPS, mailto, etc.)
+
+- authority: a namespace that qualifies the resource (e.g. www.domain.com)
+
+- path: a pathname composed of `/'-separated strings (e.g. /path/page)
+
+- query: an application-specific piece of information (e.g. ?page=1)
+
+It can be further classified as a locator, name, or both. 
+
+For a locator (Uniform Resource Locator), it is an identifier that contains the information to locate the resource. As for a name (Uniform Resource Name), it is an identifier that identifies an entity regardless of whether it is accessible or even if it exists. 
+
+\subsection{Language}
+
+\subsubsection{Hypertext Markup Language (HTML)}
+HTML describes the structure of web pages using markup. A markup language includes directives with content, and they can dictate presentation and describe content, e.g., \texttt{<title>Title</title>}. 
+
+Web pages are built from HTML elements, which are represented by tags. Tags can have attributes that provide metadata about the tag, which live only inside the tag. Notice that multiple attributes are separated by spaces.
+
+The \texttt{<frame>} tag allows for displaying multiple separate views or pages that are associated with separate URLs on the same page. They are enclosed by a \texttt{<frameset>} tag. \texttt{<iframe>} tags are inline frames which are similar to \texttt{<frame>} but do not require a \texttt{<frameset>} tag. 
+
+The page we directly visit is loaded in a main frame, where the embedding or parent frame can specify only the style and placement of the embedded or child frame in its own frame. They can also show content in their own interfaces. 
+
+\subsubsection{JavaScript}
+JavaScript is the high-level programming language of HTML and the web. It is supported by all browsers.
+
+\subsubsection{Hypertext Processor (PHP)}
+PHP is a scripting language that can be embedded in HTML pages to generate dynamic content. PHP code is executed on the server side when the page containing the code is requested.
+
+\subsection{Internet}
+HyperText Transfer Protocol (HTTP) is an application-layer protocol used to transfer information between a web client and a web server. By default, it uses TCP\footnote{A Transmission Control Protocol (TCP) connection is a reliable communication channel between two devices over a network. It ensures data arrives in order without duplication.} port 80. Then the client opens a TCP connection and sends requests, and the server accepts the connection and sends replies. 
+
+\begin{minipage}{0.4\textwidth}
+  \subsubsection{Request}
+
+  In an HTTP request, it writes data into a socket\footnotemark, and embeds input data from the user in the headers and the body. \\[3pt]
+  Headers in a request specify: \\[3pt]
+  - Method \\[3pt]
+  - Resources \\[3pt]
+  - Protocol version \\[3pt]
+  - Other info like general header, request header, and entity header. 
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{cccc}
+        \toprule
+        & Method & URL & Version  \\
+      \midrule
+        & GET & /index.html & HTTP/1.1  \\
+        Headers & \multicolumn{3}{l}{
+          \begin{tabular}[t]{l}
+          Host: www.example.com \\
+          User-Agent: Mozilla/5.0 \\
+          Accept: text/html, */* \\
+          Accept-Language: en-us \\
+          Accept-Charset: ISO-8859-1,utf-8 \\
+          Connection: keep-alive
+          \end{tabular}
+        } \\
+      \midrule
+        &  & \texttt{\textbackslash r\textbackslash n} & \\
+      \midrule
+        Body (optional) &  &  &   \\
+        \bottomrule
+    \end{tabular}
+    \caption{HTTP Request}
+  \end{table}
+\end{minipage}
+\footnotetext{A socket is basically the endpoint of communication between two programs over a network. If a port is a door number, the socket is like the full address of the door.}
+
+\subsubsection{Methods}
+There are a few types of HTTP methods:
+
+- \texttt{GET}: Read data from a specified resource referred to by the URL.
+
+- \texttt{HEAD}: Fetches only the information (HTTP header) about data at a specified resource.
+
+- \texttt{POST}: Submit data to be processed with a specified resource identified by the URL and get a response back. 
+
+- \texttt{PUT}: Upload data to be stored under a specified resource. 
+
+\subsubsection{Resources}
+A resource can be specified by an absolute URL (used when requesting a resource through a proxy) or a relative path (used when requesting a resource from a server that owns the resource). 
+
+\subsubsection{Response}
+This is the data from the socket, e.g., 
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{cccc}
+      \toprule
+      & Version & Status & Status Message  \\
+    \midrule
+      & HTTP/1.1 & 200 & OK  \\
+      Headers & \multicolumn{3}{l}{
+        \begin{tabular}[t]{l}
+        Date: Sat, 7 Jul 2018 17:36:27 GMT \\
+        Server: Apache \\
+        Content-Encoding: gzip \\
+        Content-Type: text/html; charset=UTF-8 \\
+        Content-Length: 1846
+        \end{tabular}
+      } \\
+    \midrule
+      &  & \texttt{\textbackslash r\textbackslash n} & \\
+    \midrule
+      Body & \multicolumn{3}{l}{%
+        \parbox[t]{0.3\textwidth}{%
+          \texttt{<!DOCTYPE html>}\\
+          \texttt{<html>}\\
+          \texttt{...}\\
+          \texttt{</html>}%
+        }%
+      } \\
+      \bottomrule
+  \end{tabular}
+  \caption{HTTP Response}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c}
+      \toprule
+      Code & Status & Description  \\
+    \midrule
+      \texttt{1xx} & Informational & The request was received, continuing process  \\
+      \texttt{200} & OK & Success  \\
+      \texttt{301} & Moved Permanently & Permanent redirection  \\
+      \texttt{307} & Temporary Redirect & Try URI in the Location field this time  \\
+      \texttt{400} & Bad Request & Malformed request  \\
+      \texttt{401} & Unauthorized & Requires user authentication  \\
+      \texttt{403} & Forbidden & Refuse to fulfill the request  \\
+      \texttt{404} & Not Found &   \\
+      \texttt{500} & Internal Server Error & Something unexpected (Error) happened  \\
+      \texttt{501} & Not Implemented & Does not support the requested functionality  \\
+      \texttt{503} & Service Unavailable & Unable to handle the request due to overloading or maintenance  \\
+      \bottomrule
+  \end{tabular}
+  \caption{Common HTTP Response Status Codes}
+\end{table}
+
+\subsection{Web Server}
+Both web servers and browsers speak HTTP. For a web server, it receives HTTP requests and sends HTTP responses. 
+
+A web server loops forever, accepting TCP connections from a client (browser), then reads the HTTP request from the connection, processes the request, and writes the HTTP response to the connection, then closes the TCP connection. 
+
+To serve static documents, it can simply read and write. For dynamic content, it uses the Common Gateway Interface (CGI). 
+
+CGI is a protocol for web servers to execute programs, like calling a command-line interface (CLI) program in another process, to generate web pages dynamically. 
+
+For example, when the web browser sends an HTTP request, the web server will start a CGI program passing input and environment variables. The CGI program then gives a partial response, and the web server processes the response and returns it with an HTTP response. 
+
+\subsection{HTML Forms}
+A form is a way to collect data from the client. It has form controls, e.g., text fields, buttons, etc. The \texttt{action} attribute contains the URI to submit the HTTP request, where the default is the current URI. The \texttt{method} attribute (\texttt{GET} or \texttt{POST}) specifies the HTTP method to submit the request. 
+
+Child input tags of a form are transformed into either an HTTP query string or part of the HTTP request body. The data is encoded as either ``application/x-www-form-urlencoded'' or ``multipart/form-data''.
+
+\texttt{GET} always uses ``application/x-www-form-urlencoded'', whereas \texttt{POST} depends on the \texttt{enctype} attribute of the form, with the default being ``application/x-www-form-urlencoded''. ``multipart/form-data'' is mainly used to upload files. 
+
+Data is sent as name-value pairs. The name is taken from the input tag's \texttt{name} attribute, whereas the value is taken either from the input tag's \texttt{value} attribute or user-supplied input. 
+
+For \texttt{GET}, data is passed in the query, e.g., 
+
+\begin{verbatim}
+<form method="GET" action="form.cgi">
+  Username:
+  <input type="text" name="user"></input><br>
+  Language:
+  <input type="text" name="lang"></input><br>
+  <input type="submit"></input>
+</form>
+\end{verbatim}
+
+With input \texttt{alex} and \texttt{enUS}, this gives the query string \texttt{http://www.example.com/form.cgi?user=alex\&lang=enUS} and 
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{cccc}
+      \toprule
+      & Method & URL & Version  \\
+    \midrule
+      & GET & /form.cgi?user=alex\&lang=enUS & HTTP/1.1  \\
+      Headers & \multicolumn{3}{l}{
+        \begin{tabular}[t]{l}
+        Host: www.example.com \\
+        User-Agent: Mozilla/5.0 \\
+        Accept: text/html, */* \\
+        Accept-Language: en-us \\
+        Accept-Charset: ISO-8859-1,utf-8 \\
+        Connection: keep-alive
+        \end{tabular}
+      } \\
+    \midrule
+      &  & \texttt{\textbackslash r\textbackslash n} & \\
+    \midrule
+      Body &  &  &   \\
+      \bottomrule
+  \end{tabular}
+  \caption{HTTP Request - GET}
+\end{table}
+
+For \texttt{POST}, data is passed in the body. 
+
+The same input gives the URL \texttt{http://www.example.com/form.cgi} and 
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{cccc}
+      \toprule
+      & Method & URL & Version  \\
+    \midrule
+      & POST & /form.cgi & HTTP/1.1  \\
+      Headers & \multicolumn{3}{l}{
+        \begin{tabular}[t]{l}
+        Host: www.example.com \\
+        User-Agent: Mozilla/5.0 \\
+        Accept: text/html, */* \\
+        Accept-Language: en-us \\
+        Content-Type: application/x-www-form-urlencoded \\
+        Content-Length: 19
+        \end{tabular}
+      } \\
+    \midrule
+      &  & \texttt{\textbackslash r\textbackslash n} & \\
+    \midrule
+      Body & \multicolumn{3}{l}{user=alex\&lang=enUS}  \\
+      \bottomrule
+  \end{tabular}
+  \caption{HTTP Request - POST}
+\end{table}
