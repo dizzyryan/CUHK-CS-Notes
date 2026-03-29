@@ -64,7 +64,7 @@ This describes whether frame A can change the origin of the content of frame B.
 
 - \texttt{readCookie(F, D)}, \texttt{writeCookie(F, D)}
 
-This describes whether frame F can read or write cookies of domain \(D\). 
+This describes whether frame F can read or write cookies of domain D. 
 
 The Same-Origin Policy is an essential security mechanism that isolates different pages. It says a frame in one origin shall not be allowed to access resources of frames in a different origin. Then JavaScript code can access only resources that are associated with the same origin, and it cannot make HTTP requests to access the DOM, cookies, and local storage of a site or frame of a different origin. 
 
@@ -75,7 +75,7 @@ However, JavaScript code executes under the origin of the embedding frame, which
 \subsubsection{HTTP Responses}
 XMLHttpRequest allows JavaScript to send HTTP requests to a server and receive data in the response. However, SOP prohibits XHRs from being sent to a different origin, and JavaScript can read only responses from the same origin.
 
-A frame can load images, CSS, and fonts from another origin. It cannot inspect the content of the resources, but it is similar to loading an iframe from another origin to ensure safety. 
+A frame can load images, CSS, and fonts from another origin. It cannot inspect the content of the resources, and it is similar to loading an iframe from another origin to ensure safety. 
 
 A frame can also load JavaScript from another origin. It again cannot inspect the content of the script, but it can interact with it.
 
