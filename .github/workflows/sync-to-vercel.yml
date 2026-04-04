@@ -87,7 +87,7 @@ jobs:
             CHANGED=$(git diff --cached --name-only | wc -l | tr -d ' ')
             git commit -m "sync: update $CHANGED PDF(s) from CUHK-CS-Notes
 
-Automated by GitHub Actions workflow.
+# Automated by GitHub Actions workflow.
 Triggered by: ${{ github.sha }}"
             git push
             echo "✅ Pushed $CHANGED file change(s) — Vercel will auto-deploy"
