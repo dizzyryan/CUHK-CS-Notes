@@ -13,7 +13,7 @@ For example, consider a server application as a calculator, which uses \texttt{e
 
 \begin{verbatim}
   $exp = $_GET["exp"];
-  eval('$result = ' . $exp . ';');
+  eval(`$result = ' . $exp . `;');
   echo $result;
 \end{verbatim}
 
