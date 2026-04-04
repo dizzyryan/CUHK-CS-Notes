@@ -1,0 +1,179 @@
+\section{Session}
+
+\subsection{Web Authentication}
+Authenticity is one major web security goal. Web authentication uses different approaches to achieve this goal, yet they all have limitations. For example:
+
+- IP address
+
+However, the IP source address can be spoofed, and NAT-ing (Network Address Translation) may cause several users to share the same IP address. Also, the same user could use different IP addresses. 
+
+- HTTP
+
+This is not very scalable and is difficult to manage at the application level.
+
+- certificate
+
+This works (on the server side) for TLS-based connections, but few users have ``real'' certificates or know how to use them. 
+
+- form
+
+In form-based authentication, user data might be sent in plaintext (if not protected by HTTPS).
+
+\subsection{HTTP Authentication}
+\begin{minipage}{0.4\textwidth}
+This is a protocol based on a simple challenge-response scheme. The challenge is returned by the server as part of a 401 reply message, which also specifies the authentication scheme to be used. An authentication request referring to a realm (which specifies a group of resources on the server) is sent by the client. The client must include an authorization header field with valid credentials. From the web server perspective, HTTP authentication enables basic access control. 
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{cccc}
+        \toprule
+        & Version & Status & Status Message  \\
+      \midrule
+        & HTTP/1.1 & 401 & Unauthorized  \\
+        Headers & \multicolumn{3}{l}{
+          \begin{tabular}[t]{l}
+          ... \\
+          Content-Type: text/html \\
+          WWW-Authenticate: Basic realm=``xxx'' \\
+          ...
+          \end{tabular}
+        } \\
+        \bottomrule
+    \end{tabular}
+    \caption{401 Unauthorized}
+  \end{table}
+\end{minipage}
+
+So consider the workflow like this: the client requests access to a protected resource, then the web server denies the attempt to access the restricted area and requires the client to authenticate. The client then sends the credentials to authenticate the user, where the web server will depend on the validity of the credentials and whether the authenticated user is authorized to gain access. 
+
+Notice that the access control policy can be placed inside the directory or defined in a global configuration file. 
+
+HTTP is stateless, i.e., the HTTP server is not required to retain information or state about each user for the duration of multiple requests. However, it is desirable that a web application can track state over multiple requests if it wants to. This can be achieved by adding: 
+
+- HTTP cookies
+
+- server-side sessions
+
+- embedding information in the returned page using hidden variables within web forms or modified URLs. 
+
+\subsection{User Sessions}
+A session is a sequence of HTTP request and response transactions associated with a user. It is used to represent a time-limited interaction of a client with a server. A session is a concept beyond HTTP, thus it needs to be implemented at the application level. 
+
+The workflow for basic authentication is like this: a form is used to send the credentials over a TLS-protected channel to a server-side application. The application then verifies the credentials, creates and sends back a session authenticator. The browser includes the authenticator in the next request, and later authentication is performed by checking this value. 
+
+\subsection{Cookie}
+\subsubsection{HTTP Cookie}
+An HTTP cookie is a small piece of data sent from or set by a website. It is stored on the user's computer by a web browser, and automatically sent with an HTTP request by the browser. It is designed as a reliable mechanism to help web applications keep state at the client side, and it is only accessible by the website that sets it. 
+
+A website can set multiple cookies for a client. The cookies are stored by the web browser in a cookie jar and organized by their domain name. Only cookies belonging to a domain are sent with requests to the same domain. 
+
+\subsubsection{Cookie Attribute}
+The Domain and Path attributes define the scope of the cookie. If the domain is not specified, the cookie is set as a host-only cookie (exception is Internet Explorer). If the path is specified, the cookie is then used only when requesting pages contained in the corresponding path. If the path is also not specified, then the path of the requested resource is used. 
+
+Also, in the cookie, the Expires and Max-Age attributes define the cookie's expiration. Expires sets the time when the browser should delete the cookie, whereas Max-Age defines the duration that the cookie can exist. If neither Max-Age nor Expires is set, the cookie is a session cookie. 
+
+The Secure attribute instructs the browser to use the cookie only via secure or encrypted connections, e.g., HTTPS. If the Set-Cookie response is not encrypted (e.g., using HTTP), the cookie will be sent in plaintext over the network, where attackers can intercept cookies and perform session hijacking. 
+
+The HttpOnly attribute directs browsers to not expose the cookie through channels other than HTTP requests, e.g., preventing JavaScript code from accessing the cookie. 
+
+\subsubsection{Access}
+From client-side access to cookies, they can:
+
+- read a cookie (\texttt{var cookies = document.cookie})
+
+Here only cookies in scope are returned. 
+
+- set a new cookie (\texttt{document.cookie = "name=value;expires=..."})
+
+This does not overwrite all existing cookies. 
+
+- delete a cookie (\texttt{document.cookie = "name=value;expires=PAST TIME;"})
+
+\subsubsection{Cookie Scope}
+Cookies are managed in a cookie jar per domain. The browser automatically attaches the cookies in scope with HTTP requests. The Domain and Path attributes let the browser decide which websites to send a particular cookie to. The scope of a cookie may not necessarily be the same as the URL of the website that sets it. 
+
+\subsection{Cookie SOP}
+Cookies use a different definition of origins, where the scope is based on scheme, domain, and port. 
+
+\subsubsection{Cookie Policy}
+A website might try to set cookies for another website. The browser then checks if the website is allowed to set a cookie. A valid domain can be any domain suffix of the hostname of the URL, except for the top-level domain (TLD). For example, for \texttt{a.abc.com}:
+
+- allowed: \texttt{.a.abc.com}, \texttt{.abc.com} 
+
+- disallowed: \texttt{.b.abc.com}, \texttt{.com} (TLD) 
+
+The path, however, can be set to anything. 
+
+The browser then decides which cookies to send when visiting a particular URL. It sends all cookies in the URL scope, i.e., the domain of a cookie is a suffix of the domain in the URL, the path of a cookie is a prefix of the path in the URL, and the protocol must be HTTPS if the cookie has the Secure attribute. 
+
+\subsubsection{Cookie vs. DOM}
+For cookies, \texttt{abc.com/x} does not receive cookies for \texttt{abc.com/y}. For DOM, \texttt{abc.com/x} can access the DOM of \texttt{abc.com/y}. However, using JavaScript, \texttt{abc.com/x} is able to see the cookies of \texttt{abc.com/y}. This is because JavaScript is not restricted by path in the same way as sending cookies, where using \texttt{document.cookie} can return all cookies for the current domain (except HttpOnly). 
+
+If an authentication cookie is set for \texttt{bank.com}, the browser can also send it to \texttt{https://www.bank.com/} and \texttt{http://www.bank.com}. In the latter case, this might lead to MITM attacks\footnote{There are two types of Man-In-The-Middle attacks. The active one is discussed in Chapter 3.5.4. For passive MITM, the attacker listens to events and steals cookies if they are sent in plaintext.}. This can be fixed by using the Secure attribute. 
+
+\subsubsection{Secure Attribute}
+All included JavaScript executes in the context of the embedding frame or page. Then, a script loaded from \texttt{xyz.com} into \texttt{bank.com} can access the cookies of \texttt{bank.com}. The cookies can then be leaked to \texttt{xyz.com} or arbitrary servers. This can be prevented by using the HttpOnly attribute. 
+
+\subsubsection{Bypassing SOP}
+As mentioned, a related-domain attacker can control the cookies on another domain. For example, \texttt{a.example.com} can set many cookies for \texttt{.example.com}. As the cookie jar may have a fixed storage limit, when a user visits \texttt{b.example.com}, the cookies set by the attacker are sent. This indirectly bypasses SOP because \texttt{a.example.com} can influence \texttt{b.example.com}. 
+
+\subsubsection{Session Fixation}
+Consider an attacker who obtains a session ID from a web server. Then a victim is tricked into visiting the website under the same session ID. The victim completes web authentication using the same session ID, and the attacker is then able to access the website as the victim. 
+
+\begin{remark}
+  In the initial step, this is possible if the application blindly accepts an existing session ID. 
+\end{remark}
+
+Therefore, session IDs should always be updated after login and never be inherited. Cross-site scripting can help initialize the session ID.  
+
+\subsection{Cross-Site Request Forgery}
+\subsubsection{Attacks}
+In Cross-Site Request Forgery (CSRF) attacks, a malicious server or JavaScript code tricks the user's browser into performing actions on another web application, for example posting a new message, deleting a record, or initiating a transfer. 
+
+To do this, the attacker also needs to trick the user at the right time. 
+
+\begin{verbatim}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page Title</title>
+  </head>
+  <body>
+    <h1>Welcome</h1>
+    <p>Welcome to Evil's page!</p>
+    <img src="welcome.jpg">
+    <img src="http://www.bank.com/transfer.php?amount=1000&recipient=evil">
+  </body>
+</html>
+\end{verbatim}
+
+In this example, the browser automatically sends a request to the URL with the corresponding cookies. 
+
+The workflow is as follows: the user visits \texttt{bank.com} and establishes a session, where the cookies are set. Then, when the user visits \texttt{evil.com}, a page containing a URL to the bank as above is returned. The forged request, including the user's cookies, is then sent to the bank, and the bank acts on the request as if it came from the client. 
+
+\subsubsection{Defense}
+To defend against such attacks, we avoid using GET methods when exporting functionality. However, one can use JavaScript to create a form to send a POST request. Therefore, we consider the following methods:
+
+\textbf{1. Referer Validation} 
+
+The Referer header field indicates which URL initiated the HTTP request. 
+
+However, Referer might leak privacy-sensitive information and is not always available. For example, during a transition from HTTPS to HTTP, the browser will strip this information. This is also customizable by users, and local machines or organizations can strip it. 
+
+Thus, when there is no Referer, we have:
+
+- default allow: less secure but more usable  
+- default deny: more secure but less usable  
+
+This must be implemented at the server side. 
+
+\textbf{2. Secret Token Validation} 
+
+The server tags each action for each user with a secret token. The token can be obtained only if the user has explicitly visited the right page for initiating that action. The malicious webpage would not contain the valid token. 
+
+Thus, the secret token needs to be difficult to predict, so it is not dependent on publicly known information, and it should be randomly generated. 
+
+For example, we have: \texttt{<input type="hidden" name="token" value="8x13..">}
+
+This also must be implemented at the server side.  
