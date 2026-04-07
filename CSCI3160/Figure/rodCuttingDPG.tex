@@ -1,0 +1,19 @@
+\documentclass[preview]{standalone}
+\usepackage{pgfplots}
+\begin{document}
+\begin{tikzpicture}[node distance={15mm}, main/.style = {draw, circle}]
+\tikzstyle{vertex}=[circle,draw=black,fill=white,minimum size=20pt, inner sep=0pt]
+\node[vertex] (1) at (0, 0) {\(1\)};
+\node[vertex] (2) at (2, 0) {\(2\)};
+\node[vertex] (3) at (4, 0) {\(3\)};
+\node[vertex] (4) at (6, 0) {\(4\)};
+\path[->]
+(1) edge (2)
+(1) edge[bend left] (3)
+(1) edge[bend left] (4)
+(2) edge (3)
+(2) edge[bend right] (4)
+(3) edge (4)
+;
+\end{tikzpicture}
+\end{document}
