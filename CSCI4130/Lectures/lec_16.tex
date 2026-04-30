@@ -1,0 +1,141 @@
+\section{Denial of Service}
+
+\subsection{Transport Layer Security and Secure Sockets Layer}
+Previously we showed that the TCP/IP suite provides no confidentiality, integrity, or authentication. Therefore, an attacker is able to eavesdrop, sniff, and hijack the communication. 
+
+To create an end-to-end secure communication channel, we consider Transport Layer Security (TLS) and Secure Sockets Layer (SSL). These are cryptographic protocols that provide end-to-end secure communication over a computer network. SSL is the deprecated predecessor of TLS. 
+
+TLS/SSL provides security for any TCP connection and is an added layer above TCP. For example, in an HTTPS connection, after TCP connection setup, data is sent using TLS, where the client and server agree on encryption methods. The server sends a certificate (public key), they securely derive a shared session key, and all data is then encrypted with that session key. 
+
+Here, the client verifies the certificate, and both the client and server compute a symmetric key for encryption.  
+
+However, limitations include: 
+
+- cost of public-key cryptography  
+
+Asymmetric encryption is expensive.  
+
+- cost of certificate deployment  
+
+Distributing and managing certificates across multiple servers.  
+
+- DoS amplification  
+
+The client can request the server to perform heavy computation.  
+
+- latency  
+
+There are additional round trips.  
+
+- trust issues  
+
+Invalid or misissued certificates may occur.  
+
+\subsection{Denial of Service Attacks}
+This is a class of attacks on availability that prevent users from using a certain computing service. There are two types of DoS attacks:  
+
+- \textbf{Program flaw}: supplying input that can crash the target application or system.  
+
+- \textbf{Resource exhaustion}: requesting a significant amount of computing resources, e.g., CPU, memory, disk, or network connections.  
+
+Defense against program flaws includes:  
+
+- careful programming  
+
+- thorough testing and review  
+
+- careful authentication and authorization  
+
+- least privilege principle  
+
+- consideration of other defense mechanisms  
+
+Defense against resource exhaustion includes:  
+
+- reliable authentication  
+
+- allocating quotas  
+
+- isolation  
+
+\subsection{Network DoS Attack}
+A network DoS attack aims to pull a target machine or service off the Internet. This can be done because the Internet lacks isolation between traffic from different users, allowing attackers to send a large amount of traffic to the target. 
+
+To successfully attack, the attacker needs at least the same sending bandwidth as the bandwidth of the bottleneck link of the target's connection, and a similar packet sending rate as the processing rate of the bottleneck router. 
+
+To acquire relatively high bandwidth, there are two main approaches:
+
+- distributed denial of service (DDoS) attacks  
+
+This involves controlling thousands of bots to send traffic. It is more difficult to defend against but also more costly.  
+
+- amplification  
+
+This uses a small amount of traffic that results in relatively large resource consumption, e.g., small requests with large replies.  
+
+Note that DoS attacks can occur at any layer.  
+
+\subsection{TCP SYN Flooding}
+An attacker can flood a target with a large number of forged TCP SYN requests without completing the TCP connection setup (half-open TCP connections). The attacker can spoof another victim's IP address since they do not need to send ACKs back.  
+
+As the target needs to maintain state for these half-open connections, it can only support a limited number of such connections. Once the limit is exceeded, no new TCP connections will be accepted.  
+
+To defend against TCP SYN flooding, we can:
+
+- \textbf{filtering}, i.e., detect IP spoofing  
+
+- use a shorter timeout for half-open connections  
+
+- recycle the oldest half-open connections  
+
+- limit the number of half-open connections from a specific source  
+
+- use SYN cookies  
+
+For SYN cookies, the server does not create half-open connections. Instead, it asks the client to return a valid cookie to complete the connection setup. The cookie is used to reconstruct the connection state (as the server's initial sequence number). The cookie is computed based on time, maximum segment size, and connection identifiers (ports and addresses), where:
+
+- \(T\): 5-bit timestamp counter  
+
+- \(M\): 3-bit maximum segment size  
+
+- \(S\): 24-bit hash of (SAddr, DAddr, SPort, DPort, \(T\))  
+
+\subsection{DNS DoS Attack}
+DNS runs on UDP port 53, and DNS replies are typically larger than requests. Therefore, an attacker can overwhelm a victim by spoofing a large number of DNS requests using the victim's IP address, amplifying traffic toward the victim. This is called a reflection attack.  
+
+An attacker can also bring down a DNS server by flooding it with DNS queries. One example is the Dyn attack, where attackers used Mirai botnets to make major websites inaccessible.  
+
+\subsection{Network DoS Mitigations}
+A fundamental design problem of the Internet is the lack of inbound traffic control, i.e., traffic can originate from any source since the Internet provides best-effort delivery.  
+
+To mitigate attacks, we can use the following techniques:
+
+\subsubsection{Ingress Filtering}
+IP allows spoofed requests. Ingress filtering ensures that packets actually originate from the networks they claim to come from. ISPs should drop IP datagrams with illegitimate source IP addresses, and upstream ISPs can drop packets from downstream customers.  
+
+A good neighbor policy relies on cooperation between ISPs, but not all ISPs have deployed it.  
+
+\subsubsection{Client Challenge}
+The server can refuse service to clients unless they have spent a reasonable amount of effort. This can be done using:
+
+- puzzles: require the client to solve a moderately hard problem, while verification remains efficient  
+
+- CAPTCHAs: require human users to solve problems difficult for computers  
+
+Limitations include the need for changes on both client and server sides, and negative impact on low-power legitimate clients.  
+
+\subsubsection{Source Identification}
+If attackers can still spoof requests, the target can attempt to detect the real source using traceback.  
+
+This traces anonymous packets back toward their source. To achieve this, routers need to be modified to mark packets with path information. It assumes that intermediary routers are mostly not compromised and that packets follow relatively stable paths.  
+
+In a simple traceback scheme, each router adds its link information to an IP datagram, which requires a large amount of space.  
+
+In a probabilistic version, since many attack packets follow the same paths, each datagram carries a fixed amount of link information, and routers probabilistically insert their link information into packets.  
+
+\subsection{Application DoS}
+Instead of exhausting network resources, attackers can send application-layer payloads to attack availability. This bypasses network-layer defenses and exhausts other types of resources.  
+
+Application-layer DoS attacks often have large amplification factors, e.g., TLS handshakes, PDF processing, and database queries.  
+
+To defend against such attacks, authentication and isolation should be implemented, often using distributed services.  
