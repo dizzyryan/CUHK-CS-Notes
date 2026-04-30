@@ -11,25 +11,15 @@ Here, the client verifies the certificate, and both the client and server comput
 
 However, limitations include: 
 
-- cost of public-key cryptography  
+- Cost of public-key cryptography: asymmetric encryption is expensive.  
 
-Asymmetric encryption is expensive.  
+- Cost of certificate deployment: distributing and managing certificates across multiple servers.  
 
-- cost of certificate deployment  
+- DoS amplification: the client can request the server to perform heavy computation.  
 
-Distributing and managing certificates across multiple servers.  
+- Latency: there are additional round trips.  
 
-- DoS amplification  
-
-The client can request the server to perform heavy computation.  
-
-- latency  
-
-There are additional round trips.  
-
-- trust issues  
-
-Invalid or misissued certificates may occur.  
+- Trust issues: invalid or misissued certificates may occur.  
 
 \subsection{Denial of Service Attacks}
 This is a class of attacks on availability that prevent users from using a certain computing service. There are two types of DoS attacks:  
@@ -65,13 +55,9 @@ To successfully attack, the attacker needs at least the same sending bandwidth a
 
 To acquire relatively high bandwidth, there are two main approaches:
 
-- distributed denial of service (DDoS) attacks  
+- Distributed Denial of Service (DDoS) attacks: this involves controlling thousands of bots to send traffic. It is more difficult to defend against but also more costly.  
 
-This involves controlling thousands of bots to send traffic. It is more difficult to defend against but also more costly.  
-
-- amplification  
-
-This uses a small amount of traffic that results in relatively large resource consumption, e.g., small requests with large replies.  
+- Amplification: this uses a small amount of traffic that results in relatively large resource consumption, e.g., small requests with large replies.  
 
 Note that DoS attacks can occur at any layer.  
 
