@@ -1,57 +1,89 @@
 \usepackage{listings}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
-\definecolor{maroon}{cmyk}{0, 0.87, 0.68, 0.32}
-\definecolor{halfgray}{gray}{0.55}
-\definecolor{ipython_frame}{RGB}{207, 207, 207}
-\definecolor{ipython_bg}{RGB}{247, 247, 247}
-\definecolor{ipython_red}{RGB}{186, 33, 33}
-\definecolor{ipython_green}{RGB}{0, 128, 0}
-\definecolor{ipython_cyan}{RGB}{64, 128, 128}
-\definecolor{ipython_purple}{RGB}{170, 34, 255}
 
-\colorlet{mygray}{black!30}
-\colorlet{mygreen}{green!60!blue}
-\colorlet{mymauve}{red!60!blue}
+% ── Color palette ────────────────────────────────────────────────
+\definecolor{lst@bg}{RGB}{250, 250, 252}
+\definecolor{lst@frame}{RGB}{180, 190, 210}
+\definecolor{lst@accent}{RGB}{70, 130, 180}       % SteelBlue accent bar
+\definecolor{lst@kw}{RGB}{0, 95, 160}             % keyword blue
+\definecolor{lst@kw2}{RGB}{130, 60, 160}           % builtin purple
+\definecolor{lst@str}{RGB}{175, 50, 40}            % string red-brown
+\definecolor{lst@cmt}{RGB}{90, 140, 120}           % comment teal
+\definecolor{lst@num}{RGB}{160, 165, 175}          % line-number gray
+\definecolor{lst@ident}{RGB}{40, 40, 50}           % identifier near-black
+\definecolor{lst@op}{RGB}{130, 60, 160}            % operator purple
+\definecolor{dos@bg}{RGB}{30, 30, 36}
+\definecolor{dos@fg}{RGB}{200, 210, 220}
+\definecolor{dos@accent}{RGB}{80, 200, 130}
+
+% ── Shared literate map (unicode support) ────────────────────────
+\def\lstliterateunicode{%
+	{á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+	{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+	{à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+	{À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+	{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+	{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+	{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+	{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+	{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+	{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+	{€}{{\EUR}}1 {£}{{\pounds}}1
+}
+
+% ── Global defaults ──────────────────────────────────────────────
+\lstset{
+	breaklines=true,
+	extendedchars=true,
+	basicstyle=\small\ttfamily\color{lst@ident},
+	backgroundcolor=\color{lst@bg},
+	rulecolor=\color{lst@frame},
+	frame=l,
+	framerule=2pt,
+	framesep=6pt,
+	xleftmargin=12pt,
+	tabsize=4,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	numbers=left,
+	numbersep=10pt,
+	numberstyle=\footnotesize\color{lst@num},
+	keywordstyle=\bfseries\color{lst@kw},
+	keywordstyle=[2]\color{lst@kw2},
+	commentstyle=\itshape\color{lst@cmt},
+	stringstyle=\color{lst@str},
+	identifierstyle=\color{lst@ident},
+	literate=\lstliterateunicode,
+	aboveskip=1em,
+	belowskip=0.8em,
+}
+
+% ── Command-line style ───────────────────────────────────────────
 \lstdefinelanguage{commandline}{
-	basicstyle=\ttfamily,
+	basicstyle=\small\ttfamily\color{lst@ident},
 	columns=fullflexible,
 	breakatwhitespace=false,
 	breaklines=true,
 	captionpos=b,
-	commentstyle=\color{mygreen},
+	commentstyle=\itshape\color{lst@cmt},
 	extendedchars=true,
-	frame=single,
+	frame=l,
+	framerule=2pt,
+	framesep=6pt,
+	xleftmargin=12pt,
 	keepspaces=true,
-	keywordstyle=\color{blue},
+	keywordstyle=\bfseries\color{lst@kw},
 	language=c++,
 	numbers=none,
-	numbersep=5pt,
-	numberstyle=\tiny\color{blue},
-	rulecolor=\color{mygray},
+	rulecolor=\color{lst@accent},
 	showspaces=false,
 	showtabs=false,
-	stepnumber=5,
-	stringstyle=\color{mymauve},
-	tabsize=3,
+	stringstyle=\color{lst@str},
+	tabsize=4,
+	backgroundcolor=\color{lst@bg},
 	title=\lstname
-}
-\lstset{
-breaklines=true,
-%
-extendedchars=true,
-literate=
-	{á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
-{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
-{à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
-{À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
-{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
-{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
-{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
-{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
-{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
-{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
-{€}{{\EUR}}1 {£}{{\pounds}}1
 }
 
 %%
@@ -86,54 +118,132 @@ morestring=[s]{u"""}{"""},%
 % *{-}{-}{1} will not replace in comments and so on
 literate=
 	{á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
-{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
-{à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
-{À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
-{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
-{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
-{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
-{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
-{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
-{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
-{€}{{\EUR}}1 {£}{{\pounds}}1
+	{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+	{à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+	{À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+	{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+	{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+	{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+	{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+	{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+	{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+	{€}{{\EUR}}1 {£}{{\pounds}}1
 %
-{^}{{{\color{ipython_purple}\^{}}}}1
-{=}{{{\color{ipython_purple}=}}}1
+	{^}{{{\color{lst@op}\^{}}}}1
+	{=}{{{\color{lst@op}=}}}1
 %
-{+}{{{\color{ipython_purple}+}}}1
-{*}{{{\color{ipython_purple}$^\ast$}}}1
-{/}{{{\color{ipython_purple}/}}}1
+	{+}{{{\color{lst@op}+}}}1
+	{*}{{{\color{lst@op}$^\ast$}}}1
+	{/}{{{\color{lst@op}/}}}1
 %
-{+=}{{{+=}}}1
-{-=}{{{-=}}}1
-{*=}{{{$^\ast$=}}}1
-{/=}{{{/=}}}1,
+	{+=}{{{+=}}}1
+	{-=}{{{-=}}}1
+	{*=}{{{$^\ast$=}}}1
+	{/=}{{{/=}}}1,
 literate=
-	*{-}{{{\color{ipython_purple}-}}}1
-{?}{{{\color{ipython_purple}?}}}1,
+	*{-}{{{\color{lst@op}-}}}1
+	{?}{{{\color{lst@op}?}}}1,
 %
-identifierstyle=\color{black}\ttfamily,
-commentstyle=\color{ipython_cyan}\ttfamily,
-stringstyle=\color{ipython_red}\ttfamily,
+identifierstyle=\color{lst@ident}\ttfamily,
+commentstyle=\itshape\color{lst@cmt}\ttfamily,
+stringstyle=\color{lst@str}\ttfamily,
 keepspaces=true,
 showspaces=false,
 showstringspaces=false,
 %
-rulecolor=\color{ipython_frame},
-frame=single,
-frameround={t}{t}{t}{t},
-framexleftmargin=6mm,
+rulecolor=\color{lst@accent},
+frame=l,
+framerule=2pt,
+framesep=6pt,
+xleftmargin=12pt,
 numbers=left,
-numberstyle=\tiny\color{halfgray},
+numbersep=10pt,
+numberstyle=\footnotesize\color{lst@num},
 %
-%
-backgroundcolor=\color{ipython_bg},
-%   extendedchars=true,
-basicstyle=\scriptsize,
-keywordstyle=\color{ipython_green}\ttfamily,
+backgroundcolor=\color{lst@bg},
+basicstyle=\small\ttfamily,
+keywordstyle=\bfseries\color{lst@kw}\ttfamily,
+keywordstyle=[2]\color{lst@kw2}\ttfamily,
 }
+
+% ── OCaml language definition ────────────────────────────────────
+\lstdefinelanguage{OCaml}{
+	morekeywords={and,as,assert,asr,begin,class,constraint,do,done,downto,else,end,exception,external,false,for,fun,function,functor,if,in,include,inherit,initializer,land,lazy,let,lor,lsl,lsr,lxor,match,method,mod,module,mutable,new,nonrec,object,of,open,or,private,rec,sig,struct,then,to,true,try,type,val,virtual,when,while,with},%
+	%
+	% Built-in types and modules
+	morekeywords=[2]{int,float,bool,char,string,unit,list,array,option,ref,exn,format,bytes,result,Either,Seq,Map,Set,Hashtbl,Buffer,Printf,Format,Scanf,Arg,Sys,Filename,Printexc,Lazy,Fun,Option,Result,List,Array,String,Bytes,Int,Float,Bool,Char,Unit,Queue,Stack},%
+	%
+	sensitive=true,%
+	morecomment=[n]{(*}{*)},%
+	morestring=[b]",%
+	morestring=[b]',%
+	%
+	literate=
+		{->}{{{\color{lst@op}\ensuremath{\rightarrow}}}}2
+		{<-}{{{\color{lst@op}\ensuremath{\leftarrow}}}}2
+		{|>}{{{\color{lst@op}|>}}}2
+		{@@}{{{\color{lst@op}@@}}}2
+		{||}{{{\color{lst@op}||}}}2
+		{&&}{{{\color{lst@op}\&\&}}}2
+		{<>}{{{\color{lst@op}<>}}}2
+		{!=}{{{\color{lst@op}!=}}}2
+		{>=}{{{\color{lst@op}\ensuremath{\geq}}}}2
+		{<=}{{{\color{lst@op}\ensuremath{\leq}}}}2
+		{::}{{{\color{lst@op}::}}}2
+		{;}{{{\color{lst@op};}}}1
+		{|}{{{\color{lst@op}|}}}1
+		{=}{{{\color{lst@op}=}}}1
+		{+}{{{\color{lst@op}+}}}1
+		{*}{{{\color{lst@op}*}}}1
+		{/}{{{\color{lst@op}/}}}1
+		{^}{{{\color{lst@op}\^{}}}}1
+		{@}{{{\color{lst@op}@}}}1
+		{~}{{{\color{lst@op}\~{}}}}1
+		{á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+		{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+		{à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+		{À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+		{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+		{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+		{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+		{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+		{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+		{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+		{€}{{\EUR}}1 {£}{{\pounds}}1,%
+	%
+	identifierstyle=\color{lst@ident}\ttfamily,
+	commentstyle=\itshape\color{lst@cmt}\ttfamily,
+	stringstyle=\color{lst@str}\ttfamily,
+	keywordstyle=\bfseries\color{lst@kw}\ttfamily,
+	keywordstyle=[2]\color{lst@kw2}\ttfamily,
+	basicstyle=\small\ttfamily,
+	backgroundcolor=\color{lst@bg},
+	rulecolor=\color{lst@accent},
+	frame=l,
+	framerule=2pt,
+	framesep=6pt,
+	xleftmargin=12pt,
+	numbers=left,
+	numbersep=10pt,
+	numberstyle=\footnotesize\color{lst@num},
+	keepspaces=true,
+	showspaces=false,
+	showstringspaces=false,
+	tabsize=2,
+}
+
+% ── DOS terminal style ──────────────────────────────────────────
 \lstdefinestyle{DOS}
 {
-	backgroundcolor=\color{black},
-	basicstyle=\scriptsize\color{white}\ttfamily
+	backgroundcolor=\color{dos@bg},
+	basicstyle=\small\ttfamily\color{dos@fg},
+	rulecolor=\color{dos@accent},
+	frame=l,
+	framerule=2pt,
+	framesep=6pt,
+	xleftmargin=12pt,
+	numbers=none,
+	keywordstyle=\bfseries\color{dos@accent},
+	commentstyle=\itshape\color{dos@fg!60},
+	stringstyle=\color{dos@fg!80},
 }
