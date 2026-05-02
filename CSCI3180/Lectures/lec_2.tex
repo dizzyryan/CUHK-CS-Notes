@@ -1,205 +1,192 @@
-\section{Formal Syntax Rules}
+\chapter{Formal Proof Systems}
 
-\subsection{Formal Language}
-A formal language \(L\) over an alphabet \(\Sigma\) is a subset of \(\Sigma^*\), which is the set of strings consisting of and making use of elements in \(\Sigma\). The empty string is denoted by \(\varepsilon\). 
-
-For example, a formal language \(L\) over \(\Sigma = \{1, 2\}\) is a subset of \(\Sigma^*\), e.g. \(L = \{\varepsilon, 1, 2, 11, 22, 111, 222\}\). 
-
-One way to manipulate strings is using a rewriting system, which consists of rules that map strings in a formal language to other strings in the language. For a language \(L\), we define a relation \(\to\) over strings in \(L\). For example, for \(L = \{1, 2, 11\}\), we may have \(\to = \{(1, 2), (2, 1), (1, 11), (11, 2)\}\). Then we can write \(1 \to 2\), \(2 \to 1\), \(1 \to 11\), and \(11 \to 2\). 
-
-We also have generative grammar, which is a kind of rewriting system over a language \((\Sigma \cup N)^*\), where
-
-- the alphabet is partitioned into two sets: a set of non-terminal symbols \(N\) and a set of terminal symbols \(\Sigma\),
-
-- there is a distinguished start symbol in \(N\),
-
-- rewrite rules are called \textit{production rules}; the left-hand side of each rule contains at least one non-terminal. 
-
-We can use generative grammars to define a language over the alphabet \(\Sigma\). The language defined is the set of strings of terminal symbols that we can generate by starting with the start symbol \(S\) and following the production rules. 
-
-\begin{eg}[Generative Grammar]
-Consider \(\Sigma \equiv \{a, b, c\}\).
-
-\textbf{Language ONE} with only two strings \(\{a, b\}\). 
-
-In this case, to generate a language over \(\Sigma\), we have \(N = \{S\}, \Sigma = \{a, b, c\}\) with grammar (production rules): 
+In the previous chapter we mentioned that we can prove the membership of a string in a language by giving a parse tree. For example, for a language Nat with start symbol \(N\) and terminals \(z, s, (,)\), we have
 \[
-\begin{aligned}
-  S \to a \\
-  S \to b
-\end{aligned}
+  N \Coloneqq z \mid s(N)
+\]
+and to prove \(s(s(z)) \in \textbf{Nat}\), we have
+\[
+  \begin{aligned}
+    N &\to s(N) \\
+    &\to s(s(N)) \\
+    &\to s(s(z)) \\
+  \end{aligned}
+\]
+Then, how do we perform reasoning in a completely syntactic way rather than semantic? We use a proof system. 
+
+\section{Proof Systems}
+Proof systems give us a way of performing reasoning in a completely syntactic way. A proof system has three components:
+
+1. a formal language \(L\) of statements,
+
+2. a set of inference rules (aka proof rules) that show how to prove statements. These typically have the following form, where the \textit{premises} have zero or more statements and the \textit{conclusion} is a single statement:
+\[
+  \dfrac{\textit{premises}}{\textit{conclusion}}
 \]
 
-\textbf{Language A-B} where no \(a\) follows any \(b\), e.g. \(\varepsilon, ab, aab, acb\). 
+3. a subset of the inference rules called \textit{axioms}, whose sets of premises are empty — we may omit the horizontal line when writing such rules.
 
-In this case, consider \(N = \{S, A, B, C\}, \Sigma = \{a, b, c\}\) with production rules: 
+\subsection{Propositional Logic}
+Statements of propositional logic range over a language consisting of propositional variables and connectives, where propositional variables represent propositions, which may either be true (\(\top\)) or false (\(\bot\)). 
+
+Consider the grammar for \textbf{propositional logic}:
 \[
-\begin{aligned}
-  S &\to CABC \\
-  C &\to \varepsilon \quad C \to cC \\
-  A &\to \varepsilon \quad A \to aCA \\
-  B &\to \varepsilon \quad B \to bCB \\
-\end{aligned}
+  \begin{aligned}
+    P &\Coloneqq A \mid P \overbrace{\circledcirc}^{\text{binary}} P \mid \overbrace{\neg}^{\text{not}} P \mid \overbrace{\top}^{\text{true}} \mid \overbrace{\bot}^{\text{false}} \\
+    \circledcirc &\Coloneqq \underbrace{\wedge}_{\text{and}} \mid \underbrace{\vee}_{\text{or}} \mid \underbrace{\Rightarrow}_{\text{implies}}
+  \end{aligned}
+\]
+Capital letters like \(A, B, C\) range over a set of propositional variables. For example, we can have \(A \Rightarrow A\), \(A \wedge B \Rightarrow A\), \(A \wedge B \vee C\), \(A \wedge B \Rightarrow A \vee B\). 
+
+While the semantics of a programming language is defined in terms of its abstract syntax (like ASTs) rather than concrete syntax, we typically write the concrete syntax in place of the abstract syntax and indicate the structure in the AST using parentheses when it is ambiguous. For example, we write \((A \vee B) \wedge C\) rather than \texttt{AND(OR(A, B), C)}. 
+
+To remove ambiguity, we assume:
+
+1. \(\wedge\) has precedence over \(\vee\) and \(\Rightarrow\), and \(\vee\) has precedence over \(\Rightarrow\), 
+
+2. \(\neg\) has precedence over all other connectives,
+
+3. all connectives other than \(\Rightarrow\) are left-associative,
+
+4. \(\Rightarrow\) is right-associative.
+
+Note that “has precedence over” means “binds more tightly”, e.g. \(A \wedge B \vee C\) is interpreted as \((A \wedge B) \vee C\). 
+
+As for associativity, for left-associative operators, the further to the left an operator is, the more tightly it binds, e.g. \(A \wedge B \wedge C \wedge D\) is treated as \(((A \wedge B) \wedge C) \wedge D\). 
+
+\subsection{Natural Deduction System}
+Again we consider propositional logic:
+\[
+  \begin{aligned}
+    S &\Coloneqq [P] \mid P \\
+    P &\Coloneqq A \mid P \circledcirc P \mid \neg P \mid \top \mid \bot \\
+    \circledcirc &\Coloneqq \wedge \mid \vee \mid \Rightarrow
+  \end{aligned}
+\]
+where \(P\) is a propositional statement, and \([P]\) is an assumption. Therefore, plain \(P\) is the conclusion, and \([P]\) is an assumption during the proof. 
+
+Here let \(P, Q, R\) be meta-variables ranging over arbitrary propositional formulas. For each logical connective, there are \textit{introduction} rules (which introduce the connective in the conclusion) and \textit{elimination} rules (which eliminate the connective from one of the premises in the conclusion). Then we have:
+
+- \textbf{Truth and Falsity}
+\[
+\text{(UNIT) } \dfrac{}{\top} \hspace{2cm} \text{(EX FALSO)} \dfrac{\bot}{P}
+\]
+For introduction, \(\top\) is always true. For elimination, if you have \(\bot\) (false / contradiction), you can conclude any proposition \(P\) (provable but not necessarily true).
+
+- \textbf{Negation} 
+\[
+  \text{(\(\neg\) INTRO) } \dfrac{\dfrac{\begin{array}{c}
+      [P] \\
+      \vdots
+    \end{array}}{\bot}}{\neg P} \hspace{2cm} \text{(\(\neg\) ELIM) } \dfrac{P \quad \neg P}{\bot}  
+\]
+For introduction, if assuming \(P\) leads to a contradiction, then you can conclude \(\neg P\). For elimination, if both \(P\) and \(\neg P\) exist, you get a contradiction.
+
+- \textbf{Conjunction} 
+\[
+  \text{(\(\wedge\) INTRO) } \dfrac{P \quad Q}{P \wedge Q} \hspace{2cm} \text{(\(\wedge\) ELIM 1) } \dfrac{P \wedge Q}{P} \hspace{2cm} \text{(\(\wedge\) ELIM 2) } \dfrac{P \wedge Q}{Q}
 \]
 
-\textbf{Language MATCH} where the number of \(a\)s and \(b\)s is the same.  
-
-In this case, consider \(N = \{S\}, \Sigma = \{a, b, c\}\) with production rules: 
+- \textbf{Disjunction} 
 \[
-\begin{aligned}
-  S &\to \varepsilon \quad\quad S \to c \\
-  S &\to aSb \quad S \to bSa \\
-  S &\to SS
-\end{aligned}
+  \text{(\(\vee\) INTRO 1) } \dfrac{P}{P \vee Q} \hspace{2cm} \text{(\(\vee\) INTRO 2) } \dfrac{Q}{P \vee Q} \hspace{2cm} \text{(\(\vee\) ELIM) } \dfrac{P \vee Q \quad \dfrac{\begin{array}{c}
+      [P] \\
+      \vdots
+    \end{array}}{R} \quad \dfrac{\begin{array}{c}
+      [Q] \\
+      \vdots
+    \end{array}}{R}}{R}
 \]
 
-\begin{minipage}{0.49\textwidth}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.5\textwidth]{Figure/1.1.1_1.pdf}
-\end{figure}
-\end{minipage}
-\begin{minipage}{0.49\textwidth}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{Figure/1.1.1_2.pdf}
-\end{figure}
-\end{minipage}
+- \textbf{Implication} 
+\[
+  \text{(\(\Rightarrow\) INTRO) } \dfrac{\dfrac{\begin{array}{c}
+      [P] \\
+      \vdots
+    \end{array}}{Q}}{P \Rightarrow Q} \hspace{2cm} \text{(MODUS PONENS) } \dfrac{P \quad P \Rightarrow Q}{Q}
+\]
+
+- \textbf{Assumption} 
+\[
+  \dfrac{\begin{array}{c}
+    [P] \\
+    \vdots
+  \end{array}}{P}
+\]
+
+Then we can formalize an informal proof:
+
+\begin{eg}
+Consider
+\[
+  \textit{If \textcolor{red}{Alice likes tea} and \textcolor{blue}{Alice likes bread}, then \textcolor{red}{Alice likes tea}.} 
+\]
+So to prove \(\textcolor{red}{T} \wedge \textcolor{blue}{B} \Rightarrow \textcolor{red}{T}\), we consider
+\[
+  (\Rightarrow \text{INTRO})\ \dfrac{\dfrac{\dfrac{[\textcolor{red}{T} \wedge \textcolor{blue}{B}]}{\colorbox{black}{\textcolor{white}{?}}}}{\textcolor{red}{T}}}{\textcolor{red}{T} \wedge \textcolor{blue}{B} \Rightarrow \textcolor{red}{T}}
+\]
+using assumption, we have
+\[
+  (\text{ASSUMPTION})\ \dfrac{\dfrac{\dfrac{\dfrac{[\textcolor{red}{T} \wedge \textcolor{blue}{B}]}{\textcolor{red}{T} \wedge \textcolor{blue}{B}}}{\colorbox{black}{\textcolor{white}{?}}}}{\textcolor{red}{T}}}{\textcolor{red}{T} \wedge \textcolor{blue}{B} \Rightarrow \textcolor{red}{T}}
+\]
+using \(\wedge \text{ELIM 1}\), we have
+\[
+  (\wedge \text{ELIM 1})\ \dfrac{\dfrac{\dfrac{[\textcolor{red}{T} \wedge \textcolor{blue}{B}]}{\textcolor{red}{T} \wedge \textcolor{blue}{B}}}{\textcolor{red}{T}}}{\textcolor{red}{T} \wedge \textcolor{blue}{B} \Rightarrow \textcolor{red}{T}}
+\]
+This is a derivation tree (proof tree).
 \end{eg}
 
-\subsection{Context-Free Grammar (CFGs)}
-The above grammars are context-free grammars, where the left-hand side of each production rule consists of a single non-terminal. It is often specified using Backus-Naur Form (BNF), where
-
-- every production rule is written with \(\Coloneqq\) instead of \(\to\),
-
-- production rules with the same left-hand side are combined into a single rule, where different right-hand sides are separated with \(\vert\), e.g. Language BOOL of boolean formulas with 
-
-- conjunction (and) \(\wedge\) 
-
-- disjunction (or) \(\vee\) 
-
-- negation (not) \(\neg\) 
-\[
-  S \Coloneqq x \mid y \mid z \mid w \mid (S) \mid S \wedge S \mid S \vee S \mid \neg S
-\]
-
-\begin{eg}[BNF]
-  Consider a BNF grammar for \(\text{LUNCH}^-\).
-  \[
-  \begin{aligned}
-    S &\Coloneqq NP\ VP. \\
-    NP &\Coloneqq N \mid N\ PP \\
-    VP &\Coloneqq V \mid V\ NP \mid V\ PP \mid V\ NP\ PP \\
-    V &\Coloneqq \text{buys} \mid \text{eats}  \\
-    N &\Coloneqq \text{Alice} \mid \text{Bob} \mid \text{soup} \mid \text{salad} \mid \text{pizza} \\
-    PP &\Coloneqq \text{in a bowl} \mid \text{in a teacup} \mid \text{in a house} \\
-  \end{aligned}
-  \]
-  \begin{minipage}{0.5\textwidth}    
-  Then we can derive a derivation tree (parse tree):
-  \[
-  \begin{aligned}
-    S &\to \textcolor{red}{NP}\ VP. \\
-    &\to \textcolor{red}{N}\ VP. \\
-    &\to \text{Alice } \textcolor{red}{VP}. \\
-    &\to \text{Alice } \textcolor{red}{V}NP. \\
-    &\to \text{Alice eats } \textcolor{red}{NP}. \\
-    &\to \text{Alice eats } \textcolor{red}{N}. \\
-    &\to \text{Alice eats soup.} \\
-  \end{aligned}
-  \]
-  \end{minipage}
-  \begin{minipage}{0.5\textwidth}    
-  \begin{center}
-  \begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [S
-    [NP [N [\text{Alice}]]]
-    [VP
-        [V [\text{eats}]]
-        [NP [N [\text{soup}]]]
-    ]
-    [.]
-  ]
-  \end{forest}
-  \end{center}
-  \end{minipage}
-\end{eg}
-
-\begin{remark}
-  A parse tree acts as a proof that a string is in a language (membership). 
-\end{remark}
-
-\subsection{Ambiguity \& \textit{Dangling Else Problem}}
-A grammar is ambiguous if the same string has more than one parse tree, e.g.
-
-\begin{minipage}{0.5\textwidth}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [S
-    [NP [N [\text{Alice}]]]
-    [VP
-        [V [\text{eats}]]
-        [NP
-            [N [\text{noodles}]]
-            [PP [\text{in a teacup}]]
-        ]
-    ]
-    [.]
-  ]
-\end{forest}
-\end{minipage}
-\begin{minipage}{0.5\textwidth}
-\begin{forest}
-for tree={
-  math content,
-  s sep=20pt,
-  l sep=20pt
-}
-[S
-  [NP [N [\text{Alice}]]]
-  [VP
-      [V [\text{eats}]]
-      [NP [N [\text{noodles}]]]
-      [PP [\text{in a teacup}]]
-      ]
-  [.]
-]
-\end{forest}
-\end{minipage}
-
-Grammar serves an additional purpose, that is, it can be used to give structure to a string in a language. Semantics for the strings within a language are typically described with respect to this additional structure imposed on the string. Ambiguous grammar can thus lead to ambiguous meanings being assigned to strings. 
-
-For example, in the above examples, the left suggests that the noodles are in a teacup, whereas the right one suggests that Alice is located in a teacup. While one interpretation may be more likely than another and judgment can be based on semantics and background knowledge, the correct conclusion is not determined by the grammar alone. 
-
-This problem can manifest in the \textit{dangling else problem} in a programming language context. 
-
-Consider language IF with the following grammar:
+We can modify the form of statements to keep track of assumptions in a context \(\Gamma\), which is a comma-separated list of propositional logic statements \(P\) that we treat as assumptions, i.e.
 \[
 \begin{aligned}
-  S &\Coloneqq C \mid \text{ if } B \text{ then } S \mid \text{ if } B \text{ then } S \text{ else } S \\
-  B &\Coloneqq \text{ true } \mid \text{ false } \mid \dots \\ 
-  C &\Coloneqq \dots 
+  S &\Coloneqq \Gamma \vdash P \\
+  \Gamma &\Coloneqq \Gamma, P \mid \varnothing
 \end{aligned}
 \]
-
-To deal with ambiguity, we can
-
-1. change the grammar such that it is \textbf{not} ambiguous, i.e. same language with a different grammar.
-
-For example, for BOOL:
+Here \(\Gamma\) ranges over possible contexts (lists of assumptions). Then we have
 \[
-  S \Coloneqq x \mid y \mid z \mid w \mid (S) \mid S \wedge S \mid S \vee S \mid \neg S
+  \text{(ASSUMPTION)}\ \dfrac{}{\Gamma \vdash P}\ \text{if } P \text{ is in } \Gamma 
 \]
-we change to 
+\[
+\text{(UNIT) } \dfrac{}{\Gamma \vdash \top} \hspace{1cm} \text{(EX FALSO)} \dfrac{\Gamma \vdash \bot}{\Gamma \vdash P}\ \hspace{1cm} \text{(\(\neg\) INTRO) } \dfrac{\Gamma, P \vdash \bot}{\Gamma \vdash \neg P} \hspace{1cm} \text{(\(\neg\) ELIM) } \dfrac{\Gamma \vdash P \quad \Gamma \vdash \neg P}{\Gamma \vdash \bot}  
+\]
+\[
+  \text{(\(\wedge\) INTRO) } \dfrac{\Gamma \vdash P \quad \Gamma \vdash Q}{\Gamma \vdash P \wedge Q} \hspace{1cm} \text{(\(\wedge\) ELIM 1) } \dfrac{\Gamma \vdash P \wedge Q}{\Gamma \vdash P} \hspace{1cm} \text{(\(\wedge\) ELIM 2) } \dfrac{\Gamma \vdash P \wedge Q}{\Gamma \vdash Q}
+\]
+\[
+  \text{(\(\Rightarrow\) INTRO) } \dfrac{\Gamma, P \vdash Q}{\Gamma \vdash P \Rightarrow Q} \hspace{1cm} \text{(MODUS PONENS) } \dfrac{\Gamma \vdash P \quad \Gamma \vdash P \Rightarrow Q}{\Gamma \vdash Q}
+\]
+\[
+  \text{(\(\vee\) INTRO 1) } \dfrac{\Gamma \vdash P}{\Gamma \vdash P \vee Q} \hspace{1cm} \text{(\(\vee\) INTRO 2) } \dfrac{\Gamma \vdash Q}{\Gamma \vdash P \vee Q}
+\]
+\[
+  \text{(\(\vee\) ELIM) } \dfrac{\Gamma \vdash P \vee Q \quad \Gamma, P \vdash R \quad \Gamma, Q \vdash R}{\Gamma \vdash R}
+\]
+Note that the typical notation omits \(\varnothing\) when writing \(\Gamma\). For example, instead of writing \(\varnothing \vdash \top\), we write \(\vdash \top\).
+
+\section{From Grammars to Proof System}
+Recall language Nat with start symbol \(N\) and terminals \(z, s\):
+\[
+  N \Coloneqq z \mid s(N)
+\]
+where we have an equivalent set of inference rules:
+\[
+  \textsc{ZERO}\ \dfrac{}{z} \hspace{2cm} \textsc{SUCC}\ \dfrac{N}{s(N)}
+\]
+So to prove \(s(s(z)) \in \text{Nat}\), we consider 
+\[
+  \begin{aligned}
+    N &\to s(N) \\
+    &\to s(s(N)) \\
+    &\to s(s(z)) \\
+  \end{aligned}
+\]
+or
+\[
+  \dfrac{\dfrac{\dfrac{}{z}\ \textsc{(ZERO)}}{s(z)}\ \textsc{(SUCC)}}{s(s(z))} \textsc{(SUCC)}
+\]
+
+We can also convert production rules to inference rules with notation \(e : E\), i.e. \(e\) can be generated from \(E\). Again recall the language BOOL:
 \[
 \begin{aligned}
   S &\Coloneqq D \vee S \mid D \\
@@ -207,373 +194,50 @@ we change to
   C &\Coloneqq (S) \mid \neg C \mid x \mid y \mid z \mid w \\
 \end{aligned}
 \]
-
-2. change the syntax, i.e. a different language with a different grammar.
-
-For example, we change language IF to 
+We have 
 \[
-  S \Coloneqq C \mid \text{ if } B \text{ then } S \text{ end if } \mid \text{ if } B \text{ then } S \text{ else } S \text{ end if }
+  \text{(OR) } \dfrac{d:D \quad s:S}{d \vee s:S} \quad \dfrac{d:D}{d:S} \hspace{2cm} \text{(AND) } \dfrac{c:C \quad d:D}{c \wedge d:D} \quad \dfrac{c:C}{c:D}
+\]
+\[
+  \dfrac{s:S}{(s):C} \quad (x)\ \dfrac{}{x:C} \quad (y)\ \dfrac{}{y:C} \quad (z)\ \dfrac{}{z:C} \quad (w)\ \dfrac{}{w:C}
+\]
+Then we can:
+
+1. prove that the string can be generated by \(S\) using the proof rules,
+
+2. construct a tree by making a node for each important derivation step, where a node's first named descendant in the tree is its child. 
+
+For example, we can have:
+\[
+  \dfrac{\dfrac{\dfrac{}{x:C}\ (x)}{x:D}\quad\dfrac{\dfrac{\dfrac{}{y:C}\ (y)}{y:D}}{y:S}}{x \vee y : S} \textsc{(OR)}
 \]
 
-\section{Abstract syntax trees (ASTs)}
-Before, we have \(\mathsf{Interpreter}_{\mathcal{L}}\) for \(\mathcal{L}\) that takes a program in \(\mathcal{L}\) and produces a value. Typically, there is a frontend containing a \textit{parser} and a backend containing an \textit{evaluator}. The parser parses the input string according to a grammar and converts the input program into an intermediate representation called an abstract syntax tree (AST),
+\section{Predicate Logic}
+Instead of propositional variables, we have:
+
+- predicate symbols, which are applied to zero or more terms,
+
+- function symbols, which are applied to zero or more terms,
+
+- quantifiers \(\forall, \exists\), which are applied to variables.
+
+A term is either a variable or an \(n\)-ary function symbol applied to \(n\) terms, e.g.
 \[
-  \textsf{Parser}_{\mathcal{L}}: \mathcal{L} \to \text{AST}(\mathcal{L}) 
-\] 
-and the evaluator then evaluates the AST to a value,
-\[
-  \textsf{Evaluator}_{\text{AST}(\mathcal{L})} : \text{AST}(\mathcal{L}) \to \mathcal{V}
+  \forall x.\ 1 + x < 0 \quad\text{and}\quad \forall x.\ \forall y.\ \forall z.\ x > y \wedge y > z \Rightarrow x > z
 \]
-Then we have 
+Then for
 \[
-  \textsf{Interpreter}_{\mathcal{L}} = \textsf{Evaluator}_{\text{AST}(\mathcal{L})} \circ \textsf{Parser}_{\mathcal{L}} 
+  \textit{If \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{blue}{tea} and \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{Aquamarine}{bread}, then \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{blue}{tea}.}
 \]
-
-The AST representation abstracts a parse tree and keeps only the relevant syntactic information from the parse tree, in particular, a subset of the production rules applied to obtain the parse tree. 
-
-To make an AST:
-
-1. derive a parse tree annotated with (important) production rules applied,
-
-2. remove terminal nodes,
-
-3. remove nodes expanded by production rules we do not care about; on removal, parent the node's children to its parent,
-
-4. relabel non-terminal nodes with the annotated production rule names.
-
-For example, for \(x \wedge y \vee z\) with 
+we have 
 \[
-\begin{aligned}
-  S &\Coloneqq D \vee S \mid D \\
-  D &\Coloneqq C \wedge D \mid C \\
-  C &\Coloneqq (S) \mid \neg C \mid x \mid y \mid z \mid w \\
-\end{aligned}
+  \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{blue}{tea}) \wedge \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{Aquamarine}{bread}) \Rightarrow \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{blue}{tea})
+\]
+For 
+\[
+  \textit{If \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{blue}{tea} and \textcolor{blue}{tea} \textcolor{Aquamarine}{is in the bag}, then \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{PineGreen}{something} \textcolor{Aquamarine}{in the bag}.}
 \]
 we have
-
-\begin{minipage}{0.4\textwidth} 
-  \begin{forest} 
-    for tree={ 
-      math content, % Automatically wraps node text in $ $ 
-      s  sep=20pt, % Horizontal spacing 
-      l sep=20pt % Vertical spacing between levels 
-    } 
-    [S \text{ (OR)} 
-      [D \text{ (AND)} 
-        [C(x) [\textcolor{red}{x}]] 
-        [\textcolor{red}{\wedge}] 
-        [D 
-          [C(y) [\textcolor{red}{y}]]
-        ]
-      ] 
-      [\textcolor{red}{\vee}] 
-      [S 
-        [D 
-          [C(z) [\textcolor{red}{z}]]
-        ]
-      ] 
-    ] 
-  \end{forest}
-\end{minipage}
-\begin{minipage}{0.3\textwidth}
-  \begin{forest} 
-    for tree={ 
-      math content, % Automatically wraps node text in $ $ 
-      s  sep=20pt, % Horizontal spacing 
-      l sep=20pt % Vertical spacing between levels 
-    } 
-    [S \text{ (OR)} 
-      [D \text{ (AND)} 
-        [C(x)] 
-        [\textcolor{red}{D} [C(y)]] 
-      ] 
-      [\textcolor{red}{S} 
-        [\textcolor{red}{D} [C(z)]]
-      ] 
-    ] 
-  \end{forest} 
-\end{minipage} 
-\begin{minipage}{0.3\textwidth} 
-  \begin{forest} 
-    for tree={ 
-        math content, % Automatically wraps node text in $ $ 
-        s  sep=20pt, % Horizontal spacing 
-        l sep=20pt % Vertical spacing between levels 
-    } 
-    [S \text{ (OR)} 
-      [D \text{ (AND)} 
-        [C\ (x)] 
-        [C\ (y)] 
-      ] 
-      [C\ (z)] ] 
-  \end{forest} 
-\end{minipage}
-
-finally we have 
-\begin{center}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [\text{OR}
-    [\text{AND}
-      [x]
-      [y]
-    ]
-    [z]
-  ]
-\end{forest}
-\end{center}
-
-Notice that we have viewed ASTs as generic trees, but they are often trees with a specific structure, i.e. nodes with a certain label might always have a particular degree or children that have only certain kinds of labels. This structure can be captured by another grammar, where we introduce a production rule in the AST grammar for each production rule that we care about. For example, for the above BOOL, we might have the following grammar:
 \[
-  AST \Coloneqq OR(AST, AST) \mid AND(AST, AST) \mid NOT(AST) \mid x \mid y \mid z \mid w
+  \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{blue}{tea}) \wedge \textcolor{Aquamarine}{InBag}(\textcolor{blue}{tea}) \Rightarrow \exists \textcolor{PineGreen}{thing}.\ \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{PineGreen}{thing}) \wedge \textcolor{Aquamarine}{InBag}(\textcolor{PineGreen}{thing})
 \]
-
-This can be directly translated into an ADT, such as the following in OCaml:
-
-\begin{lstlisting}[language=OCaml]
-type bool_ast = Or of bool_ast * bool_ast
-  | And of bool_ast * bool_ast
-  | Not of bool_ast
-  | X
-  | Y
-  | Z
-  | W
-\end{lstlisting}
-
-The \texttt{bool\_ast} for \(x \wedge y \vee z\) is \texttt{Or(And(X,Y),Z)}.
-
-When implementing a parser, rather than generating a full parse tree and then an AST, we can generate the AST during parsing by applying the appropriate ADT constructor for a production rule. 
-
-\section{Beyond BNF and Meta-variables}
-Many programming languages use formal grammars to specify syntax, yet they do not directly use BNF. Instead, they use \textbf{extensions} or \textbf{variants} of BNF. 
-
-For example, in the language BOOL, we have 
-\[
-  Vars \cup \{\wedge, \vee, \neg, (,)\}
-\]
-and in the grammar each variable in \(Vars\) becomes a terminal in the production rules. To extend BOOL such that it allows more variables requires updating the BNF grammar with new production rules. However, when we want to allow infinitely many variable names, this becomes impossible as BNF grammars are finite. 
-
-We then use extensions of BNF which allow using additional notations outside of BNF, e.g. \textit{meta-variables}. For example, let \(BoolVars\) be an infinite set of variables and let \(v\) range over \(BoolVars\); then \(v\) is a stand-in for any element of \(BoolVars\). Then we can still construct parse trees using BNF-like grammars and derive ASTs for them as before. 
-
-For example, consider the BNF grammar:
-\[
-\begin{aligned}
-  S &\Coloneqq Z \mid Z + S \\
-  Z &\Coloneqq -N \mid N \\
-  N &\Coloneqq DN \mid D \\
-  D &\Coloneqq 0 \mid 1 \mid 2 \mid 3 \mid 4 \mid 5 \mid 6 \mid 7 \mid 8 \mid 9
-\end{aligned}
-\]
-We typically write this as:
-
-For \(z\) ranging over integers: 
-\[
-  S \Coloneqq z \mid z + S
-\]
-Here \(z\) is an integer, which is a semantic constraint, and this form of grammar is technically an extension of BNF. 
-
-For example, we have a parse tree and AST for \(1 + 2 + 3\) as: 
-
-\begin{minipage}{0.5\textwidth}
-\begin{center}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [S (S \to 1 + S)
-    [1]
-    [+]
-    [S (S \to 2 + S)
-      [2]
-      [+]
-      [S (S \to 3)
-        [3]
-      ]
-    ]
-  ]
-\end{forest}
-\end{center}
-\end{minipage}
-\begin{minipage}{0.5\textwidth}
-\begin{center}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [1+
-    [2+ 
-      [3]
-    ]
-  ]
-\end{forest}
-\end{center}
-\end{minipage}
-
-However, consider tracking chosen \(z\) values, treating \(z\) as if generated by an infinite set of production rules:
-\[
-  z \in Z \Coloneqq \dots \mid -1 \mid 0 \mid 1 \mid \dots 
-\]
-Then we have 
-
-\begin{minipage}{0.5\textwidth}
-\begin{center}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [S (S \to z + S)
-    [\text{choose } 1 [1]]
-    [+]
-    [S (S \to z + S)
-      [\text{choose } 2 [2]]
-      [+]
-      [S (S \to z)
-        [\text{choose } 3 [3]]
-      ]
-    ]
-  ]
-\end{forest}
-\end{center}
-\end{minipage}
-\begin{minipage}{0.5\textwidth}
-\begin{center}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [+
-    [1]
-    [+
-      [2] 
-      [3]
-    ]
-  ]
-\end{forest}
-\end{center}
-\end{minipage}
-
-Note that an AST is an abstraction of the original parse tree that retains semantically meaningful parts. Choices of meta-variables are usually important. 
-
-For the above example, there is another grammar that generates the same language, i.e.
-\[
-  S^{\prime} \Coloneqq z \mid S^{\prime} + S^{\prime} 
-\]
-For example, we have
-
-\begin{minipage}{0.5\textwidth}
-\begin{center}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [S \textcolor{red}{(S \to z + S)}
-    [\text{choose } 1 [1]]
-    [+]
-    [S \textcolor{red}{(S \to z + S)}
-      [\text{choose } 2 [2]]
-      [+]
-      [S \textcolor{gray}{(S \to z)}
-        [\text{choose } 3 [3]]
-      ]
-    ]
-  ]
-\end{forest}
-\end{center}
-\end{minipage}
-\begin{minipage}{0.5\textwidth}
-\begin{center}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [S^{\prime} \textcolor{red}{(S^{\prime} \to S^{\prime} + S^{\prime})}
-    [S^{\prime} \textcolor{gray}{(S^{\prime} \to z)} [\text{choose } 1 [1]]]
-    [+]
-    [S^{\prime} \textcolor{red}{(S^{\prime} \to S^{\prime} + S^{\prime})}
-      [S^{\prime} \textcolor{gray}{(S^{\prime} \to z)} [\text{choose } 2 [2]]]
-      [+]
-      [S^{\prime} \textcolor{gray}{(S^{\prime} \to z)} [\text{choose } 3 [3]]]
-    ]
-  ]
-\end{forest}
-\end{center}
-\end{minipage}
-
-which give the same AST. 
-
-So consider \(S^{\prime} \Coloneqq z \mid S^{\prime} + S^{\prime}\). If \(+\) is left-associative, then the left-most \(+\) will bind most tightly. We then expect this \(+\) to be closest to the leaves in the AST, and the left operation is evaluated first.
-
-\begin{minipage}{0.5\textwidth}
-\begin{center}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [+
-    [+ 
-      [1]
-      [2]
-    ]
-    [3]
-  ]
-\end{forest}
-\captionof{figure}{Left Associative}
-\end{center}
-\end{minipage}
-\begin{minipage}{0.5\textwidth}
-\begin{center}
-\begin{forest}
-  for tree={
-    math content,
-    s sep=20pt,
-    l sep=20pt
-  }
-  [+
-    [1]
-    [+
-      [2] 
-      [3]
-    ]
-  ]
-\end{forest}
-\captionof{figure}{Right Associative}
-\end{center}
-\end{minipage}
-
-To further reduce ambiguity, we can add a meta-variable \(a\) that ranges over strings generated by the grammar \(S^{\prime} \Coloneqq z \mid S^{\prime} + S^{\prime}\), i.e.
-\[
-  a \in S^{\prime} \Coloneqq z \mid a_1 + a_2
-\]
-where \(+\) is right-associative (by declaring the type of associativity to reduce ambiguity). 
-
-Then consider BOOL again. We can use meta-variables and BNF-like syntax to allow variable names to be anything in the possibly infinite set \(BoolVars\), e.g.
-\[
-  S \Coloneqq v \mid (S) \mid S \wedge S \mid S \vee S \mid \neg S
-\]
-and to remove ambiguity, we can specify the \textit{precedence} and \textit{associativity} of \(\wedge, \vee, \neg\). 
-
-The OCaml ADT for the structure of the ASTs for \(\textsc{BOOL}^+\) could be something like 
-\begin{lstlisting}[language=OCaml]
-type bool_ext_ast = Or of bool_ext_ast * bool_ext_ast
-  | And of bool_ext_ast * bool_ext_ast
-  | Not of bool_ext_ast
-  | Var of string
-\end{lstlisting}
