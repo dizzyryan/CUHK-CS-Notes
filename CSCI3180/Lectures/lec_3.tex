@@ -1,0 +1,243 @@
+\chapter{Formal Proof Systems}
+
+In the previous chapter we mentioned that we can prove the membership of a string in a language by giving a parse tree. For example, for a language Nat with start symbol \(N\) and terminals \(z, s, (,)\), we have
+\[
+  N \Coloneqq z \mid s(N)
+\]
+and to prove \(s(s(z)) \in \textbf{Nat}\), we have
+\[
+  \begin{aligned}
+    N &\to s(N) \\
+    &\to s(s(N)) \\
+    &\to s(s(z)) \\
+  \end{aligned}
+\]
+Then, how do we perform reasoning in a completely syntactic way rather than semantic? We use a proof system. 
+
+\section{Proof Systems}
+Proof systems give us a way of performing reasoning in a completely syntactic way. A proof system has three components:
+
+1. a formal language \(L\) of statements,
+
+2. a set of inference rules (aka proof rules) that show how to prove statements. These typically have the following form, where the \textit{premises} have zero or more statements and the \textit{conclusion} is a single statement:
+\[
+  \dfrac{\textit{premises}}{\textit{conclusion}}
+\]
+
+3. a subset of the inference rules called \textit{axioms}, whose sets of premises are empty — we may omit the horizontal line when writing such rules.
+
+\subsection{Propositional Logic}
+Statements of propositional logic range over a language consisting of propositional variables and connectives, where propositional variables represent propositions, which may either be true (\(\top\)) or false (\(\bot\)). 
+
+Consider the grammar for \textbf{propositional logic}:
+\[
+  \begin{aligned}
+    P &\Coloneqq A \mid P \overbrace{\circledcirc}^{\text{binary}} P \mid \overbrace{\neg}^{\text{not}} P \mid \overbrace{\top}^{\text{true}} \mid \overbrace{\bot}^{\text{false}} \\
+    \circledcirc &\Coloneqq \underbrace{\wedge}_{\text{and}} \mid \underbrace{\vee}_{\text{or}} \mid \underbrace{\Rightarrow}_{\text{implies}}
+  \end{aligned}
+\]
+Capital letters like \(A, B, C\) range over a set of propositional variables. For example, we can have \(A \Rightarrow A\), \(A \wedge B \Rightarrow A\), \(A \wedge B \vee C\), \(A \wedge B \Rightarrow A \vee B\). 
+
+While the semantics of a programming language is defined in terms of its abstract syntax (like ASTs) rather than concrete syntax, we typically write the concrete syntax in place of the abstract syntax and indicate the structure in the AST using parentheses when it is ambiguous. For example, we write \((A \vee B) \wedge C\) rather than \texttt{AND(OR(A, B), C)}. 
+
+To remove ambiguity, we assume:
+
+1. \(\wedge\) has precedence over \(\vee\) and \(\Rightarrow\), and \(\vee\) has precedence over \(\Rightarrow\), 
+
+2. \(\neg\) has precedence over all other connectives,
+
+3. all connectives other than \(\Rightarrow\) are left-associative,
+
+4. \(\Rightarrow\) is right-associative.
+
+Note that “has precedence over” means “binds more tightly”, e.g. \(A \wedge B \vee C\) is interpreted as \((A \wedge B) \vee C\). 
+
+As for associativity, for left-associative operators, the further to the left an operator is, the more tightly it binds, e.g. \(A \wedge B \wedge C \wedge D\) is treated as \(((A \wedge B) \wedge C) \wedge D\). 
+
+\subsection{Natural Deduction System}
+Again we consider propositional logic:
+\[
+  \begin{aligned}
+    S &\Coloneqq [P] \mid P \\
+    P &\Coloneqq A \mid P \circledcirc P \mid \neg P \mid \top \mid \bot \\
+    \circledcirc &\Coloneqq \wedge \mid \vee \mid \Rightarrow
+  \end{aligned}
+\]
+where \(P\) is a propositional statement, and \([P]\) is an assumption. Therefore, plain \(P\) is the conclusion, and \([P]\) is an assumption during the proof. 
+
+Here let \(P, Q, R\) be meta-variables ranging over arbitrary propositional formulas. For each logical connective, there are \textit{introduction} rules (which introduce the connective in the conclusion) and \textit{elimination} rules (which eliminate the connective from one of the premises in the conclusion). Then we have:
+
+- \textbf{Truth and Falsity}
+\[
+\text{(UNIT) } \dfrac{}{\top} \hspace{2cm} \text{(EX FALSO)} \dfrac{\bot}{P}
+\]
+For introduction, \(\top\) is always true. For elimination, if you have \(\bot\) (false / contradiction), you can conclude any proposition \(P\) (provable but not necessarily true).
+
+- \textbf{Negation} 
+\[
+  \text{(\(\neg\) INTRO) } \dfrac{\dfrac{\begin{array}{c}
+      [P] \\
+      \vdots
+    \end{array}}{\bot}}{\neg P} \hspace{2cm} \text{(\(\neg\) ELIM) } \dfrac{P \quad \neg P}{\bot}  
+\]
+For introduction, if assuming \(P\) leads to a contradiction, then you can conclude \(\neg P\). For elimination, if both \(P\) and \(\neg P\) exist, you get a contradiction.
+
+- \textbf{Conjunction} 
+\[
+  \text{(\(\wedge\) INTRO) } \dfrac{P \quad Q}{P \wedge Q} \hspace{2cm} \text{(\(\wedge\) ELIM 1) } \dfrac{P \wedge Q}{P} \hspace{2cm} \text{(\(\wedge\) ELIM 2) } \dfrac{P \wedge Q}{Q}
+\]
+
+- \textbf{Disjunction} 
+\[
+  \text{(\(\vee\) INTRO 1) } \dfrac{P}{P \vee Q} \hspace{2cm} \text{(\(\vee\) INTRO 2) } \dfrac{Q}{P \vee Q} \hspace{2cm} \text{(\(\vee\) ELIM) } \dfrac{P \vee Q \quad \dfrac{\begin{array}{c}
+      [P] \\
+      \vdots
+    \end{array}}{R} \quad \dfrac{\begin{array}{c}
+      [Q] \\
+      \vdots
+    \end{array}}{R}}{R}
+\]
+
+- \textbf{Implication} 
+\[
+  \text{(\(\Rightarrow\) INTRO) } \dfrac{\dfrac{\begin{array}{c}
+      [P] \\
+      \vdots
+    \end{array}}{Q}}{P \Rightarrow Q} \hspace{2cm} \text{(MODUS PONENS) } \dfrac{P \quad P \Rightarrow Q}{Q}
+\]
+
+- \textbf{Assumption} 
+\[
+  \dfrac{\begin{array}{c}
+    [P] \\
+    \vdots
+  \end{array}}{P}
+\]
+
+Then we can formalize an informal proof:
+
+\begin{eg}
+Consider
+\[
+  \textit{If \textcolor{red}{Alice likes tea} and \textcolor{blue}{Alice likes bread}, then \textcolor{red}{Alice likes tea}.} 
+\]
+So to prove \(\textcolor{red}{T} \wedge \textcolor{blue}{B} \Rightarrow \textcolor{red}{T}\), we consider
+\[
+  (\Rightarrow \text{INTRO})\ \dfrac{\dfrac{\dfrac{[\textcolor{red}{T} \wedge \textcolor{blue}{B}]}{\colorbox{black}{\textcolor{white}{?}}}}{\textcolor{red}{T}}}{\textcolor{red}{T} \wedge \textcolor{blue}{B} \Rightarrow \textcolor{red}{T}}
+\]
+using assumption, we have
+\[
+  (\text{ASSUMPTION})\ \dfrac{\dfrac{\dfrac{\dfrac{[\textcolor{red}{T} \wedge \textcolor{blue}{B}]}{\textcolor{red}{T} \wedge \textcolor{blue}{B}}}{\colorbox{black}{\textcolor{white}{?}}}}{\textcolor{red}{T}}}{\textcolor{red}{T} \wedge \textcolor{blue}{B} \Rightarrow \textcolor{red}{T}}
+\]
+using \(\wedge \text{ELIM 1}\), we have
+\[
+  (\wedge \text{ELIM 1})\ \dfrac{\dfrac{\dfrac{[\textcolor{red}{T} \wedge \textcolor{blue}{B}]}{\textcolor{red}{T} \wedge \textcolor{blue}{B}}}{\textcolor{red}{T}}}{\textcolor{red}{T} \wedge \textcolor{blue}{B} \Rightarrow \textcolor{red}{T}}
+\]
+This is a derivation tree (proof tree).
+\end{eg}
+
+We can modify the form of statements to keep track of assumptions in a context \(\Gamma\), which is a comma-separated list of propositional logic statements \(P\) that we treat as assumptions, i.e.
+\[
+\begin{aligned}
+  S &\Coloneqq \Gamma \vdash P \\
+  \Gamma &\Coloneqq \Gamma, P \mid \varnothing
+\end{aligned}
+\]
+Here \(\Gamma\) ranges over possible contexts (lists of assumptions). Then we have
+\[
+  \text{(ASSUMPTION)}\ \dfrac{}{\Gamma \vdash P}\ \text{if } P \text{ is in } \Gamma 
+\]
+\[
+\text{(UNIT) } \dfrac{}{\Gamma \vdash \top} \hspace{1cm} \text{(EX FALSO)} \dfrac{\Gamma \vdash \bot}{\Gamma \vdash P}\ \hspace{1cm} \text{(\(\neg\) INTRO) } \dfrac{\Gamma, P \vdash \bot}{\Gamma \vdash \neg P} \hspace{1cm} \text{(\(\neg\) ELIM) } \dfrac{\Gamma \vdash P \quad \Gamma \vdash \neg P}{\Gamma \vdash \bot}  
+\]
+\[
+  \text{(\(\wedge\) INTRO) } \dfrac{\Gamma \vdash P \quad \Gamma \vdash Q}{\Gamma \vdash P \wedge Q} \hspace{1cm} \text{(\(\wedge\) ELIM 1) } \dfrac{\Gamma \vdash P \wedge Q}{\Gamma \vdash P} \hspace{1cm} \text{(\(\wedge\) ELIM 2) } \dfrac{\Gamma \vdash P \wedge Q}{\Gamma \vdash Q}
+\]
+\[
+  \text{(\(\Rightarrow\) INTRO) } \dfrac{\Gamma, P \vdash Q}{\Gamma \vdash P \Rightarrow Q} \hspace{1cm} \text{(MODUS PONENS) } \dfrac{\Gamma \vdash P \quad \Gamma \vdash P \Rightarrow Q}{\Gamma \vdash Q}
+\]
+\[
+  \text{(\(\vee\) INTRO 1) } \dfrac{\Gamma \vdash P}{\Gamma \vdash P \vee Q} \hspace{1cm} \text{(\(\vee\) INTRO 2) } \dfrac{\Gamma \vdash Q}{\Gamma \vdash P \vee Q}
+\]
+\[
+  \text{(\(\vee\) ELIM) } \dfrac{\Gamma \vdash P \vee Q \quad \Gamma, P \vdash R \quad \Gamma, Q \vdash R}{\Gamma \vdash R}
+\]
+Note that the typical notation omits \(\varnothing\) when writing \(\Gamma\). For example, instead of writing \(\varnothing \vdash \top\), we write \(\vdash \top\).
+
+\section{From Grammars to Proof System}
+Recall language Nat with start symbol \(N\) and terminals \(z, s\):
+\[
+  N \Coloneqq z \mid s(N)
+\]
+where we have an equivalent set of inference rules:
+\[
+  \textsc{ZERO}\ \dfrac{}{z} \hspace{2cm} \textsc{SUCC}\ \dfrac{N}{s(N)}
+\]
+So to prove \(s(s(z)) \in \text{Nat}\), we consider 
+\[
+  \begin{aligned}
+    N &\to s(N) \\
+    &\to s(s(N)) \\
+    &\to s(s(z)) \\
+  \end{aligned}
+\]
+or
+\[
+  \dfrac{\dfrac{\dfrac{}{z}\ \textsc{(ZERO)}}{s(z)}\ \textsc{(SUCC)}}{s(s(z))} \textsc{(SUCC)}
+\]
+
+We can also convert production rules to inference rules with notation \(e : E\), i.e. \(e\) can be generated from \(E\). Again recall the language BOOL:
+\[
+\begin{aligned}
+  S &\Coloneqq D \vee S \mid D \\
+  D &\Coloneqq C \wedge D \mid C \\
+  C &\Coloneqq (S) \mid \neg C \mid x \mid y \mid z \mid w \\
+\end{aligned}
+\]
+We have 
+\[
+  \text{(OR) } \dfrac{d:D \quad s:S}{d \vee s:S} \quad \dfrac{d:D}{d:S} \hspace{2cm} \text{(AND) } \dfrac{c:C \quad d:D}{c \wedge d:D} \quad \dfrac{c:C}{c:D}
+\]
+\[
+  \dfrac{s:S}{(s):C} \quad (x)\ \dfrac{}{x:C} \quad (y)\ \dfrac{}{y:C} \quad (z)\ \dfrac{}{z:C} \quad (w)\ \dfrac{}{w:C}
+\]
+Then we can:
+
+1. prove that the string can be generated by \(S\) using the proof rules,
+
+2. construct a tree by making a node for each important derivation step, where a node's first named descendant in the tree is its child. 
+
+For example, we can have:
+\[
+  \dfrac{\dfrac{\dfrac{}{x:C}\ (x)}{x:D}\quad\dfrac{\dfrac{\dfrac{}{y:C}\ (y)}{y:D}}{y:S}}{x \vee y : S} \textsc{(OR)}
+\]
+
+\section{Predicate Logic}
+Instead of propositional variables, we have:
+
+- predicate symbols, which are applied to zero or more terms,
+
+- function symbols, which are applied to zero or more terms,
+
+- quantifiers \(\forall, \exists\), which are applied to variables.
+
+A term is either a variable or an \(n\)-ary function symbol applied to \(n\) terms, e.g.
+\[
+  \forall x.\ 1 + x < 0 \quad\text{and}\quad \forall x.\ \forall y.\ \forall z.\ x > y \wedge y > z \Rightarrow x > z
+\]
+Then for
+\[
+  \textit{If \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{blue}{tea} and \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{Aquamarine}{bread}, then \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{blue}{tea}.}
+\]
+we have 
+\[
+  \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{blue}{tea}) \wedge \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{Aquamarine}{bread}) \Rightarrow \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{blue}{tea})
+\]
+For 
+\[
+  \textit{If \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{blue}{tea} and \textcolor{blue}{tea} \textcolor{Aquamarine}{is in the bag}, then \textcolor{orange}{Alice} \textcolor{red}{likes} \textcolor{PineGreen}{something} \textcolor{Aquamarine}{in the bag}.}
+\]
+we have
+\[
+  \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{blue}{tea}) \wedge \textcolor{Aquamarine}{InBag}(\textcolor{blue}{tea}) \Rightarrow \exists \textcolor{PineGreen}{thing}.\ \textcolor{red}{Likes}(\textcolor{orange}{Alice}, \textcolor{PineGreen}{thing}) \wedge \textcolor{Aquamarine}{InBag}(\textcolor{PineGreen}{thing})
+\]
