@@ -570,7 +570,7 @@ Then consider BOOL again. We can use meta-variables and BNF-like syntax to allow
 \]
 and to remove ambiguity, we can specify the \textit{precedence} and \textit{associativity} of \(\wedge, \vee, \neg\). 
 
-The OCaml ADT for the structure of the ASTs for \(\textsc{BOOL}^+\) could be something like 
+The OCaml ADT for the structure of the ASTs for \(\text{BOOL}^+\) could be something like 
 \begin{lstlisting}[language=OCaml]
 type bool_ext_ast = Or of bool_ext_ast * bool_ext_ast
   | And of bool_ext_ast * bool_ext_ast

@@ -171,7 +171,7 @@ Recall language Nat with start symbol \(N\) and terminals \(z, s\):
 \]
 where we have an equivalent set of inference rules:
 \[
-  \textsc{ZERO}\ \dfrac{}{z} \hspace{2cm} \textsc{SUCC}\ \dfrac{N}{s(N)}
+  \text{ZERO}\ \dfrac{}{z} \hspace{2cm} \text{SUCC}\ \dfrac{N}{s(N)}
 \]
 So to prove \(s(s(z)) \in \text{Nat}\), we consider 
 \[
@@ -183,7 +183,7 @@ So to prove \(s(s(z)) \in \text{Nat}\), we consider
 \]
 or
 \[
-  \dfrac{\dfrac{\dfrac{}{z}\ \textsc{(ZERO)}}{s(z)}\ \textsc{(SUCC)}}{s(s(z))} \textsc{(SUCC)}
+  \dfrac{\dfrac{\dfrac{}{z}\ \text{(ZERO)}}{s(z)}\ \text{(SUCC)}}{s(s(z))} \text{(SUCC)}
 \]
 
 We can also convert production rules to inference rules with notation \(e : E\), i.e. \(e\) can be generated from \(E\). Again recall the language BOOL:
@@ -209,7 +209,7 @@ Then we can:
 
 For example, we can have:
 \[
-  \dfrac{\dfrac{\dfrac{}{x:C}\ (x)}{x:D}\quad\dfrac{\dfrac{\dfrac{}{y:C}\ (y)}{y:D}}{y:S}}{x \vee y : S} \textsc{(OR)}
+  \dfrac{\dfrac{\dfrac{}{x:C}\ (x)}{x:D}\quad\dfrac{\dfrac{\dfrac{}{y:C}\ (y)}{y:D}}{y:S}}{x \vee y : S} \text{(OR)}
 \]
 
 \section{Predicate Logic}
