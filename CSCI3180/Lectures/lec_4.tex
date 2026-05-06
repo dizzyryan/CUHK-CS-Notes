@@ -1,85 +1,173 @@
-\section{Operational Semantics}
+\section{SIMPL}
+SIMPL is the Simple IMPerative Language. This is an \textit{imperative} programming language, where programs are expressed in terms of sequences of commands or statements. It has common imperative control structures, such as while loops and if-statements. It also has \textit{locations} that hold integer or boolean values, which can be \textit{dereferenced} using the \(!\) operator. 
 
+The grammar of SIMPL is as below:
+\[
+\begin{aligned}
+  e \in \langle expr \rangle \Coloneqq &\ b \mid z \mid \mathbf{skip} \\
+  &\mid r \coloneqq e & \text{assignment} \\
+  &\mid !r & \text{dereference} \\
+  &\mid e_1; e_2 & \text{sequencing} \\
+  &\mid \mathbf{if}\ e_1\ \mathbf{then}\ e_2\ \mathbf{else}\ e_3 & \text{if statement} \\
+  &\mid \mathbf{while}\ e_1\ \mathbf{do}\ e_2 & \text{while loop} \\
+  &\mid e_1 \odot e_2 \\
+  \odot \in \langle op \rangle \Coloneqq &\ + \mid - \mid * \mid / \mid \le
+\end{aligned}
+\]
+Here \(r\) ranges over a set of allowed location names, \(b\) ranges over the set of Booleans \(\mathbb{B}\), and \(z\) ranges over the set of integers \(\mathbb{Z}\).
 
-% Part 3: Semantics Basics
-% 3. Introduction to Semantics
-% What is semantics vs syntax
-% Operational meaning of programs
-% AST-based interpretation
-% 4. Operational Semantics I: Small-Step
-% Reduction rules
-% Step-by-step evaluation
-% Evaluation contexts (if included)
-% 5. Evaluation Strategy \& Determinism
-% Evaluation order
-% Determinism vs non-determinism
-% Leftmost-innermost / other strategies
-% 6. Operational Semantics II: Big-Step
-% Direct evaluation rules
-% Relationship between small-step and big-step
-% Part 4: Program Structure \& Errors
-% 7. Syntactic Sugar \& Runtime Errors
-% Desugaring
-% “Programs that go wrong”
-% Undefined behavior / stuck states
-% Part 5: Functions \& Substitution
-% 8. Functions I: Basics
-% Function definition \& application
-% Binding concepts
-% 9. Scoping \& Substitution
-% Free vs bound variables
-% Substitution rules
-% 10. Capture-Avoiding Substitution
-% Alpha-renaming
-% Variable capture problem
-% 11. Function Semantics \& Evaluation Strategies
-% Call-by-value
-% Call-by-name
-% Call-by-need (if covered)
-% 12. Recursion
-% Recursive definitions
-% Fixed-point intuition (if introduced)
-% Part 6: Environment-Based Semantics
-% 13. Environment Semantics
-% Environment vs substitution model
-% Variable lookup
-% 14. Lexical vs Dynamic Scoping
-% Scope rules comparison
-% Closures intuition
-% 15. State: Aliasing, Globals, Locals
-% Mutable state
-% Aliasing problems
-% Side effects
-% Part 7: Formal Semantic Frameworks
-% 16. Denotational Semantics
-% Meaning as mathematical objects
-% Function-based interpretation
-% 17. Axiomatic Semantics
-% Hoare logic
-% Preconditions / postconditions
-% Part 8: Type Systems
-% 18. Introduction to Type Systems
-% Type safety intuition
-% Typing rules
-% 19. Typed Stores
-% Typing with memory/state
-% 20. Polymorphism
-% Parametric polymorphism
-% Type variables
-% 21. Data Types
-% Algebraic data types
-% Constructors \& pattern-like reasoning
-% 22. Subtyping
-% Subtype relations
-% Type hierarchy rules
-% 23. Nominal vs Structural Typing
-% Name-based vs structure-based typing
-% Part 9: Advanced Theory
-% 24. Curry–Howard Correspondence
-% Types as propositions
-% Programs as proofs
-% Part 10: Review
-% 25. Final Review
-% Full course recap
-% Mixed exercises
-% Proof + semantics + typing integration
+We remove ambiguity by making the following assumptions: 
+
+1. \(*\) and \(/\) have precedence over \(+\) and \(-\), so that \(e_1 + e_2 \diamond e_3\) is interpreted as \(e_1 + (e_2 \diamond e_3)\), where \(\diamond \in \{*, /\}\),
+
+2. operators \(+, -, *, /\) all bind more tightly than \(\le\),
+
+3. the sequencing operator \(;\) is right-associative and binds the least tightly,
+
+4. operators \(\odot\) are left-associative. 
+
+For SIMPL, we define the set of values that the program evaluates to by 
+\[
+  v \in \textit{Values} \Coloneqq z \mid b \mid \mathbf{skip} 
+\]
+
+\begin{eg}~
+
+Program 1:
+\begin{lstlisting}[language=OCaml]
+x := 3;
+y := 1;
+while 2 < !x do (y := !x * !y; x := !x - 1)
+\end{lstlisting}
+
+Program 2:
+\begin{lstlisting}[language=OCaml]
+x := 3;
+z := (y := 10; if !y <= !x then !x else !y);
+!z
+\end{lstlisting}
+
+Program 3:
+\begin{lstlisting}[language=OCaml]
+x := 1;
+while 0 <= !x do x := !x + 1
+\end{lstlisting}
+
+Program 4:
+\begin{lstlisting}[language=OCaml]
+x := 1;
+while !x do x := !x - 1
+\end{lstlisting}
+\end{eg}
+
+\section{Small-step Operational Semantics}
+Since programs describe computations, we can think of the meaning of a program as the computation it describes. This is essentially \textit{operational semantics}, where the meaning of programs is defined by describing how a program should be executed on an abstract machine. 
+
+This definition is given via a proof system in which rules' statements (judgments) describe the execution steps that the abstract machine can perform. If we can prove the steps can be taken, we can take them. 
+
+In small-step operational semantics, judgments describe a \textit{single} atomic computation step that the abstract machine can perform. Each step is called a \textit{reduction}. Evaluating a program is then performing reductions until a value is reached. 
+
+In SIMPL, the judgments in particular will involve reducing \textit{configurations}, which are pairs of a program and a program \textit{state} that keeps track of the context in which the program should be executed. For SIMPL we use a \textit{store}, which is a map from location names to the values stored in them. For example:
+\[
+  \{\texttt{var1} \mapsto 1, \texttt{var2} \mapsto 2\}
+\]
+where locations \texttt{var1} and \texttt{var2} store values 1 and 2 respectively. 
+
+This store is a \textit{mutable store} in which the values may change. 
+
+The operational semantics rules for SIMPL are as follows:
+\[
+  \text{(ASSIGN-BOOL) } (r \coloneqq b, s) \to (\mathbf{skip}, s[r \mapsto b]) \hspace{1cm} \text{(DEREF-BOOL) } (!r, s) \to (b, s) \text{ if } s[r] = b
+\]
+\[
+  \text{(ASSIGN-INT) } (r \coloneqq z, s) \to (\mathbf{skip}, s[r \mapsto z]) \hspace{1cm} \text{(DEREF-INT) } (!r, s) \to (z, s) \text{ if } s[r] = z
+\]
+\[
+  \text{(ASSIGN-EXPR) } \dfrac{(e, s) \to (e^{\prime}, s^{\prime})}{(r \coloneqq e, s) \to (r \coloneqq e^{\prime}, s^{\prime})}
+\]
+\[
+  \text{(SEQ-1) } (\mathbf{skip}; e, s) \to (e, s) \hspace{1cm} \text{(SEQ-2) } \dfrac{(e_1, s) \to (e_1^{\prime}, s^{\prime})}{(e_1; e_2, s) \to (e_1^{\prime}; e_2, s^{\prime})}
+\]
+\[
+  \text{(IF-TRUE) } (\mathbf{if}\ \text{true}\ \mathbf{then}\ e_2\ \mathbf{else}\ e_3, s) \to (e_2, s)
+\]
+\[
+  \text{(IF-FALSE) } (\mathbf{if}\ \text{false}\ \mathbf{then}\ e_2\ \mathbf{else}\ e_3, s) \to (e_3, s)
+\]
+\[
+  \text{(IF-EXPR) } \dfrac{(e_1, s) \to (e_1^{\prime}, s^{\prime})}{(\mathbf{if}\ e_1\ \mathbf{then}\ e_2\ \mathbf{else}\ e_3, s) \to (\mathbf{if}\ e_1^{\prime}\ \mathbf{then}\ e_2\ \mathbf{else}\ e_3, s^{\prime})}
+\]
+\[
+  \text{(WHILE) } (\mathbf{while}\ e_1\ \mathbf{do}\ e_2, s) \to (\mathbf{if}\ e_1\ \mathbf{then}\ (e_2; \mathbf{while}\ e_1\ \mathbf{do}\ e_2)\ \mathbf{else}\ \mathbf{skip}, s)
+\]
+\[
+  \text{(OP-1) } \dfrac{(e_1, s) \to (e_1^{\prime}, s^{\prime})}{(e_1 \odot e_2, s) \to (e_1^{\prime} \odot e_2, s^{\prime})} \hspace{1cm} 
+  \text{(OP-2) } \dfrac{(e_2, s) \to (e_2^{\prime}, s^{\prime})}{(v \odot e_2, s) \to (v \odot e_2^{\prime}, s^{\prime})}
+\]
+\[
+  \text{(LT) } (z_1 \le z_2, s) \to (b, s)\ \underbrace{\mathbf{if}\ b = (z_1 \le z_2)}_{\text{side condition}}
+\]
+Note that there are some side conditions that must hold for some rules above to be applicable. 
+
+Then we can use these rules to do evaluation. Considering Program 1:
+\begin{lstlisting}[language=OCaml]
+x := 3;
+y := 1;
+while 2 < !x do (y := !x * !y; x := !x - 1)
+\end{lstlisting}
+
+Here we use \(\Delta\) for \texttt{y := !x * !y; x := !x - 1} and \(\mathbf{W}\) for \texttt{while 2 <= !x do \(\Delta\)}. The initial configuration has the form \((e_1; e_2, \{\})\), where \(e_1\) is \texttt{x := 3} and \(e_2\) is \texttt{y := 1; \(\mathbf{W}\)}. 
+
+In order to take a step to the next configuration, we need to make sure that the step is derivable using the operational semantics. We can reason about the structure of the program and the rules in the semantics to see if a step can be taken. 
+
+So in order to take a step from an expression of this form, we need a rule whose left-hand side has the form \((e_1; e_2, s)\), where \(e_1\) is not \(\mathbf{skip}\):
+\[
+  \text{(SEQ-2) } \dfrac{(x := 3, \{\}) \to (e_1^{\prime}, s^{\prime})}{(x := 3; y := 1; \mathbf{W}, \{\}) \to (e_1^{\prime}; e_2, s^{\prime})}
+\]
+To derive this we need to derive its premise. We choose to apply ASSIGN-INT:
+\[
+  \text{(ASSIGN-INT) } (x \coloneqq 3, \{\}) \to (\mathbf{skip}, \{x \mapsto 3\})
+\]
+For ASSIGN-EXPR, we would need to take a step from \((3, s)\), but there is no rule for this judgment. Thus we have the full derivation tree:
+\[
+  \dfrac{\dfrac{}{(x := 3, \{\}) \to (\mathbf{skip}, \{x \mapsto 3\})} \text{ (ASSIGN-INT)}}{(x := 3; y := 1; \mathbf{W}, \{\}) \to (\mathbf{skip}; y \coloneqq 1; \mathbf{W}, \{x \mapsto 3\})} \text{ (SEQ-2)} 
+\]
+We have the full evaluation as follow:
+\[
+\begin{aligned}
+(x := 3; y := 1; \mathbf{W}, \{\}) &\to (\mathbf{skip}; y \coloneqq 1; \mathbf{W} &,\{x \mapsto 3\}) \\
+&\to (y \coloneqq 1; W &,\{x \mapsto 3\}) \\
+&\to (\mathbf{skip}; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{if}\ 2 < = !x\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{if}\ 2 < = 3\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{if}\ \text{true}\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\Delta; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (y := 3 * !y; x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (y := 3 * 1; x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (y := 3; x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{skip}; x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 3\}) \\
+&\to (x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 3\}) \\
+&\to (x := 3 - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 3\}) \\
+&\to (x := 2; \mathbf{W} &,\{x \mapsto 3, y \mapsto 3\}) \\
+&\to (\mathbf{skip}; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{if}\ 2 < = !x\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{if}\ 2 < = 2\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{if}\ \text{true}\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\Delta; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (y := 2 * !y; x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (y := 2 * 3; x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (y := 6; x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{skip}; x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 6\}) \\
+&\to (x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 6\}) \\
+&\to (x := 2 - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 6\}) \\
+&\to (x := 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 6\}) \\
+&\to (\mathbf{skip}; \mathbf{W} &,\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{W} &,\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{if}\ 2 < = !x\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{if}\ 2 < = 1\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{if}\ \text{false} \ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{skip} &,\{x \mapsto 1, y \mapsto 6\}) \\
+\end{aligned}
+\]
