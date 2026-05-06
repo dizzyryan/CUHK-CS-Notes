@@ -31,3 +31,107 @@ Then, rather than defining new rules in the operational semantics for these oper
   e_1\ \mathbf{and}\ e_2 \equiv \mathbf{if}\ e_1\ \mathbf{then}\ e_2\ \mathbf{else}\ \text{false}
 \]
 While we can write programs directly in the core language, SIMPL programs with the same functionality are easier to read and write, and \(\text{SIMPL}^+\) programs are even easier. Therefore, we can view syntax as a user interface that is implemented using the underlying semantics and syntactic sugar definitions.
+
+\section{More on Programs}
+Consider the set of programs in Section 3.2. 
+
+\begin{eg}~
+
+Program 3:
+\begin{lstlisting}[language=OCaml]
+x := 1;
+while 0 <= !x do x := !x + 1
+\end{lstlisting}
+
+Program 4:
+\begin{lstlisting}[language=OCaml]
+x := 1;
+while !x do x := !x - 1
+\end{lstlisting}
+\end{eg}
+
+\subsection{Divergence}
+Consider using small-step operational semantics for Program 3, where \(\diamond = \texttt{while 0 <= !x do x := !x + 1}\):
+\[
+\begin{aligned}
+(x \coloneqq 1; \diamond, \{\}) &\to (\mathbf{skip}; \diamond, &\{x \mapsto 1\}) \\
+&\to (\diamond, &\{x \mapsto 1\}) \\
+&\to (\mathbf{if}\ 0 <= !x\ \mathbf{then}\ x \coloneqq !x + 1; \diamond\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 1\}) \\
+&\to (\mathbf{if}\ 0 <= 1\ \mathbf{then}\ x \coloneqq !x + 1; \diamond\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 1\}) \\
+&\to (\mathbf{if}\ \text{true}\ \mathbf{then}\ x \coloneqq !x + 1; \diamond\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 1\}) \\
+&\to (x \coloneqq !x + 1; \diamond, &\{x \mapsto 1\}) \\
+&\to (x \coloneqq 1 + 1; \diamond, &\{x \mapsto 1\}) \\
+&\to (x \coloneqq 2; \diamond, &\{x \mapsto 1\}) \\
+&\to (\mathbf{skip}; \diamond, &\{x \mapsto 2\}) \\
+&\to (\diamond, &\{x \mapsto 2\}) \\
+&\to \dots \\
+\end{aligned}
+\]
+There is no finite sequence of reduction steps that leads to a value. In this case, we say the program \textit{diverges}.
+
+\subsection{Stuck}
+Consider again using small-step operational semantics for Program 4:
+\[
+\begin{aligned}
+&(x \coloneqq 1; \mathbf{while}\ !x\ \mathbf{do}\ x \coloneqq -1 + !x, \{\}) \\
+&\to (\mathbf{skip}; \mathbf{while}\ !x\ \mathbf{do}\ x \coloneqq -1 + !x, \{x \mapsto 1\}) \\
+&\to (\mathbf{while}\ !x\ \mathbf{do}\ x \coloneqq -1 + !x, \{x \mapsto 1\}) \\
+&\to (\mathbf{if}\ !x\ \mathbf{then}\ x \coloneqq -1 + !x; \mathbf{while}\ !x\ \mathbf{do}\ x \coloneqq -1 + !x, \{x \mapsto 1\}) \\
+&\to (\mathbf{if}\ 1\ \mathbf{then}\ x \coloneqq -1 + !x; \mathbf{while}\ !x\ \mathbf{do}\ x \coloneqq -1 + !x, \{x \mapsto 1\}) \\
+&\not\to
+\end{aligned}
+\]
+There is no step allowed by the operational semantics from the configuration 
+\[
+  (\mathbf{if}\ 1\ \mathbf{then}\ x \coloneqq -1 + !x; \mathbf{while}\ !x\ \mathbf{do}\ x \coloneqq -1 + !x, \{x \mapsto 1\}).
+\]
+For any configuration \(c\) that cannot take a step according to the operational semantics, we write \(c \not\to\). If \(c\) has not evaluated the program all the way to a value, then it is a stuck configuration. 
+
+This typically indicates that there is a bug in the program. Many languages treat Boolean values \texttt{true} and \texttt{false} as syntactic sugar for 1 and 0 and have rules like 
+\[
+  \text{(IF-TRUE) } (\mathbf{if}\ z\ \mathbf{then}\ e_1\ \mathbf{else}\ e_2, s) \to (e_1, s)\ \text{if}\ z \neq 0
+\]
+\[
+  \text{(IF-FALSE) } (\mathbf{if}\ 0\ \mathbf{then}\ e_1\ \mathbf{else}\ e_2, s) \to (e_2, s)
+\]
+However, notice that this treatment is not universal. Removing stuck configurations like this comes with cons including:
+
+1. this kind of removal is fairly arbitrary
+
+2. allowing more configurations to reduce in ways that are not intuitive can make it harder to debug and understand programs, since this increases the chance that programs fail silently. 
+
+Then, to deal with stuck-ness, we 
+
+1. let runtime deal with any issues and do nothing, then write better code. 
+
+2. make the language \textbf{less} expressive
+
+This can be done by trying to eliminate programs that lead to configurations that get stuck from the syntax of the programming language. For example, we can separate Boolean and arithmetic expressions to disallow expressions like ``1 + true''
+\[
+\begin{aligned}
+  e \in \langle expr \rangle \Coloneqq &\ \langle BoolExpr \rangle \mid \langle ArithExpr \rangle \mid \mathbf{skip} \\
+  &\mid r \coloneqq e & \text{assignment} \\
+  &\mid !r & \text{dereference} \\
+  &\mid e_1; e_2 & \text{sequencing} \\
+  &\mid \mathbf{if}\ e_1\ \mathbf{then}\ e_2\ \mathbf{else}\ e_3 & \text{if statement} \\
+  &\mid \mathbf{while}\ e_1\ \mathbf{do}\ e_2 & \text{while loop} \\
+  a \in \langle ArithExpr \rangle \Coloneqq & z \mid a_1\ \langle ArithOp \rangle\ a_2 \\
+  \langle ArithOp \rangle \Coloneqq & + \mid - \mid * \\
+  \langle BoolExpr \rangle \Coloneqq & b \mid a_1 <= a_2
+\end{aligned}
+\]
+However, useful expressions that make sense in some cases might also need to be removed in order to avoid getting stuck. 
+
+3. static analysis/checking
+
+We can try to catch these kinds of issues before we run the program at all by statically analyzing the program.
+
+\subsection{Big-step Operational Semantics}
+If we consider using big-step operational semantics to evaluate Programs 3 and 4, we will not be able to come up with a complete derivation tree. For programs that do not evaluate to a value under a particular store, we express this as \(\not\Downarrow\), e.g. 
+\[
+  \{\} \vdash x \coloneqq 1; \mathbf{while}\ 0 <= !x\ \mathbf{do}\ x \coloneqq !x + 1 \not\Downarrow
+\]
+\[
+  \{\} \vdash x \coloneqq 1; \mathbf{while}\ !x\ \mathbf{do}\ x \coloneqq -1 + !x \not\Downarrow
+\]
+Here, big-step operational semantics does not provide a good way to distinguish between programs that do not evaluate to a value because they diverge and those that get stuck, while small-step semantics can be used to produce an infinite or finite sequence of reductions that end in a configuration that cannot be further reduced. In these cases, to reason about the behavior, small-step operational semantics are more useful.

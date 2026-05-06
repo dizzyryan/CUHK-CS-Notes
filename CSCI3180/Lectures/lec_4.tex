@@ -135,39 +135,62 @@ For ASSIGN-EXPR, we would need to take a step from \((3, s)\), but there is no r
 We have the full evaluation as follow:
 \[
 \begin{aligned}
-(x := 3; y := 1; \mathbf{W}, \{\}) &\to (\mathbf{skip}; y \coloneqq 1; \mathbf{W} &,\{x \mapsto 3\}) \\
-&\to (y \coloneqq 1; W &,\{x \mapsto 3\}) \\
-&\to (\mathbf{skip}; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
-&\to (\mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
-&\to (\mathbf{if}\ 2 < = !x\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 3, y \mapsto 1\}) \\
-&\to (\mathbf{if}\ 2 < = 3\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 3, y \mapsto 1\}) \\
-&\to (\mathbf{if}\ \text{true}\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 3, y \mapsto 1\}) \\
-&\to (\Delta; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
-&\to (y := 3 * !y; x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
-&\to (y := 3 * 1; x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
-&\to (y := 3; x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 1\}) \\
-&\to (\mathbf{skip}; x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 3\}) \\
-&\to (x := !x - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 3\}) \\
-&\to (x := 3 - 1; \mathbf{W} &,\{x \mapsto 3, y \mapsto 3\}) \\
-&\to (x := 2; \mathbf{W} &,\{x \mapsto 3, y \mapsto 3\}) \\
-&\to (\mathbf{skip}; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
-&\to (\mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
-&\to (\mathbf{if}\ 2 < = !x\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 2, y \mapsto 3\}) \\
-&\to (\mathbf{if}\ 2 < = 2\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 2, y \mapsto 3\}) \\
-&\to (\mathbf{if}\ \text{true}\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 2, y \mapsto 3\}) \\
-&\to (\Delta; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
-&\to (y := 2 * !y; x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
-&\to (y := 2 * 3; x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
-&\to (y := 6; x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 3\}) \\
-&\to (\mathbf{skip}; x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 6\}) \\
-&\to (x := !x - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 6\}) \\
-&\to (x := 2 - 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 6\}) \\
-&\to (x := 1; \mathbf{W} &,\{x \mapsto 2, y \mapsto 6\}) \\
-&\to (\mathbf{skip}; \mathbf{W} &,\{x \mapsto 1, y \mapsto 6\}) \\
-&\to (\mathbf{W} &,\{x \mapsto 1, y \mapsto 6\}) \\
-&\to (\mathbf{if}\ 2 < = !x\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 1, y \mapsto 6\}) \\
-&\to (\mathbf{if}\ 2 < = 1\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 1, y \mapsto 6\}) \\
-&\to (\mathbf{if}\ \text{false} \ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip} &,\{x \mapsto 1, y \mapsto 6\}) \\
-&\to (\mathbf{skip} &,\{x \mapsto 1, y \mapsto 6\}) \\
+(x := 3; y := 1; \mathbf{W}, \{\}) &\to (\mathbf{skip}; y \coloneqq 1; \mathbf{W}, &\{x \mapsto 3\}) \\
+&\to (y \coloneqq 1; W, &\{x \mapsto 3\}) \\
+&\to (\mathbf{skip}; \mathbf{W}, &\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{W}, &\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{if}\ 2 < = !x\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{if}\ 2 < = 3\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{if}\ \text{true}\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\Delta; \mathbf{W}, &\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (y := 3 * !y; x := !x - 1; \mathbf{W}, &\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (y := 3 * 1; x := !x - 1; \mathbf{W}, &\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (y := 3; x := !x - 1; \mathbf{W}, &\{x \mapsto 3, y \mapsto 1\}) \\
+&\to (\mathbf{skip}; x := !x - 1; \mathbf{W}, &\{x \mapsto 3, y \mapsto 3\}) \\
+&\to (x := !x - 1; \mathbf{W}, &\{x \mapsto 3, y \mapsto 3\}) \\
+&\to (x := 3 - 1; \mathbf{W}, &\{x \mapsto 3, y \mapsto 3\}) \\
+&\to (x := 2; \mathbf{W}, &\{x \mapsto 3, y \mapsto 3\}) \\
+&\to (\mathbf{skip}; \mathbf{W}, &\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{W}, &\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{if}\ 2 < = !x\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{if}\ 2 < = 2\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{if}\ \text{true}\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\Delta; \mathbf{W}, &\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (y := 2 * !y; x := !x - 1; \mathbf{W}, &\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (y := 2 * 3; x := !x - 1; \mathbf{W}, &\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (y := 6; x := !x - 1; \mathbf{W}, &\{x \mapsto 2, y \mapsto 3\}) \\
+&\to (\mathbf{skip}; x := !x - 1; \mathbf{W}, &\{x \mapsto 2, y \mapsto 6\}) \\
+&\to (x := !x - 1; \mathbf{W}, &\{x \mapsto 2, y \mapsto 6\}) \\
+&\to (x := 2 - 1; \mathbf{W}, &\{x \mapsto 2, y \mapsto 6\}) \\
+&\to (x := 1; \mathbf{W}, &\{x \mapsto 2, y \mapsto 6\}) \\
+&\to (\mathbf{skip}; \mathbf{W}, &\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{W}, &\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{if}\ 2 < = !x\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{if}\ 2 < = 1\ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{if}\ \text{false} \ \mathbf{then}\ (\Delta; \mathbf{W})\ \mathbf{else}\ \mathbf{skip}, &\{x \mapsto 1, y \mapsto 6\}) \\
+&\to (\mathbf{skip}, &\{x \mapsto 1, y \mapsto 6\}) \\
+\end{aligned}
+\]
+As for 
+\begin{lstlisting}[language=OCaml]
+x := 3;
+z := (y := 10; if !y <= !x then !x else !y);
+!z
+\end{lstlisting}
+Consider \(\Delta = \texttt{if !y <= !x then !x else !y}\) and \textit{e} \texttt{= z \(\coloneqq\) (y \(\coloneqq\) 10; \(\Delta\)); !z}.
+\[
+\begin{aligned}
+(x := 3; e, \{\}) &\to (\mathbf{skip}; e, &\{x \mapsto 3\}) \\
+&\to (e, &\{x \mapsto 3\}) \\
+&\to (z \coloneqq (\mathbf{skip}; \Delta); !z, &\{x \mapsto 3, y \mapsto 10\}) \\
+&\to (z \coloneqq \Delta; !z, &\{x \mapsto 3, y \mapsto 10\}) \\
+&\to (z \coloneqq (\mathbf{if}\ !y <= !x\ \mathbf{then}\ !x\ \mathbf{else}\ !y); !z, &\{x \mapsto 3, y \mapsto 10\}) \\
+&\to (z \coloneqq (\mathbf{if}\ 10 <= 3\ \mathbf{then}\ !x\ \mathbf{else}\ !y); !z, &\{x \mapsto 3, y \mapsto 10\}) \\
+&\to (z \coloneqq (\mathbf{if}\ \text{false}\ \mathbf{then}\ !x\ \mathbf{else}\ !y); !z, &\{x \mapsto 3, y \mapsto 10\}) \\
+&\to (z \coloneqq !y; !z, &\{x \mapsto 3, y \mapsto 10\}) \\
+&\to (z \coloneqq 10; !z, &\{x \mapsto 3, y \mapsto 10\}) \\
+&\to (\mathbf{skip}; !z, &\{x \mapsto 3, y \mapsto 10, z \mapsto 10\}) \\
+&\to (!z, &\{x \mapsto 3, y \mapsto 10, z \mapsto 10\}) \\
+&\to (10, &\{x \mapsto 3, y \mapsto 10, z \mapsto 10\})
 \end{aligned}
 \]
