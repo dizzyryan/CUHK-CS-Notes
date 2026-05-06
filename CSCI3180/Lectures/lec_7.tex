@@ -1,0 +1,33 @@
+\section{Syntactic Sugar}
+Rather than giving semantics directly for all expressions in a language, we often define a smaller core language, then give semantics for this core language, and define the expressions of the full language in terms of the core language. This helps to simplify the implementation of the corresponding interpreter as there are fewer semantic rules. For example, we can reduce the set of operators of SIMPL as follows:
+\[
+  \langle \textit{op} \rangle \Coloneqq + \mid * \mid /
+\]
+Then we define the expressions of the language that are not in the core language as \textit{syntactic sugar}\footnote{a nicer or more convenient way to write something that can be translated into more basic language constructs.} for the core language expressions. Since we remove only \(-\), consider
+\[
+  e_1 - e_2 \equiv e_1 + (-1 * e_2)
+\]
+To implement an interpreter, we can then implement an evaluator based on the core SIMPL semantics. To give a SIMPL AST to this evaluator, we need to \textit{desugar}, i.e. rewrite syntactic sugar into core language constructs, the SIMPL program by replacing each instance of syntactic sugar with its corresponding core SIMPL expression. The evaluator for SIMPL is then implemented in terms of the desugarer and core language evaluator, i.e.
+\[
+  \textsf{Evaluator}_{\text{SIMPL-AST}} = \textsf{Evaluator}_{\text{coreSIMPL-AST}} \circ \textsf{Desugarer}_{\text{SIMPL-AST}}
+\]
+A desugarer performs a language-to-language transformation and is therefore simply a kind of compiler from the full language to the core language.
+
+Define \(\text{SIMPL}^+\), which adds additional expressions and Boolean operators to the syntax of SIMPL, i.e.
+\[
+  e \in \langle \textit{expr} \rangle \Coloneqq \dots \mid \mathbf{not}\ e
+\]
+\[
+  \odot \in \langle \textit{op} \rangle \Coloneqq \dots \mid \mathbf{and} \mid \mathbf{or}
+\]
+Then, rather than defining new rules in the operational semantics for these operators, we can add syntactic sugar to SIMPL to provide their semantics, e.g.
+\[
+  \mathbf{not}\ e \equiv \mathbf{if}\ e\ \mathbf{then}\ \text{false}\ \mathbf{else}\ \text{true}
+\]
+\[
+  e_1\ \mathbf{or}\ e_2 \equiv \mathbf{if}\ e_1\ \mathbf{then}\ \text{true}\ \mathbf{else}\ e_2
+\]
+\[
+  e_1\ \mathbf{and}\ e_2 \equiv \mathbf{if}\ e_1\ \mathbf{then}\ e_2\ \mathbf{else}\ \text{false}
+\]
+While we can write programs directly in the core language, SIMPL programs with the same functionality are easier to read and write, and \(\text{SIMPL}^+\) programs are even easier. Therefore, we can view syntax as a user interface that is implemented using the underlying semantics and syntactic sugar definitions.

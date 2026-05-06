@@ -1,0 +1,162 @@
+\section{Big-step Operational Semantics}
+
+An alternative to small-step operational semantics is \textit{big-step} operational semantics (also called natural semantics), which describes the evaluation of a program to its final value in a single ``big'' step \(\Downarrow\). 
+
+Big-step operational semantics here will have judgments of the form \(\Gamma \vdash e \Downarrow (v, s)\), where \(\Gamma\) gives some kind of context in which we consider the program, \(e\) is the program, \(v\) is the program's final value, and \(s\) is the program's final store. 
+
+In the case of SIMPL, \(\Gamma\) is simply a store, so we have judgments like \(s \vdash e \Downarrow (v, s^{\prime})\). Judgments expressing the same thing can be shown in different notations, for example
+\[
+  s \vdash e \Downarrow v \dashv s^{\prime} \hspace{2cm} (e, s) \Downarrow (v, s^{\prime})
+\]
+Regardless of notation, what makes these big-step operational semantics judgments is that they show the entire evaluation of the program in a single step. 
+
+The big-step operational semantics for SIMPL programs are as follows:
+\[
+  \text{(INT) } s \vdash z \Downarrow (z, s) \hspace{1cm} 
+  \text{(BOOL) } s \vdash b \Downarrow (b, s) \hspace{1cm} 
+  \text{(SKIP) } s \vdash \mathbf{skip} \Downarrow (\mathbf{skip}, s)
+\]
+\[
+  \text{(ASSIGN-BOOL) } \dfrac{s \vdash e \Downarrow (b, s^{\prime})}{s \vdash r \coloneqq e \Downarrow (\mathbf{skip}, s^{\prime}[r \mapsto b])}
+  \hspace{1cm}
+  \text{(ASSIGN-INT) } \dfrac{s \vdash e \Downarrow (z, s^{\prime})}{s \vdash r \coloneqq e \Downarrow (\mathbf{skip}, s^{\prime}[r \mapsto z])}
+\]
+\[
+  \text{(DEREF-BOOL) } s \vdash !r \Downarrow (b, s) \text{ if } s[r] = b 
+  \hspace{1cm}
+  \text{(DEREF-INT) } s \vdash !r \Downarrow (z, s) \text{ if } s[r] = z
+\]
+\[
+  \text{(SEQ) } \dfrac{s \vdash e_1 \Downarrow (\mathbf{skip}, s^{\prime}) \quad s^{\prime} \vdash e_2 \Downarrow (v, s^{\prime\prime})}{s \vdash e_1 ; e_2 \Downarrow (v, s^{\prime\prime})}
+\]
+\[
+  \text{(IF-TRUE) } \dfrac{s \vdash e_1 \Downarrow (\text{true}, s^{\prime}) \quad s^{\prime} \vdash e_2 \Downarrow (v, s^{\prime\prime})}{s \vdash \mathbf{if}\ e_1\ \mathbf{then}\ e_2\ \mathbf{else}\ e_3 \Downarrow (v, s^{\prime\prime})} \hspace{1cm} \text{(IF-FALSE) } \dfrac{s \vdash e_1 \Downarrow (\text{false}, s^{\prime}) \quad s^{\prime} \vdash e_3 \Downarrow (v, s^{\prime\prime})}{s \vdash \mathbf{if}\ e_1\ \mathbf{then}\ e_2\ \mathbf{else}\ e_3 \Downarrow (v, s^{\prime\prime})}
+\]
+\[
+  \text{(WHILE) } \dfrac{s \vdash \mathbf{if}\ e_1\ \mathbf{then}\ (e_2; \mathbf{while}\ e_1\ \mathbf{do}\ e_2)\ \mathbf{else}\ \mathbf{skip} \Downarrow (v, s^{\prime})}{s \vdash \mathbf{while}\ e_1\ \mathbf{do}\ e_2 \Downarrow (v, s^{\prime})}
+\]
+\[
+  \text{(LT) } \dfrac{s \vdash e_1 \Downarrow (z_1, s^{\prime}) \quad s^{\prime} \vdash e_2 \Downarrow (z_2, s^{\prime\prime})}{s \vdash e_1 \leq e_2 \Downarrow (b, s^{\prime\prime})} \text{ if } b = (z_1 \leq z_2)
+\]
+\[
+  \text{(PLUS) } \dfrac{s \vdash e_1 \Downarrow (z_1, s^{\prime}) \quad s^{\prime} \vdash e_2 \Downarrow (z_2, s^{\prime\prime})}{s \vdash e_1 + e_2 \Downarrow (z, s^{\prime\prime})} \text{ if } z = z_1 + z_2
+\]
+\[
+  \text{(MINUS) } \dfrac{s \vdash e_1 \Downarrow (z_1, s^{\prime}) \quad s^{\prime} \vdash e_2 \Downarrow (z_2, s^{\prime\prime})}{s \vdash e_1 - e_2 \Downarrow (z, s^{\prime\prime})} \text{ if } z = z_1 - z_2
+\]
+\[
+  \text{(TIMES) } \dfrac{s \vdash e_1 \Downarrow (z_1, s^{\prime}) \quad s^{\prime} \vdash e_2 \Downarrow (z_2, s^{\prime\prime})}{s \vdash e_1 * e_2 \Downarrow (z, s^{\prime\prime})} \text{ if } z = z_1 \times z_2
+\]
+\[
+  \text{(DIVIDE) } \dfrac{s \vdash e_1 \Downarrow (z_1, s^{\prime}) \quad s^{\prime} \vdash e_2 \Downarrow (z_2, s^{\prime\prime})}{s \vdash e_1 / e_2 \Downarrow (z, s^{\prime\prime})} \text{ if } z = \left\lfloor \dfrac{z_1}{z_2} \right\rfloor
+\]
+To see what a configuration \((e, s)\) evaluates to using big-step semantics, we need to find a value \(v\) and store \(s^{\prime}\) such that we can derive a judgment \(s \vdash e \Downarrow (v, s^{\prime})\) using only the rules of the big-step operational semantics.
+
+The difference is that in small-step semantics, the rules allow us to prove \textit{which steps we can take} in order to compute a value, whereas in big-step semantics, we can prove that a program evaluates to a value directly. 
+
+We would like the big-step semantics to match the small-step semantics, i.e.
+\[
+  s \vdash e \Downarrow (v, s^{\prime}) \ \textit{iff} \ (e, s) \to^* (v, s^{\prime})
+\]
+where \(\to^*\) is the reflexive transitive closure of \(\to\). 
+
+\begin{eg}
+Consider \(((1 + 2) * 3, \{\})\). 
+
+\textbf{Small-step}:
+\[
+  \begin{aligned}
+    ((1 + 2) * 3, \{\}) &\to (3 * 3, \{\}) \\
+    &\to (9, \{\}) \\
+  \end{aligned}
+\]
+where we have
+\[
+  \dfrac{\dfrac{}{((1 + 2), \{\}) \to (3, \{\})} \text{ (PLUS)}}{((1 + 2) * 3, \{\}) \to (3 * 3, \{\})} \text{ (OP-1)} 
+  \hspace{1.5cm} 
+  \dfrac{}{(3 * 3, \{\}) \to (9, \{\})} \text{ (TIMES)}
+\]
+\textbf{Big-step}
+
+Consider 
+\[
+  \Delta = \dfrac{}{\{\} \vdash 1 \Downarrow (1, \{\})} \text{ (INT)} 
+  \hspace{1cm} 
+  \square = \dfrac{}{\{\} \vdash 2 \Downarrow (2, \{\})} \text{ (INT)}
+\]
+then we have
+\[
+  \dfrac{
+    \dfrac{\Delta \quad \square}{\{\} \vdash 1 + 2 \Downarrow (3, \{\})} \text{ (PLUS)}
+    \quad
+    \dfrac{}{\{\} \vdash 3 \Downarrow (3, \{\})} \text{ (INT)}
+  }{
+    \{\} \vdash (1 + 2) * 3 \Downarrow (9, \{\})
+  } \text{ (TIMES)}
+\]
+\end{eg}
+
+Big-step semantics are typically closer to how an evaluator in an interpreter would be implemented, where an interpreter for a programming language should produce a value \(v\) when given a program \(e\) in context \(\Gamma\) iff \(\Gamma \vdash e \Downarrow v\) is derivable using the language's big-step operational semantics. 
+
+To construct an evaluator from big-step operational semantics, each derivation rule can be implemented. 
+
+For example, consider the evaluator for arithmetic SIMPL expressions in OCaml with grammar 
+\[
+  a \in \langle \textit{ArithExpr} \rangle \Coloneqq z \mid a_1 + a_2 \mid a_1 - a_2 \mid a_1 * a_2 \mid a_1 / a_2
+\]
+\begin{lstlisting}[language=OCaml]
+exception Stuck;;
+
+(* omitted: definition of type store *)
+
+(* ADT for the AST *)
+type arith_expr = Plus of arith_expr * arith_expr
+                | Minus of arith_expr * arith_expr
+                | Times of arith_expr * arith_expr
+                | Div of arith_expr * arith_expr
+                | Int of int
+
+let rec evaluator (s : store) (e : arith_expr) = 
+  match e with 
+    | Plus (e1, e2) ->
+      (* recursive call for left expression *)
+      (match (evaluator s e1) with
+        (Int z1, s1) ->
+          (* recursive call for right expression *)
+          match (evaluator s1 e2) with
+            (* add the expressions *)
+            (Int z2, s2) -> (Int (z1 + z2), s2)
+          | _ -> raise Stuck
+      | _ -> raise Stuck)
+    | Minus (e1, e2) ->
+      (* recursive call for left expression *)
+      (match (evaluator s e1) with
+        (Int z1, s1) ->
+          (* recursive call for right expression *)
+          match (evaluator s1 e2) with
+            (* subtract the expressions *)
+            (Int z2, s2) -> (Int (z1 - z2), s2)
+          | _ -> raise Stuck
+      | _ -> raise Stuck)
+    | Times (e1, e2) ->
+      (* recursive call for left expression *)
+      (match (evaluator s e1) with
+        (Int z1, s1) ->
+          (* recursive call for right expression *)
+          match (evaluator s1 e2) with
+            (* multiply the expressions *)
+            (Int z2, s2) -> (Int (z1 * z2), s2)
+          | _ -> raise Stuck
+      | _ -> raise Stuck)
+    | Div (e1, e2) ->
+      (* recursive call for left expression *)
+      (match (evaluator s e1) with
+        (Int z1, s1) ->
+          (* recursive call for right expression *)
+          match (evaluator s1 e2) with
+            (* divide the expressions *)
+            (Int z2, s2) -> (Int (z1 / z2), s2)
+          | _ -> raise Stuck
+      | _ -> raise Stuck)
+    | Int z -> (Int z, s)
+\end{lstlisting}
