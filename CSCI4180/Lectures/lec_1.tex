@@ -1,0 +1,162 @@
+\chapter{Fundamentals of Cloud Computing}
+
+\section{Introduction}
+
+\subsection{Definition}
+\textbf{Cloud computing} provides computing resources, such as processing power, storage, networking, and applications, as services over a network. These resources may be physical or virtual and are typically hosted in data centers. IBM emphasizes on-demand access to these resources and usage-based pricing.\footnote{\href{https://www.ibm.com/think/topics/cloud-computing}{IBM: What Is Cloud Computing?}}
+
+In \textbf{NIST}'s definition, users obtain configurable resources from a shared pool over a network, with rapid allocation and release and little administrative effort. NIST identifies five essential characteristics:\footnote{\href{https://doi.org/10.6028/NIST.SP.800-145}{NIST SP 800-145: The NIST Definition of Cloud Computing}. This also defines the three service models and four deployment models discussed below.}
+
+\begin{itemize}
+  \item \textbf{On-demand self-service:} Users provision resources without requiring a provider's staff to process each request.
+  \item \textbf{Broad network access:} Services are accessible over networks using standard mechanisms and different types of client devices.
+  \item \textbf{Resource pooling:} Providers dynamically allocate shared resources among multiple customers according to demand.
+  \item \textbf{Rapid elasticity:} Allocated capacity can expand and contract quickly as demand changes.
+  \item \textbf{Measured service:} Resource consumption is metered, monitored, and reported.
+\end{itemize}
+
+Measured service supports usage-based billing, but does not require every service to use the same pricing model. A \textbf{service-level agreement (SLA)} specifies service commitments, such as availability; it is distinct from usage metering.
+
+Definitions vary in emphasis. The Berkeley report \emph{Above the Clouds} discusses both applications delivered over the Internet and the data-center hardware and systems software supporting them. In that report, the latter constitute the ``cloud.''\footnote{\href{https://www2.eecs.berkeley.edu/Pubs/TechRpts/2009/EECS-2009-28.html}{Armbrust et al.: Above the Clouds: A Berkeley View of Cloud Computing (2009)}.}
+
+In general, cloud computing combines hardware and software technologies with automated service delivery to make computing resources available on demand.
+
+\subsection{Reasons for Using Clouds}
+Cloud computing can reduce upfront investment in hardware, accelerate software development, testing, and deployment, and provide access to infrastructure that an organization would otherwise have to build and maintain itself. Elastic resource allocation can also improve utilization.
+
+The unit price of on-demand capacity may exceed that of fully utilized owned or reserved capacity. However, releasing resources when they are no longer needed can reduce the total cost. Allocated but idle resources, retained storage, and other services may still incur charges; cost savings are not automatic.
+
+Traditional infrastructure management can involve long procurement and setup times, complex administration, and low utilization when capacity is sized for peak demand. Cloud services can alleviate these problems.
+
+Concerns include service reliability, security, data location and control, interoperability, vendor lock-in, and cost predictability. Differences among provider APIs and service capabilities can complicate migration and integration.
+
+\subsection{Grid Computing}
+Grid computing coordinates resources from multiple networked computers, potentially across different organizations, to execute computational workloads. A workload may be split into many jobs that run in parallel; a grid is not restricted to solving one problem at a time.\footnote{\href{https://aws.amazon.com/what-is/grid-computing/}{AWS: What Is Grid Computing?}}
+
+Cloud computing emphasizes on-demand service delivery, resource pooling, elasticity, and metering. Both approaches use distributed resources, but cloud computing is not simply an extension of grid computing. A grid can also run on cloud infrastructure.
+
+\section{Cloud Computing Concepts}
+
+\subsection{Elasticity and Scalability}
+\textbf{Scalability} is a system's ability to handle increased workload by adding resources while maintaining acceptable performance. \textbf{Vertical scaling} adds capacity to an existing machine, while \textbf{horizontal scaling} adds more machines or instances.
+
+\textbf{Elasticity} is the ability to adjust allocated resources to changing demand, including releasing resources when demand falls. These adjustments are often automated, but they are not necessarily instantaneous.
+
+For example, an application that can handle more traffic when additional servers are added is scalable. If it adds servers during a traffic spike and removes them afterward, it is also elastic.
+
+Providers and customers use scaling policies to meet performance and availability targets while controlling costs. Actual charges depend on the service's billing model and the resources retained or consumed.
+
+\subsection{Provisioning and Deprovisioning}
+\textbf{Provisioning} allocates and configures resources for users or applications, such as creating virtual machines, storage volumes, or network connections. Access policies and quotas determine who may request resources and how much they may allocate.
+
+\textbf{Deprovisioning} releases resources or revokes access when they are no longer needed. Releasing a compute instance does not necessarily delete its associated storage or stop all related charges.
+
+\textbf{Self-service provisioning} allows customers to request resources through a portal or API without a lengthy manual process, reducing provisioning delays.
+
+\subsection{Virtualization}
+Virtualization creates logical abstractions of physical computing resources so that they can be allocated and managed more flexibly. It can divide one physical resource into several virtual resources or combine multiple physical resources into a logical pool.
+
+Examples include virtual CPUs, virtual disks, and virtual networks. Server virtualization allows multiple virtual machines (VMs), each with its own guest operating system, to share a physical machine. It is a common enabling technology for cloud computing, but cloud services do not have to use VMs.\footnote{\href{https://www.ibm.com/think/topics/virtualization}{IBM: What Is Virtualization?}}
+
+Virtualization provides:
+
+\begin{itemize}
+  \item \textbf{Partitioning:} Physical resources are divided among multiple VMs, allowing several operating systems and applications to run on one machine.
+  \item \textbf{Isolation:} VMs have separate execution environments. Isolation reduces interference, but is not absolute: vulnerabilities, misconfiguration, and resource contention can still affect other VMs or the host.
+  \item \textbf{Encapsulation:} A VM's configuration and virtual disks can be represented as files; snapshots may also capture memory and execution state. Moving a VM still requires compatible virtualization support.
+\end{itemize}
+
+Virtualization can consolidate workloads, improve hardware utilization, and make resource allocation more flexible.
+
+A \textbf{hypervisor} creates and manages VMs and mediates their access to CPU time, memory, storage, and networking. It may run directly on hardware or above a host operating system.
+
+Unlike a VM, a \textbf{container} normally shares the kernel of its host environment, which may itself be a VM. A container packages an application with its required user-space dependencies, rather than a separate guest kernel. Containers provide process isolation, but their shared kernel creates a different security boundary from that of VMs.\footnote{\href{https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/}{Docker documentation: What Is a Container?}}
+
+\subsection{Multitenancy}
+\textbf{Multitenancy} allows multiple customers or organizations, called \emph{tenants}, to share some part of a system while keeping their data and access permissions logically separated. Sharing can occur at the infrastructure, platform, or application layer.
+
+For SaaS, deployment arrangements can range from separate application instances to a shared application instance:
+
+\begin{itemize}
+  \item \textbf{Separate instances:} Each customer has a separate application instance and possibly a separate database, while the underlying infrastructure may be shared. This is single-tenancy at the application-instance level, even if the infrastructure is multi-tenant.
+  \item \textbf{Shared instance:} Multiple customers use the same application instance, with tenant-aware authorization and data separation. Databases may be shared or separated.
+\end{itemize}
+
+For PaaS, customers deploy their own applications onto a shared platform. Isolation may use VMs, containers, runtime sandboxes, or other mechanisms; it does not require one VM per customer.
+
+Key challenges include preventing cross-tenant data access, enforcing resource limits, and avoiding excessive performance interference between tenants.
+
+\subsection{Application Programming Interface (API)}
+An \textbf{application programming interface (API)} defines the operations and data formats through which software components interact. Cloud APIs allow applications and management tools to provision resources, configure services, and access data.
+
+Although common protocols and standards exist, providers often expose different APIs, service semantics, and features. This can create \textbf{vendor lock-in}: dependence on a provider that makes migration difficult or expensive.
+
+Standard interfaces, portable data formats, and abstraction layers can reduce lock-in, but do not eliminate it. Applications may still depend on provider-specific behavior or managed services.
+
+\section{Service Delivery Models}
+The three principal cloud service models differ in what the provider manages and what remains under the customer's control.\footnote{\href{https://www.ibm.com/think/topics/iaas-paas-saas}{IBM: IaaS, PaaS, SaaS: What's the Difference?}}
+
+\subsection{Infrastructure as a Service (IaaS)}
+\textbf{Infrastructure as a Service (IaaS)} supplies compute, storage, and networking resources. The provider operates the physical infrastructure; customers typically manage their guest operating systems, applications, and data.
+
+Customers can provision and release resources on demand. Virtualization is common, although physical servers may also be offered. Examples of infrastructure services include Amazon EC2 for compute and Amazon S3 or Azure Blob Storage for object storage.
+
+\subsection{Platform as a Service (PaaS)}
+\textbf{Platform as a Service (PaaS)} provides a managed environment for developing, testing, deploying, and running applications. The provider manages the underlying infrastructure and platform software, while customers manage their applications and data.
+
+Platform capabilities may include language runtimes, application servers, databases, messaging, and development tools. Customers may still configure instance sizes, scaling limits, or service tiers, even though they do not manage the physical hardware. Examples include Google App Engine and Heroku.
+
+\subsection{Software as a Service (SaaS)}
+\textbf{Software as a Service (SaaS)} delivers a provider-managed application over a network. The provider maintains the application and its underlying platform and infrastructure. Customers use and configure the application and remain responsible for appropriate access and data handling. Examples include Google Drive, iCloud, and Dropbox.
+
+Other service labels include Storage as a Service, Data as a Service, Testing as a Service, and Integration as a Service. These may overlap with the three principal models.
+
+\subsection{Serverless Computing}
+\textbf{Serverless computing} lets developers use managed execution environments and backend services without provisioning or administering the underlying servers. Servers still exist; the provider manages them. Scaling and billing behavior depend on the particular service.\footnote{\href{https://aws.amazon.com/serverless/}{AWS: Serverless Computing}.}
+
+Two commonly associated models are:
+
+\begin{itemize}
+  \item \textbf{Function as a Service (FaaS):} Customers deploy functions that run in response to requests or events, while the provider manages their execution infrastructure. Examples include AWS Lambda and Azure Functions.
+  \item \textbf{Backend as a Service (BaaS):} Applications access managed backend capabilities, such as authentication, databases, and storage, through APIs or SDKs. BaaS is a service model, not a serverless development framework.
+\end{itemize}
+
+Serverless applications may combine FaaS and BaaS, but serverless computing is broader than a fixed combination of the two; it also includes other managed execution and data services.
+
+\section{Deployment Scenarios}
+NIST identifies four cloud deployment models: public, private, hybrid, and community. A virtual private cloud is a related networking concept, rather than a fifth NIST deployment model.
+
+\subsection{Public Cloud}
+A \textbf{public cloud} offers services to the general public. Customers usually access it over the Internet, although private connections may be available. Infrastructure is commonly shared, with logical isolation between customers. Services, eligibility conditions, and pricing vary by provider.
+
+\subsection{Private Cloud}
+A \textbf{private cloud} serves one organization exclusively. It may be operated by that organization, a third party, or both, and may be hosted on or off premises.
+
+Private clouds offer greater control over infrastructure and policies, but are not inherently more secure or reliable. They still face capacity limits, network failures, misconfiguration, and security threats. Their effectiveness depends on design and operation.
+
+\subsection{Hybrid Cloud}
+A \textbf{hybrid cloud} connects distinct cloud environments while allowing data or applications to move between them. For example, an organization may use a private cloud for routine workloads and a public cloud for additional capacity during demand peaks.
+
+Hybrid deployments require suitable connectivity, identity and access controls, monitoring, and management. Merely using several disconnected clouds does not establish a hybrid cloud.
+
+\subsection{Community Cloud}
+A \textbf{community cloud} serves organizations with shared requirements, such as a common mission or security policy. Participating organizations or a third party may operate it. Ownership and cost allocation depend on the arrangement; it need not be purchased by a single customer.
+
+\subsection{Virtual Private Cloud (VPC)}
+A \textbf{virtual private cloud (VPC)} is a logically isolated virtual network within a public cloud. Customers configure network elements such as address ranges, subnets, routing, and access controls. A VPC does not by itself imply dedicated physical hardware or a private-cloud deployment.\footnote{\href{https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html}{AWS documentation: What Is Amazon VPC?}}
+
+A VPC can connect to an organization's existing network through a VPN or a dedicated connection, allowing cloud resources to extend that network.
+
+When choosing a deployment model, organizations should consider cost, control, workload characteristics, connectivity, and shared requirements. Public clouds reduce the need to own infrastructure; private and community clouds require capacity planning and operation; hybrid clouds add flexibility but also integration complexity.
+
+\section{Security Issues}
+Cloud security follows a \textbf{shared responsibility model}. Providers protect the infrastructure and service components they operate. Customers remain responsible for the components they control, including account permissions, service configuration, and data handling. The exact division varies across IaaS, PaaS, SaaS, and individual services.\footnote{\href{https://aws.amazon.com/compliance/shared-responsibility-model/}{AWS: Shared Responsibility Model}.}
+
+Customers may have limited visibility into a provider's internal infrastructure. They must assess available security documentation, audit evidence, logs, and contractual commitments rather than assume that outsourcing infrastructure transfers all security responsibility.
+
+\begin{itemize}
+  \item \textbf{Isolation failures:} Vulnerabilities or misconfiguration in hypervisors, kernels, or shared services may allow unauthorized access across tenants or to the host. Resource contention can also affect availability.
+  \item \textbf{Insecure APIs:} Weak authentication, excessive permissions, exposed credentials, or implementation flaws can allow unauthorized operations. Different provider APIs increase management complexity, but lack of standardization alone does not make an API insecure.
+  \item \textbf{Data loss and leakage:} Accidental deletion, corruption, misconfiguration, compromised accounts, and service failures can threaten data. Cloud storage does not remove the need to define backup, recovery, retention, encryption, and access-control responsibilities. Replication alone is not a substitute for backups.
+  \item \textbf{Account or service hijacking:} Stolen passwords, tokens, or API keys may allow an attacker to read or alter data, change services, redirect traffic, or consume resources. Least-privilege access, multi-factor authentication where applicable, credential protection, and monitoring help reduce this risk.
+\end{itemize}
